@@ -33,9 +33,11 @@ public class BackwardsSpeaking implements NiConduct {
 
 	@Override
 	public void behave(Option opts) {
-		final String reversedMessage = reverseString(opts.message.getMessageContent());
-		if(reversedMessage != null) {
-			nicobot.sendMessage(opts.message, reversedMessage);
+		if(!nicobot.isSelfMessage(opts.message)) {
+			final String reversedMessage = reverseString(opts.message.getMessageContent());
+			if (reversedMessage != null) {
+				nicobot.sendMessage(opts.message, reversedMessage);
+			}
 		}
 	}
 	

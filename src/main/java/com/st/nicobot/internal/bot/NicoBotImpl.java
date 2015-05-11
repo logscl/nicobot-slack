@@ -16,7 +16,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.nio.charset.Charset;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -104,7 +104,7 @@ public class NicoBotImpl implements NicoBot {
     public void sendMessage(SlackChannel channel, SlackUser origin, String message) {
         Boolean devMode = props.getBoolean(NicobotProperty.BOT_DEV_MODE);
         if(!devMode || (channel.getId().equals(devChan.getId()))) {
-            session.sendMessage(channel, formatMessage(message, origin, channel), null, null, null);
+            session.sendMessage(channel, formatMessage(message, origin, channel), null);
         }
     }
 
@@ -114,7 +114,7 @@ public class NicoBotImpl implements NicoBot {
     }
 
     @Override
-    public void connect() {
+    public void connect() throws IOException {
         session.connect();
 
         for(SlackUser user : session.getUsers()) {

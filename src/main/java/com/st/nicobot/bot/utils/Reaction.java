@@ -1,10 +1,13 @@
 package com.st.nicobot.bot.utils;
 
 import com.ullink.slack.simpleslackapi.SlackChannel;
+import org.apache.commons.lang3.RandomUtils;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -13,7 +16,7 @@ public class Reaction implements Serializable {
 	private static final long serialVersionUID = -9167874891022108827L;
 	
 	private Pattern pattern;
-	private String response;
+	private List<String> response;
 	private int cooldownTimer;
 	private Map<SlackChannel, DateTime> lastSpokenTimeByChan = new HashMap<>();
 	
@@ -24,9 +27,9 @@ public class Reaction implements Serializable {
 	 * @param caseInsensitive précise si le message est Case Insensitive ou non
 	 * @param cooldownTimer Temps minimum pour ne pas répéter la réaction (en secondes)
 	 */
-	public Reaction(String regex, String response, boolean caseInsensitive,	int cooldownTimer) {
+	public Reaction(String regex, boolean caseInsensitive,	int cooldownTimer, String... response) {
 		pattern = Pattern.compile(regex, (caseInsensitive) ? Pattern.CASE_INSENSITIVE : 0);
-		this.response = response;
+		this.response = Arrays.asList(response);
 		this.cooldownTimer = cooldownTimer;
 	}
 	
@@ -36,9 +39,9 @@ public class Reaction implements Serializable {
 	 * @param response la réponse à retourner en cas de succès au message
 	 * @param response
 	 */
-	public Reaction(String regex, String response) {
+	public Reaction(String regex, String... response) {
 		pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-		this.response = response;
+		this.response = Arrays.asList(response);
 		this.cooldownTimer = 0;
 	}
 	
@@ -80,7 +83,11 @@ public class Reaction implements Serializable {
 	}
 
 	public String getResponse() {
-		return response;
+		if(response.size() == 1) {
+			return response.get(0);
+		} else {
+			return response.get(RandomUtils.nextInt(0, response.size()));
+		}
 	}
 
 	public int getCooldownTimer() {

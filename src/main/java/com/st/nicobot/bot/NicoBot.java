@@ -4,6 +4,7 @@ import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackMessage;
 import com.ullink.slack.simpleslackapi.SlackUser;
 
+import java.io.IOException;
 import java.util.Collection;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Collection;
  */
 public interface NicoBot {
 
-    void connect();
+    void connect() throws IOException;
 
     void sendMessage(SlackChannel channel, SlackUser sender, String message);
 

@@ -78,17 +78,21 @@ public class MessagesImpl implements Messages {
 		reactions.add(new Reaction(".*amis de (m|t|s)es amis.*",	"Si tu as un ami, en fait tu en as deux. Puisque les amis de tes amis sont tes amis, et que tu es l'ami de ton ami, tu es donc ton propre ami !"));
 		reactions.add(new Reaction(".*garagiste.*", 				"PUTAIN QU'ELLE EST BONNE LA GARAGIIIIISTE ! :D"));
 		reactions.add(new Reaction(".*choper.*", 					"Tout le monde sait très bien que je choppe plus rien depuis P2, merci de remuer le couteau. :("));
-		reactions.add(new Reaction(".*nico( .*|$)",					"\"Nico\" avec un N majuscule putain !  Tu es né idiot, tu vas mourir idiot !", false, 20));
+		reactions.add(new Reaction(".*nico( .*|$)",					false, 20, "\"Nico\" avec un N majuscule putain !  Tu es né idiot, tu vas mourir idiot !"));
 		reactions.add(new Reaction(".*ocin.*",						"Tain mais pas à l'envers !  Ca m'énèèèèrve çaaaa !!"));
 		reactions.add(new Reaction(".*tracteur.*",					"On va au Quick ?  Il est où mon saucisson ?"));
 
+		// Random reacts
+		reactions.add(new Reaction(".*"+botName+"( \\?)??$",		"Oui.", "Oui !", "Non...", "Non !", "Tu peux pas décider tout seul franchement ?", "Ché pas tséééé","Ché pas... Demande a slackbot ! !yesno"));
+		reactions.add(new Reaction("^Qui.*\\?$",					"C'est %u !", "J'veux pas dénoncer... mais c'est %u.", "Si c'est pas %u, c'est ta mère !"));
+
 		// girls
-		reactions.add(new Reaction(".*sarah?.*",					"Mhmmm...  \"Avec tes deux obus, j'crois que tu te sens plus. Du quatre-vingt dix D, il en faut plus pour me faire trembler !\"", true, 30));
-		reactions.add(new Reaction(".*(julie|hercot) .*",			"On en reparle quand elle aura arrêté avec son équipe de meeeerde celle là.  Iiiimmmmbécile.", true, 30));
-		reactions.add(new Reaction(".*pauline.*",					"Ah ben si tu veux, moi j'en connais un rayon sur les Paulines !  P1, P2, P3 et même P4: j'ai fait toute la famille !", true, 30));
-		reactions.add(new Reaction(".*alice.*",						"T'as qu'à me dire dans quel auditoire elle a cours; j'ai un plan pour ça.", true, 30));
-		reactions.add(new Reaction(".*(ga(e|ë)lle).*",				"Moi, quand une meuf un peu bourrée me propose de dormir chez elle après une bonne grosse guindaille, je préfère encore dire non tu vois.  Genre gentleman.  Où est le challenge sinon ?!", true, 30));
-		reactions.add(new Reaction(".*(fairy|aur(e|é)lie|hanut).*",	"Heuuu, ouais, salut...  T'aurais pas de_cbble stp ?  En fait j'l'ai pas et on a war dans 4 minutes :(", true, 30));
+		reactions.add(new Reaction(".*sarah?.*",					true, 30, "Mhmmm...  \"Avec tes deux obus, j'crois que tu te sens plus. Du quatre-vingt dix D, il en faut plus pour me faire trembler !\""));
+		reactions.add(new Reaction(".*(julie|hercot) .*",			true, 30, "On en reparle quand elle aura arrêté avec son équipe de meeeerde celle là.  Iiiimmmmbécile."));
+		reactions.add(new Reaction(".*pauline.*",					true, 30, "Ah ben si tu veux, moi j'en connais un rayon sur les Paulines !  P1, P2, P3 et même P4: j'ai fait toute la famille !"));
+		reactions.add(new Reaction(".*alice.*",						true, 30, "T'as qu'à me dire dans quel auditoire elle a cours; j'ai un plan pour ça."));
+		reactions.add(new Reaction(".*(ga(e|ë)lle).*",				true, 30, "Moi, quand une meuf un peu bourrée me propose de dormir chez elle après une bonne grosse guindaille, je préfère encore dire non tu vois.  Genre gentleman.  Où est le challenge sinon ?!"));
+		reactions.add(new Reaction(".*(fairy|aur(e|é)lie|hanut).*",	true, 30, "Heuuu, ouais, salut...  T'aurais pas de_cbble stp ?  En fait j'l'ai pas et on a war dans 4 minutes :("));
 
 		otherMessages = new HashMap<>();
 		otherMessages.put("onKick", 		"Merci pour le kick, %p...");
