@@ -1,14 +1,13 @@
 package com.st.nicobot.bot.behavior;
 
-import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.CharUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import com.st.nicobot.bot.NicoBot;
 import com.st.nicobot.bot.utils.Option;
+import org.apache.commons.lang3.CharUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.regex.Pattern;
 
 /**
  * @author Julien

@@ -1,9 +1,9 @@
 package com.st.nicobot.api.domain.model.response;
 
-import java.util.List;
-
 import com.st.nicobot.api.domain.model.Message;
 import com.st.nicobot.api.domain.model.Paging;
+
+import java.util.List;
 
 /**
  * @author Julien

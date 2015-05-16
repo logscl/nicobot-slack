@@ -1,10 +1,9 @@
 package com.st.nicobot.api.services;
 
-import java.util.List;
-
+import com.st.nicobot.api.domain.model.Message;
 import org.joda.time.DateTime;
 
-import com.st.nicobot.api.domain.model.Message;
+import java.util.List;
 
 /**
  * @author Julien

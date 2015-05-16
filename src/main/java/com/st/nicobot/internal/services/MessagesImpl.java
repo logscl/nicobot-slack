@@ -54,7 +54,7 @@ public class MessagesImpl implements Messages {
 		reactions = new LinkedHashSet<>();
 		
 		// messages complets
-		reactions.add(new Reaction("^"+botName+"( \\?)??$", 		"Quoi ?"));
+		reactions.add(new Reaction("^"+botName+"( ?\\?)+?$", 		"Quoi ?"));
 		reactions.add(new Reaction("^(sisi|13)$", 					"la famille"));
 		reactions.add(new Reaction("^tf2$", 						"Bande de casus..."));
 		reactions.add(new Reaction("^(pour )??rien( \\!)??$", 		"Baaam ! Bien joué %p !"));
@@ -83,8 +83,8 @@ public class MessagesImpl implements Messages {
 		reactions.add(new Reaction(".*tracteur.*",					"On va au Quick ?  Il est où mon saucisson ?"));
 
 		// Random reacts
-		reactions.add(new Reaction(".*"+botName+"( \\?)??$",		"Oui.", "Oui !", "Non...", "Non !", "Tu peux pas décider tout seul franchement ?", "Ché pas tséééé","Ché pas... Demande a slackbot ! !yesno"));
-		reactions.add(new Reaction("^Qui.*\\?$",					"C'est %u !", "J'veux pas dénoncer... mais c'est %u.", "Si c'est pas %u, c'est ta mère !"));
+		reactions.add(new Reaction(".*"+botName+"( ?\\?)+?$",		"Oui.", "Oui !", "Non...", "Non !", "Tu peux pas décider tout seul franchement ?", "Ché pas tséééé","Ché pas... Demande a slackbot ! !yesno"));
+		reactions.add(new Reaction(".*qui.*\\?$",					"C'est %u !", "J'veux pas dénoncer... mais c'est %u.", "Si c'est pas %u, c'est ta mère !"));
 
 		// girls
 		reactions.add(new Reaction(".*sarah?.*",					true, 30, "Mhmmm...  \"Avec tes deux obus, j'crois que tu te sens plus. Du quatre-vingt dix D, il en faut plus pour me faire trembler !\""));

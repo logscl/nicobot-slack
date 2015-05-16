@@ -85,12 +85,12 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
     }
 
     /**
-     * Retourne un message formaté diffirement si {@code names} contient 1 ou
-     * plusieurs éléments
+     * Retourne un message formatÃ© diffirement si {@code names} contient 1 ou
+     * plusieurs Ã©lÃ©ments
      *
      * @param users
      *            Un collection de {@link SlackUser} contenant 1 ou plusieurs
-     *            éléments
+     *            Ã©lÃ©ments
      * @return
      */
     public String createCongratulationMessageWithNames(Set<SlackUser> users) {

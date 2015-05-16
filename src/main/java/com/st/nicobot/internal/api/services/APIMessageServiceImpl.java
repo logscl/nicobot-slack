@@ -1,19 +1,17 @@
 package com.st.nicobot.internal.api.services;
 
-import java.util.Collections;
-import java.util.List;
-
-import javax.ws.rs.core.MultivaluedMap;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-
 import com.st.nicobot.api.domain.model.Message;
 import com.st.nicobot.api.domain.model.request.MessageRequest;
 import com.st.nicobot.api.domain.model.response.MessageResponse;
 import com.st.nicobot.api.services.APIMessageService;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.springframework.stereotype.Service;
+
+import javax.ws.rs.core.MultivaluedMap;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Julien

@@ -1,10 +1,7 @@
 package com.st.nicobot.bot.handler;
 
-import com.st.nicobot.bot.NicoBot;
 import com.st.nicobot.bot.event.MessageEvent;
-import com.ullink.slack.simpleslackapi.SlackMessage;
 import com.ullink.slack.simpleslackapi.SlackSession;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 

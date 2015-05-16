@@ -1,8 +1,8 @@
 package com.st.nicobot.services;
 
-import java.util.Set;
-
 import com.st.nicobot.bot.utils.Reaction;
+
+import java.util.Set;
 
 /**
  * @author Julien

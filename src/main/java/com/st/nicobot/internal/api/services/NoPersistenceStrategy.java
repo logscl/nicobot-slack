@@ -1,11 +1,10 @@
 package com.st.nicobot.internal.api.services;
 
-import javax.ws.rs.core.MultivaluedMap;
-
+import com.st.nicobot.api.services.PersistenceStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.st.nicobot.api.services.PersistenceStrategy;
+import javax.ws.rs.core.MultivaluedMap;
 
 public class NoPersistenceStrategy implements PersistenceStrategy {
 

@@ -1,19 +1,18 @@
 package com.st.nicobot.internal.services;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
-
+import com.st.nicobot.services.LeetGreetingService;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackMessage;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.st.nicobot.services.LeetGreetingService;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 @Service
 public class LeetGreetingServiceImpl implements LeetGreetingService {

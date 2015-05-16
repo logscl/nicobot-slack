@@ -1,9 +1,9 @@
 package com.st.nicobot.bot.behavior;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
 
-import com.st.nicobot.bot.behavior.BackwardsSpeaking;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * @author Julien

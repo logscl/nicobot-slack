@@ -1,18 +1,19 @@
 package com.st.nicobot.job.task;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
 import com.st.nicobot.internal.job.HappyGeekTimeJobImpl;
+import com.st.nicobot.services.LeetGreetingService;
+import com.st.nicobot.services.Messages;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.st.nicobot.services.LeetGreetingService;
-import com.st.nicobot.services.Messages;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author jlamby

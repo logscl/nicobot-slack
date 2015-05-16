@@ -1,8 +1,8 @@
 package com.st.nicobot.api.domain.model.request;
 
-import java.util.List;
-
 import com.st.nicobot.api.domain.model.Message;
+
+import java.util.List;
 
 /**
  * @author Julien
