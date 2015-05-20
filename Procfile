@@ -1,1 +1,1 @@
-worker: java -cp target/classes:target/dependency/* com.st.nicobot.BotMain
+worker: java $JAVA_OPTS -cp target/classes:target/dependency/* com.st.nicobot.BotMain
