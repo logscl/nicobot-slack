@@ -10,7 +10,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @ComponentScan
 @EnableScheduling
 @EnableAsync
-@PropertySources({@PropertySource("classpath:nicobot.properties"), @PropertySource("classpath:slack.properties")})
+@PropertySource("classpath:nicobot.properties")
+@PropertySource(value = "classpath:slack.properties", ignoreResourceNotFound = true)
 public class BotMain {
 
 	/**
