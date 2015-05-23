@@ -33,7 +33,7 @@ public class RiamaskinWatcher extends ConditionalMessageEvent {
     }
 
     @Override
-    public void onMessage(SlackMessage message) {
+    public void onEvent(SlackMessage message) {
     	Option o = new Option(message);
     	
     	if (testCondition(o)) {

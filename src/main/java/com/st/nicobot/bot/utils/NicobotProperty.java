@@ -3,7 +3,6 @@ package com.st.nicobot.bot.utils;
 public enum NicobotProperty {
 
 	BOT_NAME("bot.name", "nicobot"),
-	BOT_DEV_MODE("bot.dev.mode", "false"),
 
 	SLACK_API_KEY("slack.api.key", ""),
 

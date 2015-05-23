@@ -21,10 +21,7 @@ public class ParseReactions extends AbstractMessageEvent {
     private LeetGreetingService greetingService;
 	
 	@Override
-	public void onMessage(SlackMessage message) {
-		if(nicobot.isSelfMessage(message)) {
-			return;
-		}
+	public void onEvent(SlackMessage message) {
 
 		String content = message.getMessageContent();
 		String response = null;

@@ -21,9 +21,16 @@ public class SaveMessage extends AbstractMessageEvent {
 	
 	@Autowired
 	private NicoBot nicoBot;
-	
+
 	@Override
-	public void onMessage(final SlackMessage message) {
+	public void onMessage(SlackMessage message) {
+		if(message.getChannel().getName().equals("general")) {
+			onEvent(message);
+		}
+	}
+
+	@Override
+	public void onEvent(final SlackMessage message) {
 		Thread t = new Thread() {
 			public void run() {
 				Message msg = new Message(new DateTime(), message.getSender().getUserName(), message.getMessageContent());

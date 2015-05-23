@@ -45,8 +45,6 @@ public class NicoBotImpl implements NicoBot {
 
     private SlackUser self;
 
-    private SlackChannel devChan;
-
     @PostConstruct
     private void postConstruct() {
         session = SlackSessionFactory.createWebSocketSlackSession(props.get(NicobotProperty.SLACK_API_KEY));
@@ -102,10 +100,7 @@ public class NicoBotImpl implements NicoBot {
 
     @Override
     public void sendMessage(SlackChannel channel, SlackUser origin, String message) {
-        Boolean devMode = props.getBoolean(NicobotProperty.BOT_DEV_MODE);
-        if(!devMode || (channel.getId().equals(devChan.getId()))) {
-            session.sendMessage(channel, formatMessage(message, origin, channel), null);
-        }
+        session.sendMessage(channel, formatMessage(message, origin, channel), null);
     }
 
     @Override
@@ -118,16 +113,8 @@ public class NicoBotImpl implements NicoBot {
         session.connect();
 
         for(SlackUser user : session.getUsers()) {
-            if(user.getUserName().equals(props.get(NicobotProperty.BOT_NAME))) {
+            if (user.getUserName().equals(props.get(NicobotProperty.BOT_NAME))) {
                 self = user;
-                break;
-            }
-        }
-
-        devChan = null;
-        for(SlackChannel chan : session.getChannels()) {
-            if(chan.getName().equals("dev")) {
-                devChan = chan;
                 break;
             }
         }
@@ -143,5 +130,15 @@ public class NicoBotImpl implements NicoBot {
     @Override
     public Collection<SlackChannel> getChannels() {
         return session.getChannels();
+    }
+
+    @Override
+    public SlackChannel findChannelByName(String channelName) {
+        return session.findChannelByName(channelName);
+    }
+
+    @Override
+    public SlackUser findUserByUserName(String userName) {
+        return session.findUserByUserName(userName);
     }
 }

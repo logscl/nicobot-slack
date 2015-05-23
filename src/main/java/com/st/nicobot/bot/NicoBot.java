@@ -21,4 +21,8 @@ public interface NicoBot {
     boolean isSelfMessage(SlackMessage message);
 
     Collection<SlackChannel> getChannels();
+
+    SlackChannel findChannelByName(String channelName);
+
+    SlackUser findUserByUserName(String userName);
 }

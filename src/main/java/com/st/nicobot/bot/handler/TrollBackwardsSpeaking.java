@@ -27,10 +27,7 @@ public class TrollBackwardsSpeaking extends ConditionalMessageEvent {
     }
 
     @Override
-    public void onMessage(SlackMessage message) {
-        if(nicobot.isSelfMessage(message)) {
-            return;
-        }
+    public void onEvent(SlackMessage message) {
     	Option opt = new Option(message);
     	
     	if (testCondition(opt)) {
