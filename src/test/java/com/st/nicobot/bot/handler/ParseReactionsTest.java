@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import static org.mockito.Matchers.any;
@@ -52,6 +53,10 @@ public class ParseReactionsTest {
         SlackMessage message = mock(SlackMessage.class);
         when(message.getMessageContent()).thenReturn("bla bla julie bla bla");
         when(message.getChannel()).thenReturn(mock(SlackChannel.class));
+        ArrayList<SlackChannel> list = new ArrayList<>();
+        list.add(message.getChannel());
+        when(nicobot.getChannels()).thenReturn(list);
+
         HashSet<Reaction> set = new HashSet<>();
         set.add(new Reaction(".*(julie|hercot) .*",			true, 30, "On en reparle quand elle aura arrêté avec son équipe de meeeerde celle là.  Iiiimmmmbécile."));
         when(messages.getSentences()).thenReturn(set);

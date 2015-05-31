@@ -118,8 +118,6 @@ public class NicoBotImpl implements NicoBot {
                 break;
             }
         }
-
-        //session.sendMessage(devChan, "Yéop", null, null, null);
     }
 
     @Override

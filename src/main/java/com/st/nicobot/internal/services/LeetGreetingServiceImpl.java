@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -58,7 +58,7 @@ public class LeetGreetingServiceImpl implements LeetGreetingService {
 
     private boolean hasAlreadyGreeted(SlackMessage message) {
         if(leetGreeters.get(message.getChannel()) == null) {
-            leetGreeters.put(message.getChannel(), new HashSet<>());
+            leetGreeters.put(message.getChannel(), new LinkedHashSet<>());
             return false;
         } else {
             return (leetGreeters.get(message.getChannel()).contains(message.getSender()));
