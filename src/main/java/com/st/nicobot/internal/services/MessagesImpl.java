@@ -65,6 +65,16 @@ public class MessagesImpl implements Messages {
 		reactions.add(new Reaction("^pic$", 						"...or it didn't happen"));
 		reactions.add(new Reaction("^secret$", 						"J'ai un terrible secret aussi..."));
 
+
+		
+		
+		// strict calls
+		reactions.add(new Reaction("^!epicsong$",					"https://www.youtube.com/watch?v=MPjy55Y6hWU&feature=youtu.be&t=2m17s"));
+		reactions.add(new Reaction("^!wind$",						"https://www.youtube.com/watch?v=d-_q-md80VQ"));
+		reactions.add(new Reaction("^!popopo$",						"https://www.youtube.com/watch?v=NJuTp7KTZCU"));
+		reactions.add(new Reaction("^!admektator$",					"https://soundcloud.com/vincevh/admektator"));
+		reactions.add(new Reaction("^!astuvu$",						"https://youtu.be/0jZf7jIjB5s?t=1m9s"));
+		
 		// fragments
 		reactions.add(new Reaction("^salut "+botName+".*", 			"Salut %p !"));
 		reactions.add(new Reaction(".*gamin.*",						"Hein fieu"));
@@ -81,9 +91,16 @@ public class MessagesImpl implements Messages {
 		reactions.add(new Reaction(".*nico( .*|$)",					false, 20, "\"Nico\" avec un N majuscule putain !  Tu es né idiot, tu vas mourir idiot !"));
 		reactions.add(new Reaction(".*ocin.*",						"Tain mais pas à l'envers !  Ca m'énèèèèrve çaaaa !!"));
 		reactions.add(new Reaction(".*tracteur.*",					"On va au Quick ?  Il est où mon saucisson ?"));
+		reactions.add(new Reaction(".*projet.*",					"C'est quoi le projet?"));
+		reactions.add(new Reaction(".*mauvaise ambiance.*",			"MAUVAISE AMBIANCE MAUUVAISE AMBIANCE! MAU-VAISE-AM-BIANCE!"));
+		reactions.add(new Reaction(".*bière.*",						"#jesuispichet"));
+		reactions.add(new Reaction(".*citerne.*",					"J'ai plus faim, merci anto !"));
+		reactions.add(new Reaction(".*oedipe.*",					"https://youtu.be/1WtjruJzZkI?t=10s"));
+		reactions.add(new Reaction(".*parc.*",						"parque!"));
+		reactions.add(new Reaction(".*lac.*",						"laque!"));
 
 		// Random reacts
-		reactions.add(new Reaction(".*"+botName+"( ?\\?)+?$",		"Oui.", "Oui !", "Non...", "Non !", "Tu peux pas décider tout seul franchement ?", "Ché pas tséééé","Ché pas... Demande a slackbot ! !yesno"));
+		reactions.add(new Reaction(".*"+botName+"( ?\\?)+?$",		"Oui.", "Oui !", "Non...", "Non !", "Tu peux pas décider tout seul franchement ?", "Ché pas tséééé","Ché pas... Demande a slackbot !"));
 		reactions.add(new Reaction(".*qui.*\\?$",					"C'est %u !", "J'veux pas dénoncer... mais c'est %u.", "Si c'est pas %u, c'est ta mère !"));
 
 		// girls

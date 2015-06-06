@@ -111,13 +111,7 @@ public class NicoBotImpl implements NicoBot {
     @Override
     public void connect() throws IOException {
         session.connect();
-
-        for(SlackUser user : session.getUsers()) {
-            if (user.getUserName().equals(props.get(NicobotProperty.BOT_NAME))) {
-                self = user;
-                break;
-            }
-        }
+        self = session.findUserByUserName(props.get(NicobotProperty.BOT_NAME));
     }
 
     @Override
