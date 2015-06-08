@@ -96,8 +96,8 @@ public class MessagesImpl implements Messages {
 		reactions.add(new Reaction(".*bière.*",						"#jesuispichet"));
 		reactions.add(new Reaction(".*citerne.*",					"J'ai plus faim, merci anto !"));
 		reactions.add(new Reaction(".*oedipe.*",					"https://youtu.be/1WtjruJzZkI?t=10s"));
-		reactions.add(new Reaction(".*parc.*",						"parque!"));
-		reactions.add(new Reaction(".*lac.*",						"laque!"));
+		reactions.add(new Reaction(".*\\bparc\\b.*",				"parque!"));
+		reactions.add(new Reaction(".*\\blac\\b.*",					"laque!"));
 
 		// Random reacts
 		reactions.add(new Reaction(".*"+botName+"( ?\\?)+?$",		"Oui.", "Oui !", "Non...", "Non !", "Tu peux pas décider tout seul franchement ?", "Ché pas tséééé","Ché pas... Demande a slackbot !"));
