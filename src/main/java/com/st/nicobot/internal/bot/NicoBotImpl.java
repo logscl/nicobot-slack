@@ -133,4 +133,9 @@ public class NicoBotImpl implements NicoBot {
     public SlackUser findUserByUserName(String userName) {
         return session.findUserByUserName(userName);
     }
+
+    @Override
+    public SlackUser findUserById(String userId) {
+        return session.findUserById(userId);
+    }
 }

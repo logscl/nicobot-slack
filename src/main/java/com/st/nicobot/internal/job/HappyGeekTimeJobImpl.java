@@ -2,6 +2,7 @@ package com.st.nicobot.internal.job;
 
 import com.st.nicobot.bot.NicoBot;
 import com.st.nicobot.job.HappyGeekTimeJob;
+import com.st.nicobot.services.GreetersRepositoryManager;
 import com.st.nicobot.services.LeetGreetingService;
 import com.st.nicobot.services.Messages;
 import com.ullink.slack.simpleslackapi.SlackChannel;
@@ -15,6 +16,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -36,10 +38,13 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
     @Autowired
     private LeetGreetingService greetingService;
 
+    @Autowired
+    private GreetersRepositoryManager greetersRepositoryManager;
+
     @Override
     @Async
     @Scheduled(cron="0 37 13 * * *")
-    //@Scheduled(fixedDelay = 60000, initialDelay = 10000)
+    //@Scheduled(fixedDelay = 11000, initialDelay = 5000)
     public void runJob() {
         for(SlackChannel channel : nicobot.getChannels()) {
             nicobot.sendMessage(channel, null, messages.getOtherMessage("hgt"));
@@ -57,6 +62,12 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
                 String message = buildMessageWithNames(users);
 
                 nicobot.sendMessage(chan, null, message);
+
+                if(users != null && !users.isEmpty()) {
+                    greetersRepositoryManager.addGreeters(chan, users);
+                }
+
+                nicobot.sendMessage(chan, null, buildTopUsers(greetersRepositoryManager.getWeeklyGreeters(chan)));
             }
 
             logger.info("Happy Geek Thread finished");
@@ -65,6 +76,19 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
         } finally {
             greetingService.finish();
         }
+    }
+
+    public String buildTopUsers(Map<SlackUser, Integer> users) {
+        StringBuilder message = new StringBuilder(messages.getOtherMessage("weekTopHGT"));
+        if(users != null && !users.isEmpty()) {
+            for (Map.Entry<SlackUser, Integer> user : users.entrySet()) {
+                message.append(user.getKey().getUserName()).append(" (").append(user.getValue()).append("), ");
+            }
+            message.delete(message.lastIndexOf(","), message.length());
+        } else {
+            message.append(messages.getOtherMessage("noOne"));
+        }
+        return message.toString();
     }
 
     /**

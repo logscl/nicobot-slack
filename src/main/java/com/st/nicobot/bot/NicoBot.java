@@ -25,4 +25,6 @@ public interface NicoBot {
     SlackChannel findChannelByName(String channelName);
 
     SlackUser findUserByUserName(String userName);
+
+    SlackUser findUserById(String userId);
 }

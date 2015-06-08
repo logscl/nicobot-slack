@@ -133,9 +133,13 @@ public class MessagesImpl implements Messages {
 		otherMessages.put("riamaskin",		"Ca suffit maintenant ! C'est excessivement énervant !");
 		otherMessages.put("noLastMsg",		"Aucun message n'a été échangé lors des 5 dernieres minutes");
 		otherMessages.put("lastMsgHeader",	"Derniers messages échangés :");
+
 		otherMessages.put("noHGT", 			"Vous me souhaitez pas un Happy Geek Time à moi ? Ingrats ! :(");
 		otherMessages.put("congratHGT", 	"Félicitations à %s ! Propre sur vous !");
 		otherMessages.put("congratSoloHGT",	"Bravo %s ! Au moins toi tu y as pensé <3 !");
+		otherMessages.put("weekTopHGT",		"Le top de la semaine: ");
+		otherMessages.put("allTopHGT",		"Les meilleurs au MONDE: ");
+		otherMessages.put("noOne",			"Personne ! Bande de clinches ! :(");
 		
 		welcomeMessages = new HashMap<>();
 		welcomeMessages.put("newJoin0",		"Yo les gars! Saluez %p !");

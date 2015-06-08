@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 
 @Service
 public class LeetGreetingServiceImpl implements LeetGreetingService {
-	
+
 	private static Logger logger = LoggerFactory.getLogger(LeetGreetingServiceImpl.class);
 
     private boolean leetHourActive = false;
