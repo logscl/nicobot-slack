@@ -118,15 +118,15 @@ public class GreetersRepositoryManagerImpl implements GreetersRepositoryManager,
         return users;
     }
 
-    private <K,V extends Comparable<? super V>> HashMap<K,V> entriesSortedByValues(Map<K,V> map) {
+    private <K,V extends Comparable<? super V>> Map<K,V> entriesSortedByValues(Map<K,V> map) {
         SortedSet<Map.Entry<K,V>> sortedEntries = new TreeSet<>(
                 (e1, e2) -> {
-                    int res = e1.getValue().compareTo(e2.getValue());
+                    int res = e2.getValue().compareTo(e1.getValue());
                     return res != 0 ? res : 1;
                 }
         );
         sortedEntries.addAll(map.entrySet());
-        HashMap<K,V> outputMap = new HashMap<>();
+        LinkedHashMap<K,V> outputMap = new LinkedHashMap<>();
         for(Map.Entry<K,V> entry : sortedEntries) {
             outputMap.put(entry.getKey(), entry.getValue());
         }
