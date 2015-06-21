@@ -30,7 +30,7 @@ public class GreetersRepositoryManagerImpl implements GreetersRepositoryManager,
 
     @PostConstruct
     private boolean loadFile() {
-        if(!memoryLoaded) {
+        if (!memoryLoaded) {
             try {
                 FileInputStream fin = new FileInputStream(MEMORY_FILE_NAME);
                 ObjectInputStream ois = new ObjectInputStream(fin);
@@ -66,28 +66,29 @@ public class GreetersRepositoryManagerImpl implements GreetersRepositoryManager,
 
     @Override
     public void addGreeters(SlackChannel channel, Set<SlackUser> users) {
-        if(memory.getCollectionWeek() != DateTime.now().getWeekOfWeekyear()) {
+        if (memory.getCollectionWeek() != DateTime.now().getWeekOfWeekyear()) {
             memory.setWeeklyGreeters(new HashMap<>());
+            memory.setCollectionWeek(DateTime.now().getWeekOfWeekyear());
         }
 
-        if(memory.getWeeklyGreeters().get(channel.getId()) == null) {
+        if (memory.getWeeklyGreeters().get(channel.getId()) == null) {
             memory.getWeeklyGreeters().put(channel.getId(), new HashMap<>());
         }
 
-        if(memory.getAllTimeGreeters().get(channel.getId()) == null) {
+        if (memory.getAllTimeGreeters().get(channel.getId()) == null) {
             memory.getAllTimeGreeters().put(channel.getId(), new HashMap<>());
         }
 
-        for(SlackUser user : users) {
-            if(memory.getWeeklyGreeters().get(channel.getId()).get(user.getId()) == null) {
+        for (SlackUser user : users) {
+            if (memory.getWeeklyGreeters().get(channel.getId()).get(user.getId()) == null) {
                 memory.getWeeklyGreeters().get(channel.getId()).put(user.getId(), 0);
             }
 
-            if(memory.getAllTimeGreeters().get(channel.getId()).get(user.getId()) == null) {
+            if (memory.getAllTimeGreeters().get(channel.getId()).get(user.getId()) == null) {
                 memory.getAllTimeGreeters().get(channel.getId()).put(user.getId(), 0);
             }
-            memory.getWeeklyGreeters().get(channel.getId()).put(user.getId(), memory.getWeeklyGreeters().get(channel.getId()).get(user.getId())+1);
-            memory.getAllTimeGreeters().get(channel.getId()).put(user.getId(), memory.getAllTimeGreeters().get(channel.getId()).get(user.getId())+1);
+            memory.getWeeklyGreeters().get(channel.getId()).put(user.getId(), memory.getWeeklyGreeters().get(channel.getId()).get(user.getId()) + 1);
+            memory.getAllTimeGreeters().get(channel.getId()).put(user.getId(), memory.getAllTimeGreeters().get(channel.getId()).get(user.getId()) + 1);
         }
         writeFile();
     }
@@ -95,7 +96,7 @@ public class GreetersRepositoryManagerImpl implements GreetersRepositoryManager,
     @Override
     public Map<SlackUser, Integer> getWeeklyGreeters(SlackChannel channel) {
         Map<SlackUser, Integer> users = new HashMap<>();
-        if(memory.getWeeklyGreeters() != null && !memory.getWeeklyGreeters().isEmpty() && memory.getWeeklyGreeters().get(channel.getId()) != null) {
+        if (memory.getWeeklyGreeters() != null && !memory.getWeeklyGreeters().isEmpty() && memory.getWeeklyGreeters().get(channel.getId()) != null) {
             for (Map.Entry<String, Integer> entry : memory.getWeeklyGreeters().get(channel.getId()).entrySet()) {
                 users.put(nicoBot.findUserById(entry.getKey()), entry.getValue());
             }
@@ -107,7 +108,7 @@ public class GreetersRepositoryManagerImpl implements GreetersRepositoryManager,
     @Override
     public Map<SlackUser, Integer> getAllTimeGreeters(SlackChannel channel) {
         Map<SlackUser, Integer> users = new HashMap<>();
-        if(memory.getAllTimeGreeters() != null && !memory.getAllTimeGreeters().isEmpty() && memory.getAllTimeGreeters().get(channel.getId()) != null) {
+        if (memory.getAllTimeGreeters() != null && !memory.getAllTimeGreeters().isEmpty() && memory.getAllTimeGreeters().get(channel.getId()) != null) {
             for (Map.Entry<String, Integer> entry : memory.getAllTimeGreeters().get(channel.getId()).entrySet()) {
                 users.put(nicoBot.findUserById(entry.getKey()), entry.getValue());
             }
@@ -118,18 +119,46 @@ public class GreetersRepositoryManagerImpl implements GreetersRepositoryManager,
         return users;
     }
 
-    private <K,V extends Comparable<? super V>> Map<K,V> entriesSortedByValues(Map<K,V> map) {
-        SortedSet<Map.Entry<K,V>> sortedEntries = new TreeSet<>(
+    private <K, V extends Comparable<? super V>> Map<K, V> entriesSortedByValues(Map<K, V> map) {
+        SortedSet<Map.Entry<K, V>> sortedEntries = new TreeSet<>(
                 (e1, e2) -> {
                     int res = e2.getValue().compareTo(e1.getValue());
                     return res != 0 ? res : 1;
                 }
         );
         sortedEntries.addAll(map.entrySet());
-        LinkedHashMap<K,V> outputMap = new LinkedHashMap<>();
-        for(Map.Entry<K,V> entry : sortedEntries) {
+        LinkedHashMap<K, V> outputMap = new LinkedHashMap<>();
+        for (Map.Entry<K, V> entry : sortedEntries) {
             outputMap.put(entry.getKey(), entry.getValue());
         }
         return outputMap;
+    }
+
+    public static void main(String[] args) {
+        GreetersRepositoryManagerImpl impl = new GreetersRepositoryManagerImpl();
+        impl.loadFile();
+
+        System.out.print("Collection Week : " + impl.memory.getCollectionWeek());
+        if (impl.memory.getCollectionWeek() == DateTime.now().getWeekOfWeekyear()) {
+            System.out.print(" (This week)");
+        } else {
+            System.out.println(" (This week is " + DateTime.now().getWeekOfWeekyear() + ")");
+        }
+
+        System.out.println("\nWeekly Greeters :");
+        for (Map.Entry<String, Map<String, Integer>> entry1 : impl.memory.getWeeklyGreeters().entrySet()) {
+            System.out.println("Chan ID : " + entry1.getKey());
+            for (Map.Entry<String, Integer> entry : impl.entriesSortedByValues(entry1.getValue()).entrySet()) {
+                System.out.println("User ID : " + entry.getKey() + " , points: " + entry.getValue());
+            }
+        }
+
+        System.out.println("\nAll Time Greeters :");
+        for (Map.Entry<String, Map<String, Integer>> entry1 : impl.memory.getAllTimeGreeters().entrySet()) {
+            System.out.println("Chan ID : " + entry1.getKey());
+            for (Map.Entry<String, Integer> entry : impl.entriesSortedByValues(entry1.getValue()).entrySet()) {
+                System.out.println("User ID : " + entry.getKey() + " , points: " + entry.getValue());
+            }
+        }
     }
 }
