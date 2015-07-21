@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -73,8 +74,33 @@ public class BackwardsSpeaking implements NiConduct {
 			builder.replace(0, 1, StringUtils.upperCase(firstCharSequence));
 			builder.replace(builder.length()-1, builder.length(), StringUtils.lowerCase(lastCharSequence));
 		}
+
+		String fixed = fixSmileysAndNicks(builder.toString());
 		
-		return builder.toString();
+		return fixed;
+	}
+
+	private String fixSmileysAndNicks(String string) {
+		Pattern pattern = Pattern.compile(":[^:]*:");
+
+		Matcher match = pattern.matcher(string);
+
+		while(match.find()) {
+			String text = match.group();
+			string = string.replace(text, StringUtils.reverse(text));
+		}
+
+		pattern = Pattern.compile(">[^<]*@<");
+
+		match = pattern.matcher(string);
+
+		while(match.find()) {
+			String text = match.group();
+			string = string.replace(text, StringUtils.reverse(text));
+		}
+
+		return string;
+
 	}
 
 }
