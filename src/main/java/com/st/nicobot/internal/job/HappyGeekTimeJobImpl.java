@@ -46,13 +46,13 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
     @Scheduled(cron="0 37 13 * * *")
     //@Scheduled(fixedDelay = 11000, initialDelay = 5000)
     public void runJob() {
+        greetingService.init();
         for(SlackChannel channel : nicobot.getChannels()) {
             nicobot.sendMessage(channel, null, messages.getOtherMessage("hgt"));
         }
 
         try {
             logger.info("Bot will now wait for 1 min to read mesages");
-            greetingService.init();
             synchronized (this) {
                 this.wait(60000);
             }
