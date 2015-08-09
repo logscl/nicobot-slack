@@ -2,11 +2,13 @@ package com.st.nicobot.internal.bot;
 
 import com.st.nicobot.bot.NicoBot;
 import com.st.nicobot.bot.event.MessageEvent;
+import com.st.nicobot.bot.utils.Emoji;
 import com.st.nicobot.bot.utils.NicobotProperty;
 import com.st.nicobot.bot.utils.Option;
 import com.st.nicobot.services.BehaviorsService;
 import com.st.nicobot.services.PropertiesService;
 import com.ullink.slack.simpleslackapi.*;
+import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
@@ -43,30 +45,22 @@ public class NicoBotImpl implements NicoBot {
 
     private SlackSession session;
 
-    private SlackUser self;
+    private SlackPersona self;
 
     @PostConstruct
     private void postConstruct() {
         session = SlackSessionFactory.createWebSocketSlackSession(props.get(NicobotProperty.SLACK_API_KEY));
         Map<String, MessageEvent> eventMap = ctx.getBeansOfType(MessageEvent.class);
 
-        session.addMessageListener(new SlackMessageListener() {
-            @Override
-            public void onSessionLoad(SlackSession session) {
-
-            }
-
-            @Override
-            public void onMessage(SlackMessage message) {
-                logger.info("MSG [{}] ON CHAN {} BY {} : {}", message.getSubType(), message.getChannel().getName(), message.getSender().getUserName(), message.getMessageContent());
-                //Message apiMessage = new Message(new DateTime(), message.getSender().getUserName(), message.getMessageContent());
-                //api.saveMessages(Arrays.asList(apiMessage));
-                behaviors.randomBehave(new Option(message));
-            }
+        session.addMessagePostedListener((message, session1) -> {
+            logger.info("MSG [{}] ON CHAN {} BY {} : {}", message.getEventType(), message.getChannel().getName(), message.getSender().getUserName(), message.getMessageContent());
+            //Message apiMessage = new Message(new DateTime(), message.getSender().getUserName(), message.getMessageContent());
+            //api.saveMessages(Arrays.asList(apiMessage));
+            behaviors.randomBehave(new Option(message));
         });
 
         for (Map.Entry<String, MessageEvent> entry : eventMap.entrySet()) {
-            session.addMessageListener(entry.getValue());
+            session.addMessagePostedListener(entry.getValue());
             logger.info("{} loaded", entry.getValue().getClass().getSimpleName());
         }
 
@@ -99,24 +93,49 @@ public class NicoBotImpl implements NicoBot {
     }
 
     @Override
-    public void sendMessage(SlackChannel channel, SlackUser origin, String message) {
-        session.sendMessage(channel, formatMessage(message, origin, channel), null);
+    public SlackMessageHandle sendMessage(SlackChannel channel, SlackUser origin, String message) {
+        return session.sendMessage(channel, formatMessage(message, origin, channel), null);
     }
 
     @Override
-    public void sendMessage(SlackMessage originator, String message) {
-        sendMessage(originator.getChannel(), originator.getSender(), message);
+    public SlackMessageHandle sendMessage(SlackChannel channel, SlackUser sender, String message, Emoji emoji) {
+        SlackMessageHandle handle = sendMessage(channel, sender, message);
+
+        session.addReactionToMessage(channel, handle.getSlackReply().getTimestamp(), emoji.getEmojiName());
+
+        return handle;
+    }
+
+    @Override
+    public SlackMessageHandle sendMessage(SlackMessagePosted originator, String message) {
+        return sendMessage(originator.getChannel(), originator.getSender(), message);
+    }
+
+    @Override
+    public SlackMessageHandle sendMessage(SlackMessagePosted originator, String message, Emoji emoji, boolean placeReactionOnBotMsg) {
+        SlackMessageHandle handle = sendMessage(originator.getChannel(), originator.getSender(), message);
+        String tstamp = originator.getTimeStamp();
+        if(placeReactionOnBotMsg) {
+            tstamp = handle.getSlackReply().getTimestamp();
+        }
+        session.addReactionToMessage(originator.getChannel(), tstamp, emoji.getEmojiName());
+        return handle;
     }
 
     @Override
     public void connect() throws IOException {
         session.connect();
-        self = session.findUserByUserName(props.get(NicobotProperty.BOT_NAME));
+        self = session.sessionPersona();
     }
 
     @Override
-    public boolean isSelfMessage(SlackMessage message) {
-        return message.getSender().equals(self);
+    public boolean isSelfMessage(SlackMessagePosted message) {
+        return message.getSender().getId().equals(self.getId());
+    }
+
+    @Override
+    public String getBotName() {
+        return self.getUserName();
     }
 
     @Override

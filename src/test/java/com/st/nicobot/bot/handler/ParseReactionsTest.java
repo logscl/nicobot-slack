@@ -5,7 +5,7 @@ import com.st.nicobot.bot.utils.Reaction;
 import com.st.nicobot.services.LeetGreetingService;
 import com.st.nicobot.services.Messages;
 import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackMessage;
+import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,8 +16,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 /**
@@ -40,9 +38,9 @@ public class ParseReactionsTest {
 
     @Before
     public void setup() {
-        when(nicobot.isSelfMessage(any(SlackMessage.class))).thenReturn(false);
+        when(nicobot.isSelfMessage(any(SlackMessagePosted.class))).thenReturn(false);
         when(greetingService.isLeetHourActive()).thenReturn(false);
-        doNothing().when(nicobot).sendMessage(any(SlackMessage.class), anyString());
+        when(nicobot.sendMessage(any(SlackMessagePosted.class), anyString())).thenReturn(null);
     }
 
     /**
@@ -50,7 +48,7 @@ public class ParseReactionsTest {
      */
     @Test
     public void testReactionWithDelay() {
-        SlackMessage message = mock(SlackMessage.class);
+        SlackMessagePosted message = mock(SlackMessagePosted.class);
         when(message.getMessageContent()).thenReturn("bla bla julie bla bla");
         when(message.getChannel()).thenReturn(mock(SlackChannel.class));
         ArrayList<SlackChannel> list = new ArrayList<>();
@@ -66,7 +64,7 @@ public class ParseReactionsTest {
 
         reactions.onMessage(message);
 
-        verify(nicobot).sendMessage(any(SlackMessage.class), anyString());
+        verify(nicobot).sendMessage(any(SlackMessagePosted.class), anyString());
 
     }
 }
