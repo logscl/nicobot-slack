@@ -4,7 +4,7 @@ import com.st.nicobot.bot.NicoBot;
 import com.st.nicobot.bot.cmd.NiCommand;
 import com.st.nicobot.bot.utils.Option;
 import com.st.nicobot.services.Commands;
-import com.ullink.slack.simpleslackapi.SlackMessage;
+import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -61,7 +61,7 @@ public class CommandsImpl implements Commands {
 	}
 
 	@Override
-	public boolean handleCommandEvent(SlackMessage slackMessage) {
+	public boolean handleCommandEvent(SlackMessagePosted slackMessage) {
 		String message = slackMessage.getMessageContent();
 		//on extrait <cmd> <reste>
 		String[] arguments = message.split(" ");

@@ -4,7 +4,7 @@ import com.st.nicobot.bot.NicoBot;
 import com.st.nicobot.bot.utils.Reaction;
 import com.st.nicobot.services.LeetGreetingService;
 import com.st.nicobot.services.Messages;
-import com.ullink.slack.simpleslackapi.SlackMessage;
+import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +21,7 @@ public class ParseReactions extends AbstractMessageEvent {
     private LeetGreetingService greetingService;
 	
 	@Override
-	public void onEvent(SlackMessage message) {
+	public void onMessage(SlackMessagePosted message) {
 
 		String content = message.getMessageContent();
 		String response = null;

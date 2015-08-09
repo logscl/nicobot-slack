@@ -1,7 +1,7 @@
 package com.st.nicobot.services;
 
 import com.st.nicobot.bot.cmd.NiCommand;
-import com.ullink.slack.simpleslackapi.SlackMessage;
+import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 
 /**
  * @author Julien
@@ -16,6 +16,6 @@ public interface Commands {
 	 * @param message
 	 * @return true si une commande a été gérée, false sinon
 	 */
-	boolean handleCommandEvent(SlackMessage message);
+	boolean handleCommandEvent(SlackMessagePosted message);
 	
 }

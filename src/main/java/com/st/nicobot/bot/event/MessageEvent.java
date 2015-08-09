@@ -1,10 +1,10 @@
 package com.st.nicobot.bot.event;
 
 
-import com.ullink.slack.simpleslackapi.SlackMessage;
-import com.ullink.slack.simpleslackapi.SlackMessageListener;
+import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
+import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
 
-public interface MessageEvent extends SlackMessageListener {
+public interface MessageEvent extends SlackMessagePostedListener {
 
-   void onEvent(SlackMessage message);
+   void onMessage(SlackMessagePosted message);
 }

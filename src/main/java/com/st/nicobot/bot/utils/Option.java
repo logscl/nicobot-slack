@@ -1,6 +1,6 @@
 package com.st.nicobot.bot.utils;
 
-import com.ullink.slack.simpleslackapi.SlackMessage;
+import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 
 /**
  * @author Julien
@@ -8,9 +8,9 @@ import com.ullink.slack.simpleslackapi.SlackMessage;
  */
 public class Option {
 
-	public final SlackMessage message;
+	public final SlackMessagePosted message;
 	
-	public Option(SlackMessage message) {
+	public Option(SlackMessagePosted message) {
 		this.message = message;
 	}
 	

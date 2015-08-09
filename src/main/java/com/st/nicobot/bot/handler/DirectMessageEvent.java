@@ -2,7 +2,8 @@ package com.st.nicobot.bot.handler;
 
 import com.st.nicobot.bot.NicoBot;
 import com.st.nicobot.services.Commands;
-import com.ullink.slack.simpleslackapi.SlackMessage;
+import com.ullink.slack.simpleslackapi.SlackSession;
+import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +21,14 @@ public class DirectMessageEvent extends AbstractMessageEvent {
     private Commands commands;
 
     @Override
-    public void onMessage(SlackMessage message) {
+    public void onEvent(SlackMessagePosted message, SlackSession session) {
         if(!nicoBot.isSelfMessage(message) && !nicoBot.getChannels().contains(message.getChannel())) {
-            onEvent(message);
+            onMessage(message);
         }
     }
 
     @Override
-    public void onEvent(SlackMessage message) {
+    public void onMessage(SlackMessagePosted message) {
         commands.handleCommandEvent(message);
     }
 }

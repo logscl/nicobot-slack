@@ -1,6 +1,7 @@
 package com.st.nicobot.bot.cmd;
 
 import com.st.nicobot.bot.utils.Option;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -98,7 +99,7 @@ public abstract class NiCommand {
 			if (explodedArgs[i].equals(REPlACE_VALUE)) {
 				
 				// on vire le " en debut et en fin de chaine
-				explodedArgs[i] = inputString.substring(1, inputString.length()-1);
+				explodedArgs[i] = StringUtils.substring(inputString, 1, -1);
 				needToContinue = false;
 			}
 		}

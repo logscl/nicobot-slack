@@ -75,9 +75,7 @@ public class BackwardsSpeaking implements NiConduct {
 			builder.replace(builder.length()-1, builder.length(), StringUtils.lowerCase(lastCharSequence));
 		}
 
-		String fixed = fixSmileysAndNicks(builder.toString());
-		
-		return fixed;
+		return fixSmileysAndNicks(builder.toString());
 	}
 
 	private String fixSmileysAndNicks(String string) {

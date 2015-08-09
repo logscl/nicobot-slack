@@ -22,9 +22,8 @@ public class RemoteAPIStrategy implements PersistenceStrategy {
 	 */
 	WebResource getClient(String url) {
 		Client client = Client.create();
-		WebResource webResource = client.resource(url);
 
-		return webResource;
+		return client.resource(url);
 	}
 
 
