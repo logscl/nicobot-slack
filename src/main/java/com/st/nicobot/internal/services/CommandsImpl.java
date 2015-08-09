@@ -1,7 +1,10 @@
 package com.st.nicobot.internal.services;
 
+import com.st.nicobot.bot.NicoBot;
 import com.st.nicobot.bot.cmd.NiCommand;
+import com.st.nicobot.bot.utils.Option;
 import com.st.nicobot.services.Commands;
+import com.ullink.slack.simpleslackapi.SlackMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,9 @@ public class CommandsImpl implements Commands {
 
 	@Autowired
 	private ApplicationContext ctx;
+
+	@Autowired
+	private NicoBot nicobot;
 	
 	private NiCommand firstLink;
 
@@ -52,5 +58,30 @@ public class CommandsImpl implements Commands {
 		firstLink = cmds.get(0);
 		
 		return firstLink;
+	}
+
+	@Override
+	public boolean handleCommandEvent(SlackMessage slackMessage) {
+		String message = slackMessage.getMessageContent();
+		//on extrait <cmd> <reste>
+		String[] arguments = message.split(" ");
+
+		boolean handled = false;
+
+		if(arguments.length >= 1) {
+			String[] commandArgs = null;
+
+			if(arguments.length > 1) {
+				// on extrait de la chaine uniquement la partie contenant les arguments
+				String commandsString = message.substring(message.indexOf(arguments[1]));
+				commandArgs = NiCommand.getArgs(commandsString);
+			}
+
+			handled = this.getFirstLink().handle(arguments[0], commandArgs, new Option(slackMessage));
+		} else {
+			nicobot.sendMessage(slackMessage, "T'es con ou quoi ? Une commande, c'est \"<commande> [params]\"");
+		}
+
+		return handled;
 	}
 }
