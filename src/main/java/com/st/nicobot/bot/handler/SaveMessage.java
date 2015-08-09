@@ -3,7 +3,8 @@ package com.st.nicobot.bot.handler;
 import com.st.nicobot.api.domain.model.Message;
 import com.st.nicobot.api.services.APIMessageService;
 import com.st.nicobot.bot.NicoBot;
-import com.ullink.slack.simpleslackapi.SlackMessage;
+import com.ullink.slack.simpleslackapi.SlackSession;
+import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,14 +24,14 @@ public class SaveMessage extends AbstractMessageEvent {
 	private NicoBot nicoBot;
 
 	@Override
-	public void onMessage(SlackMessage message) {
+	public void onEvent(SlackMessagePosted message, SlackSession session) {
 		if(message.getChannel().getName().equals("general")) {
-			onEvent(message);
+			onMessage(message);
 		}
 	}
 
 	@Override
-	public void onEvent(final SlackMessage message) {
+	public void onMessage(final SlackMessagePosted message) {
 		Thread t = new Thread() {
 			public void run() {
 				Message msg = new Message(new DateTime(), message.getSender().getUserName(), message.getMessageContent());

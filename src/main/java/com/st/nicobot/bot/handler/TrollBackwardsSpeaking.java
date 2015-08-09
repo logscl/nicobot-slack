@@ -2,8 +2,9 @@ package com.st.nicobot.bot.handler;
 
 import com.st.nicobot.bot.NicoBot;
 import com.st.nicobot.bot.behavior.BackwardsSpeaking;
+import com.st.nicobot.bot.utils.Emoji;
 import com.st.nicobot.bot.utils.Option;
-import com.ullink.slack.simpleslackapi.SlackMessage;
+import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,11 +28,11 @@ public class TrollBackwardsSpeaking extends ConditionalMessageEvent {
     }
 
     @Override
-    public void onEvent(SlackMessage message) {
+    public void onMessage(SlackMessagePosted message) {
     	Option opt = new Option(message);
     	
     	if (testCondition(opt)) {
-        	nicobot.sendMessage(message, message.getMessageContent());
+            nicobot.sendMessage(message, message.getMessageContent(), Emoji.TROLL, true);
         }
     }
     

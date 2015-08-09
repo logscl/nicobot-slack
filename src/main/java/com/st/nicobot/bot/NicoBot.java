@@ -1,8 +1,10 @@
 package com.st.nicobot.bot;
 
+import com.st.nicobot.bot.utils.Emoji;
 import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackMessage;
+import com.ullink.slack.simpleslackapi.SlackMessageHandle;
 import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -14,11 +16,17 @@ public interface NicoBot {
 
     void connect() throws IOException;
 
-    void sendMessage(SlackChannel channel, SlackUser sender, String message);
+    SlackMessageHandle sendMessage(SlackChannel channel, SlackUser sender, String message);
 
-    void sendMessage(SlackMessage originator, String message);
+    SlackMessageHandle sendMessage(SlackChannel channel, SlackUser sender, String message, Emoji emoji);
 
-    boolean isSelfMessage(SlackMessage message);
+    SlackMessageHandle sendMessage(SlackMessagePosted originator, String message);
+
+    SlackMessageHandle sendMessage(SlackMessagePosted originator, String message, Emoji emoji, boolean placeReactionOnBotMsg);
+
+    boolean isSelfMessage(SlackMessagePosted message);
+
+    String getBotName();
 
     Collection<SlackChannel> getChannels();
 

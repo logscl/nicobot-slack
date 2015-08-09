@@ -2,8 +2,8 @@ package com.st.nicobot.internal.services;
 
 import com.st.nicobot.services.LeetGreetingService;
 import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackMessage;
 import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -40,7 +40,7 @@ public class LeetGreetingServiceImpl implements LeetGreetingService {
     }
 
     @Override
-    public void addGreeter(SlackMessage message) {
+    public void addGreeter(SlackMessagePosted message) {
         if(!hasAlreadyGreeted(message)) {
             for(Pattern pattern : triggers) {
                 if(pattern.matcher(message.getMessageContent()).matches()) {
@@ -56,7 +56,7 @@ public class LeetGreetingServiceImpl implements LeetGreetingService {
         return leetHourActive;
     }
 
-    private boolean hasAlreadyGreeted(SlackMessage message) {
+    private boolean hasAlreadyGreeted(SlackMessagePosted message) {
         if(leetGreeters.get(message.getChannel()) == null) {
             leetGreeters.put(message.getChannel(), new LinkedHashSet<>());
             return false;

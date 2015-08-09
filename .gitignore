@@ -173,4 +173,4 @@ pip-log.txt
 *.iml
 
 src/main/resources/slack.properties
-GreetersMemory.ser
+*.ser
