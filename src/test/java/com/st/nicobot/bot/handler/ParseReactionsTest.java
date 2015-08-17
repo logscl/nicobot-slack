@@ -2,6 +2,7 @@ package com.st.nicobot.bot.handler;
 
 import com.st.nicobot.bot.NicoBot;
 import com.st.nicobot.bot.utils.Reaction;
+import com.st.nicobot.services.Commands;
 import com.st.nicobot.services.LeetGreetingService;
 import com.st.nicobot.services.Messages;
 import com.ullink.slack.simpleslackapi.SlackChannel;
@@ -36,11 +37,15 @@ public class ParseReactionsTest {
     @Mock
     private LeetGreetingService greetingService;
 
+    @Mock
+    private Commands commands;
+
     @Before
     public void setup() {
         when(nicobot.isSelfMessage(any(SlackMessagePosted.class))).thenReturn(false);
         when(greetingService.isLeetHourActive()).thenReturn(false);
         when(nicobot.sendMessage(any(SlackMessagePosted.class), anyString())).thenReturn(null);
+        when(commands.isProbableCommand(anyString())).thenReturn(false);
     }
 
     /**
