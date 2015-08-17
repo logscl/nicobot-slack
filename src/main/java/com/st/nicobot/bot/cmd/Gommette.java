@@ -172,6 +172,10 @@ public class Gommette extends NiCommand {
                 return;
             }
 
+            if(!isVote(message)) {
+                return;
+            }
+
             if(event.getSender().getId().equals(target.getId())) {
                 nicobot.sendMessage(event, messages.getOtherMessage("gmNoVote"));
                 return;
@@ -181,17 +185,28 @@ public class Gommette extends NiCommand {
                 if (trollMessage()) {
                     nicobot.sendMessage(event, String.format(messages.getOtherMessage("gmTrollVote"), event.getSender().getUserName()));
                     votes.put(event.getSender(), GommetteVoteType.CANCELLED);
-                } else if ("!oui".equals(message)) {
+                } else if (getVoteYesStr().equals(message)) {
                     votes.put(event.getSender(), GommetteVoteType.YES);
-                } else if ("!non".equals(message)) {
+                } else if (getVoteNoStr().equals(message)) {
                     votes.put(event.getSender(), GommetteVoteType.NO);
                 }
             } else {
-                if("!oui".equals(message) || "!non".equals(message)) {
-                    nicobot.sendMessage(event, String.format(messages.getOtherMessage("gmVoteOnce"), event.getSender().getUserName()));
-                }
+                nicobot.sendMessage(event, String.format(messages.getOtherMessage("gmVoteOnce"), event.getSender().getUserName()));
             }
         }
+
+        public String getVoteYesStr() {
+            return "!oui";
+        }
+
+        public String getVoteNoStr() {
+            return "!non";
+        }
+
+        public boolean isVote(String message) {
+            return message.equals(getVoteYesStr()) || message.equals(getVoteNoStr());
+        }
+
 
         boolean trollMessage() {
             return RandomUtils.nextInt(0,100) == 50;
