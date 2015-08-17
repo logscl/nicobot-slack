@@ -63,16 +63,19 @@ public abstract class NiCommand {
 	 * @param opts
 	 * 		Les options {@link Option}
 	 */
-	public void handle(String command, String[] arguments, Option opts) {
+	public boolean handle(String command, String[] arguments, Option opts) {
+		boolean handled = false;
 		
 		if (command.startsWith(getCommandName())){
 			this.doCommand(command, arguments, opts);
-			return;
+			return true;
 		}
 
 		if (nextCommand != null) {
-			nextCommand.handle(command, arguments, opts);
+			handled |= nextCommand.handle(command, arguments, opts);
 		}
+
+		return handled;
 	}
 	
 	/** Regex pour trouver une chaine de caractere encadrée par " " */

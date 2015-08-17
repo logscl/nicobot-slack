@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class Say extends NiCommand {
 	
-	private static final String COMMAND = "say";
-	private static final String FORMAT = "say <channel> \"<message>\"";
+	private static final String COMMAND = "!say";
+	private static final String FORMAT = "!say <channel> \"<message>\"";
 	private static final String DESC = "Fait parler le bot.";
 
 	@Autowired
