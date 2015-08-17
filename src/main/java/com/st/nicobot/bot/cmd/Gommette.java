@@ -168,6 +168,10 @@ public class Gommette extends NiCommand {
         public void onEvent(SlackMessagePosted event, SlackSession session) {
             String message = StringUtils.trim(event.getMessageContent());
 
+            if(nicobot.isSelfMessage(event)) {
+                return;
+            }
+
             if(event.getSender().getId().equals(target.getId())) {
                 nicobot.sendMessage(event, messages.getOtherMessage("gmNoVote"));
                 return;
