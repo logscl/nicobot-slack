@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class Help extends NiCommand {
 
-	private static final String COMMAND = "help";
-	private static final String FORMAT = "help [commandName]";
+	private static final String COMMAND = "!help";
+	private static final String FORMAT = "!help [commandName]";
 	private static final String DESC = "Retourne la liste des commandes disponibles OU " +
 			"une aide detaillée pour la commande passée en paramètre.";
 
