@@ -1,67 +1,49 @@
-package com.st.nicobot.internal.services;
+package com.st.nicobot.internal.services.memory;
 
 import com.st.nicobot.api.domain.model.GreetersMemory;
 import com.st.nicobot.bot.NicoBot;
-import com.st.nicobot.services.GreetersRepositoryManager;
+import com.st.nicobot.services.memory.GreetersRepositoryManager;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import java.io.*;
 import java.util.*;
 
 /**
  * Created by Logs on 06-06-15.
  */
 @Service
-public class GreetersRepositoryManagerImpl implements GreetersRepositoryManager, Serializable {
+public class GreetersRepositoryManagerImpl extends AbstractRepositoryManager<GreetersMemory> implements GreetersRepositoryManager {
 
     @Autowired
     private NicoBot nicoBot;
 
     private GreetersMemory memory;
 
-    private static String MEMORY_FILE_NAME = "GreetersMemory.ser";
-
-    private boolean memoryLoaded = false;
-
-    @PostConstruct
-    private boolean loadFile() {
-        if (!memoryLoaded) {
-            try {
-                FileInputStream fin = new FileInputStream(MEMORY_FILE_NAME);
-                ObjectInputStream ois = new ObjectInputStream(fin);
-                memory = (GreetersMemory) ois.readObject();
-                fin.close();
-                memoryLoaded = true;
-            } catch (FileNotFoundException fe) {
-                memory = new GreetersMemory();
-                memory.setCollectionWeek(DateTime.now().getWeekOfWeekyear());
-                memory.setWeeklyGreeters(new HashMap<>());
-                memory.setAllTimeGreeters(new HashMap<>());
-                memoryLoaded = true;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }
-        }
-        return true;
+    @Override
+    protected String getMemoryFileName() {
+        return "GreetersMemory.ser";
     }
 
-    private boolean writeFile() {
-        try {
-            FileOutputStream fout = new FileOutputStream(MEMORY_FILE_NAME);
-            ObjectOutputStream oos = new ObjectOutputStream(fout);
-            oos.writeObject(memory);
-            fout.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
+    @Override
+    public GreetersMemory getMemory() {
+        return memory;
+    }
+
+    @Override
+    protected void setMemory(Object memory) {
+        this.memory = (GreetersMemory) memory;
+    }
+
+    @Override
+    protected void initMemory() {
+        this.memory = new GreetersMemory();
+        this.memory = new GreetersMemory();
+        this.memory.setCollectionWeek(DateTime.now().getWeekOfWeekyear());
+        this.memory.setWeeklyGreeters(new HashMap<>());
+        this.memory.setAllTimeGreeters(new HashMap<>());
     }
 
     @Override

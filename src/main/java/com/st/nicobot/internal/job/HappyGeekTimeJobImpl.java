@@ -2,7 +2,7 @@ package com.st.nicobot.internal.job;
 
 import com.st.nicobot.bot.NicoBot;
 import com.st.nicobot.job.HappyGeekTimeJob;
-import com.st.nicobot.services.GreetersRepositoryManager;
+import com.st.nicobot.services.memory.GreetersRepositoryManager;
 import com.st.nicobot.services.LeetGreetingService;
 import com.st.nicobot.services.Messages;
 import com.ullink.slack.simpleslackapi.SlackChannel;

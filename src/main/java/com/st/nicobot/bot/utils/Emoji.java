@@ -43,7 +43,9 @@ public enum Emoji {
     YOLD("yold"),
     BOLD("bold"),
     FBLIKE("fblike"),
-    FBDISLIKE("fbdislike");
+    FBDISLIKE("fbdislike"),
+    GOMMETTE("gomette"),
+    GOMMETTE_ROUGE("gomette_rouge");
 
     String emojiName;
 

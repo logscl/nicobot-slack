@@ -7,9 +7,13 @@ import java.util.Map;
  * Created by Logs on 08-06-15.
  */
 public class GreetersMemory implements Serializable {
+
+    private static final long serialVersionUID = -4162769449088811927L;
+
     private int collectionWeek;
     private Map<String, Map<String, Integer>> weeklyGreeters;
     private Map<String, Map<String, Integer>> allTimeGreeters;
+
 
     public int getCollectionWeek() {
         return collectionWeek;

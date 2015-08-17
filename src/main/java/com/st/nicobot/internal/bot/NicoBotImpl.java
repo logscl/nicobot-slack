@@ -10,6 +10,7 @@ import com.st.nicobot.services.PropertiesService;
 import com.ullink.slack.simpleslackapi.*;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
+import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
 import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -156,5 +157,15 @@ public class NicoBotImpl implements NicoBot {
     @Override
     public SlackUser findUserById(String userId) {
         return session.findUserById(userId);
+    }
+
+    @Override
+    public void addMessagePostedListener(SlackMessagePostedListener event) {
+        session.addMessagePostedListener(event);
+    }
+
+    @Override
+    public void removeMessagePostedListener(SlackMessagePostedListener event) {
+        session.removeMessagePostedListener(event);
     }
 }

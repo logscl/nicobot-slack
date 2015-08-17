@@ -1,4 +1,4 @@
-package com.st.nicobot.services;
+package com.st.nicobot.services.memory;
 
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackUser;

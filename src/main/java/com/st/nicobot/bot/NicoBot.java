@@ -5,6 +5,7 @@ import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackMessageHandle;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
+import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -35,4 +36,8 @@ public interface NicoBot {
     SlackUser findUserByUserName(String userName);
 
     SlackUser findUserById(String userId);
+
+    void addMessagePostedListener(SlackMessagePostedListener event);
+
+    void removeMessagePostedListener(SlackMessagePostedListener event);
 }

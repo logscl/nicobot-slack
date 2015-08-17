@@ -5,6 +5,7 @@ import com.st.nicobot.bot.cmd.NiCommand;
 import com.st.nicobot.bot.utils.Option;
 import com.st.nicobot.services.Commands;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -69,7 +70,7 @@ public class CommandsImpl implements Commands {
 
 	@Override
 	public boolean handleCommandEvent(SlackMessagePosted slackMessage) {
-		String message = slackMessage.getMessageContent();
+		String message = StringUtils.trim(slackMessage.getMessageContent());
 		//on extrait <cmd> <reste>
 		String[] arguments = message.split(" ");
 
@@ -95,7 +96,7 @@ public class CommandsImpl implements Commands {
 	@Override
 	public boolean isProbableCommand(String message) {
 		for(String command : commands) {
-			if(message.startsWith(command)) {
+			if(StringUtils.trim(message).startsWith(command)) {
 				return true;
 			}
 		}

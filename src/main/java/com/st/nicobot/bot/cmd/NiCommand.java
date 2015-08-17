@@ -66,7 +66,7 @@ public abstract class NiCommand {
 	public boolean handle(String command, String[] arguments, Option opts) {
 		boolean handled = false;
 		
-		if (command.startsWith(getCommandName())){
+		if (command.equals(getCommandName())){
 			this.doCommand(command, arguments, opts);
 			return true;
 		}

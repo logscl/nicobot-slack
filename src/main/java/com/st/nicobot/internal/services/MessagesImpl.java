@@ -98,6 +98,7 @@ public class MessagesImpl implements Messages {
 		reactions.add(new Reaction(".*oedipe.*",					"https://youtu.be/1WtjruJzZkI?t=10s"));
 		reactions.add(new Reaction(".*\\bparc\\b.*",				"parque!"));
 		reactions.add(new Reaction(".*\\blac\\b.*",					"laque!"));
+		reactions.add(new Reaction(".*gomette.*",					"Ca s'écrit gomMette. Avec 2 m."));
 
 		// Random reacts
 		reactions.add(new Reaction(".*"+botName+"( ?\\?)+?$",		"Oui.", "Oui !", "Non...", "Non !", "Tu peux pas décider tout seul franchement ?", "Ché pas tséééé","Ché pas... Demande a slackbot !"));
@@ -140,7 +141,23 @@ public class MessagesImpl implements Messages {
 		otherMessages.put("weekTopHGT",		"Le top de la semaine: ");
 		otherMessages.put("allTopHGT",		"Les meilleurs au MONDE: ");
 		otherMessages.put("noOne",			"Personne ! Bande de clinches ! :(");
-		
+
+		otherMessages.put("gmMissingColor",	"Une gommette rouge ou verte hein, on invente pas les couleurs ici !");
+		otherMessages.put("gmUnknownUser",	"C'est qui %s ? J'connais pas !");
+		otherMessages.put("gmPollRunning",	"Du calme, un sondage à la fois !");
+		otherMessages.put("gmStartNoReason","%s veut mettre une gommette %s à %s comme ça, sans raison. C'est gratuit. \"!oui\" ou \"!non\" ? %d secondes pour voter !");
+		otherMessages.put("gmStartReason",	"%s veut mettre une gommette %s à %s : %s. \"!oui\" ou \"!non\" ? %d secondes pour voter !");
+		otherMessages.put("gmTrollVote",	"Désolé %s, ton vote ne compte pas. Disctute pas !");
+		otherMessages.put("gmNoVote",		"Toi tu peux pas voter...");
+		otherMessages.put("gmInsufficient",	"Tout le monde s'en fout ? J'peux pas décider avec si peu de participants...");
+		otherMessages.put("gmVoteOnce",		"On peut voter qu'une fois %s.");
+		otherMessages.put("gmVoteValid",	"Validé ! À %d contre %d, %s a sa gommette %s !");
+		otherMessages.put("gmVoteInvalid",	"On est pas d'accord avec toi %s... pas de gommette pour %s !");
+		otherMessages.put("gmVoteEquality",	"J'sais pas... alors on va dire euh... %s. Voilà.");
+		otherMessages.put("gmScore",		"%s a %d gommette%s verte%s et %d gommette%s rouge%s.");
+		otherMessages.put("gmScoreEmpty",	"%s n'a pas encore de gommettes... :(");
+		otherMessages.put("gmNoBest",		"Personne !");
+
 		welcomeMessages = new HashMap<>();
 		welcomeMessages.put("newJoin0",		"Yo les gars! Saluez %p !");
 		welcomeMessages.put("newJoin1",		"Coucou %p ! Ca va bien ?");
