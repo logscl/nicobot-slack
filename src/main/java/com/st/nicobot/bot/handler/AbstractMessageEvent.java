@@ -21,10 +21,8 @@ public abstract class AbstractMessageEvent implements MessageEvent {
 
     @Override
     public void onEvent(SlackMessagePosted message, SlackSession session) {
-        if(!nicoBot.isSelfMessage(message)) {
-            boolean isCommand = commands.handleCommandEvent(message);
-
-            if(!isCommand && nicoBot.getChannels().contains(message.getChannel())) {
+        if (!nicoBot.isSelfMessage(message) && !commands.isProbableCommand(message.getMessageContent())) {
+            if (nicoBot.getChannels().contains(message.getChannel())) {
                 onMessage(message);
             }
         }

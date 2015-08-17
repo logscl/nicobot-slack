@@ -17,5 +17,12 @@ public interface Commands {
 	 * @return true si une commande a été gérée, false sinon
 	 */
 	boolean handleCommandEvent(SlackMessagePosted message);
+
+	/**
+	 * Boucle sur les commandes actives connues et retourne vrai si le texte entré démarre comme une commande
+	 * @param message
+	 * @return
+	 */
+	boolean isProbableCommand(String message);
 	
 }
