@@ -148,7 +148,7 @@ public class MessagesImpl implements Messages {
 		otherMessages.put("gmStartNoReason","%s veut mettre une gommette %s à %s comme ça, sans raison. C'est gratuit. \"!oui\" ou \"!non\" ? %d minutes pour voter !");
 		otherMessages.put("gmCloseSoon",	"Plus personne ? On se magne là !");
 		otherMessages.put("gmPollClosed",	"Tant pis, je ferme !");
-		otherMessages.put("gmStartReason",	"%s veut mettre une gommette %s à %s : %s. \"!oui\" ou \"!non\" ? %d secondes pour voter !");
+		otherMessages.put("gmStartReason",	"%s veut mettre une gommette %s à %s : %s. \"!oui\" ou \"!non\" ? %d minutes pour voter !");
 		otherMessages.put("gmTrollVote",	"Désolé %s, ton vote ne compte pas. Disctute pas !");
 		otherMessages.put("gmNoVote",		"Toi tu peux pas voter...");
 		otherMessages.put("gmInsufficient",	"Tout le monde s'en fout ? J'peux pas décider avec si peu de participants...");

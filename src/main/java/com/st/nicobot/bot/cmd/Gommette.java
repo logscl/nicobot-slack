@@ -38,7 +38,7 @@ public class Gommette extends NiCommand {
     private static final int TICK_DURATION_SECONDS = 10;
     private static final int TICKS = VOTE_TIMER_MINUTES * 60 / TICK_DURATION_SECONDS;
     private static final int GRACE_TICKS = 2 * 60 / TICK_DURATION_SECONDS;
-    
+
     private static final int MIN_VOTES_TRIGGER = 3;
 
     @Autowired
