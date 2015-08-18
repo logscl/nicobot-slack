@@ -15,7 +15,7 @@ public enum GommetteColor {
 
     public static GommetteColor getGommetteByName(String name) {
         for(GommetteColor gommette : GommetteColor.values()) {
-            if(gommette.gommetteName.equals(name)) {
+            if(gommette.gommetteName.equals(name.toLowerCase())) {
                 return gommette;
             }
         }

@@ -4,14 +4,15 @@ import com.st.nicobot.bot.NicoBot;
 import com.st.nicobot.bot.utils.Emoji;
 import com.st.nicobot.bot.utils.GommetteColor;
 import com.st.nicobot.bot.utils.Option;
-import com.st.nicobot.services.memory.GommettesRepositoryManager;
 import com.st.nicobot.services.Messages;
+import com.st.nicobot.services.memory.GommettesRepositoryManager;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,11 @@ public class Gommette extends NiCommand {
     private static final String FORMAT = "!gommette <rouge|verte> <nickname> [\"raison\"]";
     private static final String DESC = "Attribue une gommette rouge ou verte à l'utilisateur <nickname>.";
 
-    private static final int VOTE_TIMER = 60;
+    private static final int VOTE_TIMER_MINUTES = 5;
+    private static final int TICK_DURATION_SECONDS = 10;
+    private static final int TICKS = VOTE_TIMER_MINUTES * 60 / TICK_DURATION_SECONDS;
+    private static final int GRACE_TICKS = 2 * 60 / TICK_DURATION_SECONDS;
+    
     private static final int MIN_VOTES_TRIGGER = 3;
 
     @Autowired
@@ -81,9 +86,9 @@ public class Gommette extends NiCommand {
             }
 
             if(StringUtils.isBlank(arguments.reason)) {
-                nicobot.sendMessage(opts.message, String.format(messages.getOtherMessage("gmStartNoReason"),opts.message.getSender().getUserName(), arguments.gommette.getGommetteName(), arguments.user.getUserName(), VOTE_TIMER));
+                nicobot.sendMessage(opts.message, String.format(messages.getOtherMessage("gmStartNoReason"),opts.message.getSender().getUserName(), arguments.gommette.getGommetteName(), arguments.user.getUserName(), VOTE_TIMER_MINUTES));
             } else {
-                nicobot.sendMessage(opts.message, String.format(messages.getOtherMessage("gmStartReason"),opts.message.getSender().getUserName(), arguments.gommette.getGommetteName(), arguments.user.getUserName(), arguments.reason, VOTE_TIMER));
+                nicobot.sendMessage(opts.message, String.format(messages.getOtherMessage("gmStartReason"),opts.message.getSender().getUserName(), arguments.gommette.getGommetteName(), arguments.user.getUserName(), arguments.reason, VOTE_TIMER_MINUTES));
             }
 
             new Thread() {
@@ -93,7 +98,28 @@ public class Gommette extends NiCommand {
                         listener = new GommetteEventListener(nicobot, messages, arguments.user);
                         nicobot.addMessagePostedListener(listener);
                         synchronized (this) {
-                            this.wait(VOTE_TIMER * 1000);
+                            int i = 0;
+                            int warns = 0;
+                            while(i < TICKS) {
+                                if(i> GRACE_TICKS) {
+                                    // pas de vote depuis 1 min
+                                    if(listener.getLastVoteDate().isBefore(DateTime.now().minusMinutes(1))) {
+                                        warns++;
+                                    } else {
+                                        warns = 0;
+                                    }
+
+                                    if(warns == 2) {
+                                        nicobot.sendMessage(opts.message, messages.getOtherMessage("gmCloseSoon"));
+                                    } else if(warns == 3) {
+                                        nicobot.sendMessage(opts.message, messages.getOtherMessage("gmPollClosed"));
+                                        break;
+                                    }
+                                }
+
+                                this.wait(TICK_DURATION_SECONDS * 1000);
+                                i++;
+                            }
                         }
 
                         nicobot.removeMessagePostedListener(listener);
@@ -157,11 +183,13 @@ public class Gommette extends NiCommand {
         private Messages messages;
         private SlackUser target;
         private Map<SlackUser, GommetteVoteType> votes = new HashMap<>();
+        private DateTime lastVoteDate;
 
         public GommetteEventListener(NicoBot nicobot, Messages messages, SlackUser target) {
             this.nicobot = nicobot;
             this.messages = messages;
             this.target = target;
+            this.lastVoteDate = DateTime.now();
         }
 
         @Override
@@ -190,6 +218,7 @@ public class Gommette extends NiCommand {
                 } else if (getVoteNoStr().equals(message)) {
                     votes.put(event.getSender(), GommetteVoteType.NO);
                 }
+                lastVoteDate = DateTime.now();
             } else {
                 nicobot.sendMessage(event, String.format(messages.getOtherMessage("gmVoteOnce"), event.getSender().getUserName()));
             }
@@ -207,6 +236,9 @@ public class Gommette extends NiCommand {
             return message.equals(getVoteYesStr()) || message.equals(getVoteNoStr());
         }
 
+        public DateTime getLastVoteDate() {
+            return lastVoteDate;
+        }
 
         boolean trollMessage() {
             return RandomUtils.nextInt(0,100) == 50;
