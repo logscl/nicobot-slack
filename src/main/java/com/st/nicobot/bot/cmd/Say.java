@@ -11,7 +11,7 @@ public class Say extends NiCommand {
 	
 	private static final String COMMAND = "!say";
 	private static final String FORMAT = "!say <channel> \"<message>\"";
-	private static final String DESC = "Fait parler le bot.";
+	private static final String DESC = "Fait parler le bot. ADMIN ONLY :D";
 
 	@Autowired
 	private NicoBot nicobot;
@@ -34,10 +34,12 @@ public class Say extends NiCommand {
 	@Override
 	protected void doCommand(String command, String[] args, Option opts) {
 		try {
-			SayArguments arguments = new SayArguments(args);
-			String message = arguments.message;
-			
-			nicobot.sendMessage(arguments.channel, null, message);
+			if(opts.message.getSender().isAdmin()) {
+				SayArguments arguments = new SayArguments(args);
+				String message = arguments.message;
+
+				nicobot.sendMessage(arguments.channel, null, message);
+			}
 		}
 		catch (IllegalArgumentException ex) {
 			nicobot.sendMessage(opts.message, "Malformed command, format : " + getFormat());

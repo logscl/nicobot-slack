@@ -3,6 +3,7 @@ package com.st.nicobot.internal.services.memory;
 import com.st.nicobot.api.domain.model.GommettesMemory;
 import com.st.nicobot.bot.NicoBot;
 import com.st.nicobot.bot.utils.GommetteColor;
+import com.st.nicobot.bot.utils.MapUtils;
 import com.st.nicobot.services.memory.GommettesRepositoryManager;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class GommettesRepositoryManagerImpl extends AbstractRepositoryManager<Go
     private NicoBot nicoBot;
 
     private GommettesMemory memory;
+
+    private static final int GREEN_COEFF = 2;
+    private static final int RED_COEFF = -1;
 
     @Override
     protected String getMemoryFileName() {
@@ -85,6 +89,17 @@ public class GommettesRepositoryManagerImpl extends AbstractRepositoryManager<Go
             return tmp;
         }
         return null;
+    }
+
+    @Override
+    public Map<SlackUser, Integer> getGommettesTop() {
+        Map<SlackUser, Integer> tmp = new HashMap<>();
+        for (Map.Entry<String, Map<GommetteColor, Integer>> entry1 : memory.getGommettes().entrySet()) {
+            int score = (entry1.getValue().get(GommetteColor.GREEN) != null ?  entry1.getValue().get(GommetteColor.GREEN) * GREEN_COEFF : 0) + (entry1.getValue().get(GommetteColor.RED) != null ? entry1.getValue().get(GommetteColor.RED) * RED_COEFF : 0);
+            tmp.put(nicoBot.findUserById(entry1.getKey()), score);
+        }
+
+        return MapUtils.entriesSortedByValues(tmp);
     }
 
     public static void main(String[] args) {

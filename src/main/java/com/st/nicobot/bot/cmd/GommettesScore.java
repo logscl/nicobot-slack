@@ -65,6 +65,8 @@ public class GommettesScore extends NiCommand {
                 nicobot.sendMessage(opts.message, messages.getOtherMessage("gmNoBest"));
             }
 
+        } else if(arguments.topUsers) {
+            nicobot.sendMessage(opts.message, buildTopUsers(repositoryManager.getGommettesTop()));
         } else {
             gomm = repositoryManager.getGommettes(target);
 
@@ -74,6 +76,19 @@ public class GommettesScore extends NiCommand {
                 sendGreetings(gomm,opts,target);
             }
         }
+    }
+
+    private String buildTopUsers(Map<SlackUser, Integer> users) {
+        StringBuilder message = new StringBuilder(messages.getOtherMessage("gmTopUsers"));
+        if(users != null && !users.isEmpty()) {
+            for (Map.Entry<SlackUser, Integer> user : users.entrySet()) {
+                message.append(user.getKey().getUserName()).append(" (").append(user.getValue()).append("), ");
+            }
+            message.delete(message.lastIndexOf(","), message.length());
+        } else {
+            message.append(messages.getOtherMessage("noOne"));
+        }
+        return message.toString();
     }
 
     private void sendGreetings(Map<GommetteColor, Integer> gomm, Option opts, SlackUser target) {
@@ -90,11 +105,14 @@ public class GommettesScore extends NiCommand {
 
         SlackUser user;
         boolean bestUser = false;
+        boolean topUsers = false;
 
         public GommettesScoreArguments(String[] args) {
             if(args != null && args.length > 0) {
                 if(args[0].toLowerCase().equals("best")) {
                     bestUser = true;
+                } else if(args[0].toLowerCase().equals("top")) {
+                    topUsers = true;
                 } else {
                     user = nicobot.findUserByUserName(args[0]);
                 }

@@ -15,4 +15,6 @@ public interface GommettesRepositoryManager {
     Map<GommetteColor, Integer> getGommettes(SlackUser user);
 
     Map<GommetteColor, Integer> getBestGommettes();
+
+    Map<SlackUser, Integer> getGommettesTop();
 }

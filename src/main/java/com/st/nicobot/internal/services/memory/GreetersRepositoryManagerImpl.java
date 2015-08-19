@@ -2,6 +2,7 @@ package com.st.nicobot.internal.services.memory;
 
 import com.st.nicobot.api.domain.model.GreetersMemory;
 import com.st.nicobot.bot.NicoBot;
+import com.st.nicobot.bot.utils.MapUtils;
 import com.st.nicobot.services.memory.GreetersRepositoryManager;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackUser;
@@ -9,7 +10,9 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Logs on 06-06-15.
@@ -82,7 +85,7 @@ public class GreetersRepositoryManagerImpl extends AbstractRepositoryManager<Gre
             for (Map.Entry<String, Integer> entry : memory.getWeeklyGreeters().get(channel.getId()).entrySet()) {
                 users.put(nicoBot.findUserById(entry.getKey()), entry.getValue());
             }
-            users = entriesSortedByValues(users);
+            users = MapUtils.entriesSortedByValues(users);
         }
         return users;
     }
@@ -95,25 +98,10 @@ public class GreetersRepositoryManagerImpl extends AbstractRepositoryManager<Gre
                 users.put(nicoBot.findUserById(entry.getKey()), entry.getValue());
             }
 
-            users = entriesSortedByValues(users);
+            users = MapUtils.entriesSortedByValues(users);
         }
 
         return users;
-    }
-
-    private <K, V extends Comparable<? super V>> Map<K, V> entriesSortedByValues(Map<K, V> map) {
-        SortedSet<Map.Entry<K, V>> sortedEntries = new TreeSet<>(
-                (e1, e2) -> {
-                    int res = e2.getValue().compareTo(e1.getValue());
-                    return res != 0 ? res : 1;
-                }
-        );
-        sortedEntries.addAll(map.entrySet());
-        LinkedHashMap<K, V> outputMap = new LinkedHashMap<>();
-        for (Map.Entry<K, V> entry : sortedEntries) {
-            outputMap.put(entry.getKey(), entry.getValue());
-        }
-        return outputMap;
     }
 
     public static void main(String[] args) {
@@ -130,7 +118,7 @@ public class GreetersRepositoryManagerImpl extends AbstractRepositoryManager<Gre
         System.out.println("\nWeekly Greeters :");
         for (Map.Entry<String, Map<String, Integer>> entry1 : impl.memory.getWeeklyGreeters().entrySet()) {
             System.out.println("Chan ID : " + entry1.getKey());
-            for (Map.Entry<String, Integer> entry : impl.entriesSortedByValues(entry1.getValue()).entrySet()) {
+            for (Map.Entry<String, Integer> entry : MapUtils.entriesSortedByValues(entry1.getValue()).entrySet()) {
                 System.out.println("User ID : " + entry.getKey() + " , points: " + entry.getValue());
             }
         }
@@ -138,7 +126,7 @@ public class GreetersRepositoryManagerImpl extends AbstractRepositoryManager<Gre
         System.out.println("\nAll Time Greeters :");
         for (Map.Entry<String, Map<String, Integer>> entry1 : impl.memory.getAllTimeGreeters().entrySet()) {
             System.out.println("Chan ID : " + entry1.getKey());
-            for (Map.Entry<String, Integer> entry : impl.entriesSortedByValues(entry1.getValue()).entrySet()) {
+            for (Map.Entry<String, Integer> entry : MapUtils.entriesSortedByValues(entry1.getValue()).entrySet()) {
                 System.out.println("User ID : " + entry.getKey() + " , points: " + entry.getValue());
             }
         }
