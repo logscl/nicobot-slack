@@ -65,7 +65,6 @@ public class NicoBotImpl implements NicoBot {
             logger.info("{} loaded", entry.getValue().getClass().getSimpleName());
         }
 
-
     }
 
     /**

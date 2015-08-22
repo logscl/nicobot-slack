@@ -161,6 +161,8 @@ public class MessagesImpl implements Messages {
 		otherMessages.put("gmTopUsers",		"Classement gommettes (verte = 2pts, rouge = -1pt) : ");
 		otherMessages.put("gmNoBest",		"Personne !");
 
+		otherMessages.put("nothingFound",	"J'ai rien trouvé :(");
+
 		welcomeMessages = new HashMap<>();
 		welcomeMessages.put("newJoin0",		"Yo les gars! Saluez %p !");
 		welcomeMessages.put("newJoin1",		"Coucou %p ! Ca va bien ?");

@@ -173,4 +173,5 @@ pip-log.txt
 *.iml
 
 src/main/resources/slack.properties
+src/main/resources/googleapi.properties
 *.ser

@@ -18,8 +18,8 @@ import java.util.Map;
 public class GommettesScore extends NiCommand {
 
     private static final String COMMAND = "!gommettesScore";
-    private static final String FORMAT = "!gommettesScore [nickName|BEST]";
-    private static final String DESC = "Donne la liste des gommettes de l'utilisateur (BEST pour le meilleur) (ou de soi si pas de paramètre passé)";
+    private static final String FORMAT = "!gommettesScore [nickName|BEST|TOP]";
+    private static final String DESC = "Donne la liste des gommettes de l'utilisateur (BEST pour le meilleur, TOP pour le classement) (ou de soi si pas de paramètre passé)";
 
     @Autowired
     private NicoBot nicobot;
