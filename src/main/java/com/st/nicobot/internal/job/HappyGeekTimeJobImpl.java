@@ -8,6 +8,7 @@ import com.st.nicobot.services.Messages;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,34 +48,35 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
     //@Scheduled(fixedDelay = 11000, initialDelay = 5000)
     public void runJob() {
         greetingService.init();
+        logger.info("Leet starting at "+ DateTime.now().toString());
         for(SlackChannel channel : nicobot.getChannels()) {
             nicobot.sendMessage(channel, null, messages.getOtherMessage("hgt"));
         }
 
         try {
-            logger.info("Bot will now wait for 1 min to read mesages");
+            logger.info("Bot will now wait for 1 min to read mesages at "+ DateTime.now().toString());
             synchronized (this) {
                 this.wait(60000);
             }
-
-            for(SlackChannel chan : nicobot.getChannels()) {
-                Set<SlackUser> users = greetingService.getGreeters().get(chan);
-                String message = buildMessageWithNames(users);
-
-                nicobot.sendMessage(chan, null, message);
-
-                if(users != null && !users.isEmpty()) {
-                    greetersRepositoryManager.addGreeters(chan, users);
-                }
-
-                nicobot.sendMessage(chan, null, buildTopUsers(greetersRepositoryManager.getWeeklyGreeters(chan)));
-            }
-
-            logger.info("Happy Geek Thread finished");
+            logger.info("Happy Geek Thread finished at "+ DateTime.now().toString());
         } catch (InterruptedException e) {
             logger.error("Error in waiting task", e);
         } finally {
             greetingService.finish();
+            logger.info("Leet ended at " + DateTime.now().toString());
+        }
+
+        for(SlackChannel chan : nicobot.getChannels()) {
+            Set<SlackUser> users = greetingService.getGreeters().get(chan);
+            String message = buildMessageWithNames(users);
+
+            nicobot.sendMessage(chan, null, message);
+
+            if(users != null && !users.isEmpty()) {
+                greetersRepositoryManager.addGreeters(chan, users);
+            }
+
+            nicobot.sendMessage(chan, null, buildTopUsers(greetersRepositoryManager.getWeeklyGreeters(chan)));
         }
     }
 
