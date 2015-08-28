@@ -2,13 +2,14 @@ package com.st.nicobot.internal.job;
 
 import com.st.nicobot.bot.NicoBot;
 import com.st.nicobot.job.HappyGeekTimeJob;
-import com.st.nicobot.services.memory.GreetersRepositoryManager;
 import com.st.nicobot.services.LeetGreetingService;
 import com.st.nicobot.services.Messages;
+import com.st.nicobot.services.memory.GreetersRepositoryManager;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.Seconds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,9 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
         try {
             logger.info("Bot will now wait for 1 min to read mesages at "+ DateTime.now().toString());
             synchronized (this) {
-                this.wait(60000);
+                int secondsBeforeTimeOut = Seconds.secondsBetween(DateTime.now(), DateTime.now().withTime(13, 38, 0, 0)).getSeconds();
+                logger.info("exact wait time (seconds): {}",secondsBeforeTimeOut);
+                this.wait(secondsBeforeTimeOut*1000);
             }
             logger.info("Happy Geek Thread finished at "+ DateTime.now().toString());
         } catch (InterruptedException e) {

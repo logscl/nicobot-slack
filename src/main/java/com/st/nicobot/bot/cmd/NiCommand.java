@@ -3,6 +3,8 @@ package com.st.nicobot.bot.cmd;
 import com.st.nicobot.bot.utils.Option;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,6 +33,13 @@ public abstract class NiCommand {
 	 * Retourne le format de la commande
 	 */
 	public abstract String getFormat();
+
+	/**
+	 * Retourne les alias de la commande
+	 */
+	public List<String> getAliases() {
+		return Collections.emptyList();
+	}
 	
 
 	/**
@@ -66,7 +75,7 @@ public abstract class NiCommand {
 	public boolean handle(String command, String[] arguments, Option opts) {
 		boolean handled = false;
 		
-		if (command.equals(getCommandName())){
+		if (command.equals(getCommandName()) || getAliases().contains(command)){
 			this.doCommand(command, arguments, opts);
 			return true;
 		}

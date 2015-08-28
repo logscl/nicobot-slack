@@ -53,6 +53,7 @@ public class CommandsImpl implements Commands {
 		List<NiCommand> cmds = ctx.getBeansOfType(NiCommand.class).entrySet().stream().filter(entry -> !entry.getValue().getClass().isAnnotationPresent(Deprecated.class)).map(Map.Entry::getValue).collect(Collectors.toList());
 
 		commands.add(cmds.get(0).getCommandName());
+		commands.addAll(cmds.get(0).getAliases());
 
 		for (int i = 1; i < cmds.size(); i++) {
 			final NiCommand prev = cmds.get(i-1);
@@ -61,8 +62,9 @@ public class CommandsImpl implements Commands {
 			prev.setNext(curr);
 
 			commands.add(curr.getCommandName());
+			commands.addAll(curr.getAliases());
 		}
-		
+
 		firstLink = cmds.get(0);
 		
 		return firstLink;

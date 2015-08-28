@@ -115,7 +115,7 @@ public class MessagesImpl implements Messages {
 		otherMessages = new HashMap<>();
 		otherMessages.put("onKick", 		"Merci pour le kick, %p...");
 		otherMessages.put("onSelfJoin",		"Yo les gars! Ovation pour %p ! Woup Woup !!");
-		otherMessages.put("onInvite", 		"remercie %p");
+		otherMessages.put("onInvite", "remercie %p");
 		otherMessages.put("onLeave", 		"A plus les nb's !");
 		otherMessages.put("onPart", 		"Casse toi, aller ... j'veux plus jamais t'voir !");
 
@@ -142,7 +142,7 @@ public class MessagesImpl implements Messages {
 		otherMessages.put("allTopHGT",		"Les meilleurs au MONDE: ");
 		otherMessages.put("noOne",			"Personne ! Bande de clinches ! :(");
 
-		otherMessages.put("gmMissingColor",	"Une gommette rouge ou verte hein, on invente pas les couleurs ici !");
+		otherMessages.put("gmWrongArgs",	"La commande c'est !gommette verte|rouge|score|top|best.");
 		otherMessages.put("gmUnknownUser",	"C'est qui %s ? J'connais pas !");
 		otherMessages.put("gmPollRunning",	"Du calme, un sondage à la fois !");
 		otherMessages.put("gmStartNoReason","%s veut mettre une gommette %s à %s comme ça, sans raison. C'est gratuit. \"!oui\" ou \"!non\" ? %d minutes pour voter !");
@@ -162,6 +162,14 @@ public class MessagesImpl implements Messages {
 		otherMessages.put("gmNoBest",		"Personne !");
 
 		otherMessages.put("nothingFound",	"J'ai rien trouvé :(");
+
+		otherMessages.put("weNoDays",		"Non, encore %d jours :(");
+		otherMessages.put("weNoHours",		"C'est pour bientôt ! Encore %d heures !");
+		otherMessages.put("weNoMinutes",	"Ouvre les bières ! C'est dans %d minutes !");
+
+		otherMessages.put("weYesDays",		"C'est le WEEEEKEEEEEND \\o/ !");
+		otherMessages.put("weYesHours",		"Oui \\o/ Pour encore %d heures !");
+		otherMessages.put("weYesMinutes",	"Oui, mais c'est bientôt terminé...");
 
 		welcomeMessages = new HashMap<>();
 		welcomeMessages.put("newJoin0",		"Yo les gars! Saluez %p !");
