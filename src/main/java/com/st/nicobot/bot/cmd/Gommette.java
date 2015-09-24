@@ -33,7 +33,7 @@ public class Gommette extends NiCommand {
     private static Logger logger = LoggerFactory.getLogger(Gommette.class);
 
     private static final String COMMAND = "!gommette";
-    private static final String FORMAT = "!gommette <rouge|verte|score|best|top> <nickname> [\"raison\"]";
+    private static final String FORMAT = "!gommette <rouge|verte|score"/*+"|best"*/+"|top> <nickname> [\"raison\"]";
     private static final String DESC = "Attribue une gommette rouge ou verte à l'utilisateur <nickname>.";
 
     private static final int VOTE_TIMER_MINUTES = 5;
@@ -78,11 +78,6 @@ public class Gommette extends NiCommand {
     @Async
     protected void doCommand(String command, String[] args, Option opts) {
         try {
-            if(isPollAlreadyRunning()) {
-                nicobot.sendMessage(opts.message, messages.getOtherMessage("gmPollRunning"));
-                return;
-            }
-
             GommetteArguments arguments = new GommetteArguments(args);
 
             if(arguments.subCmd != null) {
@@ -91,9 +86,9 @@ public class Gommette extends NiCommand {
                     case RED:
                         doPollingMode(arguments, args, opts);
                         break;
-                    case BEST:
-                        doBestUserMode(arguments, args, opts);
-                        break;
+                    //case BEST:
+                        //doBestUserMode(arguments, args, opts);
+                        //break;
                     case SCORE:
                         doScoreMode(arguments, args, opts);
                         break;
@@ -111,8 +106,14 @@ public class Gommette extends NiCommand {
     }
 
     private void doPollingMode(GommetteArguments arguments, String[] args, Option opts) {
+        if(isPollAlreadyRunning()) {
+            nicobot.sendMessage(opts.message, messages.getOtherMessage("gmPollRunning"));
+            return;
+        }
+
         if(arguments.user == null) {
             nicobot.sendMessage(opts.message, String.format(messages.getOtherMessage("gmUnknownUser"),args[1]));
+            return;
         }
 
         if(StringUtils.isBlank(arguments.reason)) {
