@@ -74,10 +74,10 @@ public class GithubIssue extends NiCommand {
                     .post(ClientResponse.class, issue);
 
             if(response.getClientResponseStatus() == ClientResponse.Status.CREATED) {
-                nicobot.sendMessage(opts.message, "Ok. J'y penserai.");
+                nicobot.sendMessage(opts.message, messages.getOtherMessage("githubAdded"));
             } else {
                 logger.warn("Unable to add new request to GitHub ! Error: "+response.getClientResponseStatus());
-                nicobot.sendMessage(opts.message, "Ca marche pas maintenant, essaye plus tard.");
+                nicobot.sendMessage(opts.message, messages.getOtherMessage("githubFailure"));
             }
 
 

@@ -171,6 +171,9 @@ public class MessagesImpl implements Messages {
 		otherMessages.put("weYesHours",		"Oui \\o/ Pour encore %d heures !");
 		otherMessages.put("weYesMinutes",	"Oui, mais c'est bientôt terminé...");
 
+		otherMessages.put("githubAdded",	"Ok. J'y penserai.");
+		otherMessages.put("githubFailure",	"Ca marche pas maintenant, essaye plus tard.");
+
 		welcomeMessages = new HashMap<>();
 		welcomeMessages.put("newJoin0",		"Yo les gars! Saluez %p !");
 		welcomeMessages.put("newJoin1",		"Coucou %p ! Ca va bien ?");
