@@ -14,7 +14,10 @@ public enum NicobotProperty {
 	SEARCH_API_KEY("search.api.key"),
 
 	YOUTUBE_QUERY_URI("youtube.query.uri"),
-	YOUTUBE_VIDEO_URI("youtube.video.uri");
+	YOUTUBE_VIDEO_URI("youtube.video.uri"),
+
+	GITHUB_ISSUE_ADD_URL("github.issue.add.url"),
+	GITHUB_API_KEY("github.api.key");
 
 	private String key;
 	private String defaultValue;
