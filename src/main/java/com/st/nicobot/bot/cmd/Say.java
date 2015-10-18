@@ -42,7 +42,7 @@ public class Say extends NiCommand {
 			}
 		}
 		catch (IllegalArgumentException ex) {
-			nicobot.sendMessage(opts.message, "Malformed command, format : " + getFormat());
+			nicobot.sendPrivateMessage(opts.message, "Malformed command, format : " + getFormat());
 		}
 	}
 	

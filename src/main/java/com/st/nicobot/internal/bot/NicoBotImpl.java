@@ -123,6 +123,17 @@ public class NicoBotImpl implements NicoBot {
     }
 
     @Override
+    public SlackMessageHandle sendPrivateMessage(SlackMessagePosted originator, String message) {
+        for(SlackChannel channel : session.getChannels()) {
+            if(channel.isDirect() && channel.getMembers().contains(originator.getSender())) {
+                return session.sendMessage(channel, message, null);
+            }
+        }
+        logger.warn("Direct channel with user {} not found !", originator.getSender());
+        return null;
+    }
+
+    @Override
     public void connect() throws IOException {
         session.connect();
         self = session.sessionPersona();

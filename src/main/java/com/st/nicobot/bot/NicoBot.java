@@ -25,6 +25,8 @@ public interface NicoBot {
 
     SlackMessageHandle sendMessage(SlackMessagePosted originator, String message, Emoji emoji, boolean placeReactionOnBotMsg);
 
+    SlackMessageHandle sendPrivateMessage(SlackMessagePosted originator, String message);
+
     boolean isSelfMessage(SlackMessagePosted message);
 
     String getBotName();

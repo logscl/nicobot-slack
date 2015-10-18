@@ -64,10 +64,10 @@ public class Help extends NiCommand {
 	private void sendCommandList(NicoBot nicobot, Option opts) {
 		NiCommand cmd = commandsChain.getFirstLink();
 		
-		nicobot.sendMessage(opts.message, messages.getOtherMessage("helpHeader"));
+		nicobot.sendPrivateMessage(opts.message, messages.getOtherMessage("helpHeader"));
 		
 		while (cmd != null) {
-			nicobot.sendMessage(opts.message, "    - " + cmd.getCommandName() + " : " + cmd.getDescription());
+			nicobot.sendPrivateMessage(opts.message, "    - " + cmd.getCommandName() + " : " + cmd.getDescription());
 			cmd = cmd.nextCommand;
 		}
 	}
@@ -86,10 +86,10 @@ public class Help extends NiCommand {
 		}
 		
 		if (cmd != null) {
-			nicobot.sendMessage(opts.message, cmd.getDescription());
-			nicobot.sendMessage(opts.message, cmd.getFormat());
+			nicobot.sendPrivateMessage(opts.message, cmd.getDescription());
+			nicobot.sendPrivateMessage(opts.message, cmd.getFormat());
 		} else {
-			nicobot.sendMessage(opts.message, messages.getOtherMessage("helpNotFound"));
+			nicobot.sendPrivateMessage(opts.message, messages.getOtherMessage("helpNotFound"));
 		}
 	}
 	
