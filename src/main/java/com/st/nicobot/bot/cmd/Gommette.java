@@ -127,6 +127,7 @@ public class Gommette extends NiCommand {
             public void run() {
                 try {
                     listener = new GommetteEventListener(nicobot, messages, arguments.user);
+                    listener.addInitiatorVote(opts.message.getSender());
                     nicobot.addMessagePostedListener(listener);
                     synchronized (this) {
                         int i = 0;
@@ -307,6 +308,10 @@ public class Gommette extends NiCommand {
             } else {
                 nicobot.sendMessage(event, String.format(messages.getOtherMessage("gmVoteOnce"), event.getSender().getUserName()));
             }
+        }
+
+        public void addInitiatorVote(SlackUser initiator) {
+            this.votes.put(initiator, GommetteVoteType.YES);
         }
 
         public String getVoteYesStr() {
