@@ -3,6 +3,7 @@ package com.st.nicobot.bot.cmd;
 import com.st.nicobot.bot.utils.Option;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -88,28 +89,36 @@ public abstract class NiCommand {
 	}
 	
 	/** Regex pour trouver une chaine de caractere encadrée par " " */
-	private static final Pattern REGEX_FIND_STRING = Pattern.compile("\"(.)*\"");
+	private static final Pattern REGEX_FIND_STRING = Pattern.compile("\"([^\"]*)\"");
 	private static final String REPlACE_VALUE = "inputString";
 	
 	public static String[] getArgs(String arguments) {
 		Matcher matcher = REGEX_FIND_STRING.matcher(arguments);
 		
-		String inputString = null;
-		
-		if (matcher.find()) {
-			inputString = matcher.group();
-			arguments = matcher.replaceFirst(REPlACE_VALUE);
+		List<String> inputStrings = new ArrayList<>();
+		int j = 0, k = 0;
+		if(matcher.find()) {
+			inputStrings.add(matcher.group());
+			j++;
+			while (matcher.find()) {
+				inputStrings.add(matcher.group());
+				j++;
+			}
+			arguments = matcher.replaceAll(" "+REPlACE_VALUE);
 		}
 		
-		String[] explodedArgs = arguments.split(" ");
-		boolean needToContinue = true;
-		
-		for (int i = 0; i < explodedArgs.length && needToContinue; i++) {
+		String[] explodedArgs = arguments.trim().split(" +");
+		boolean continueProcess = true;
+
+		for (int i = 0; i < explodedArgs.length && continueProcess; i++) {
 			if (explodedArgs[i].equals(REPlACE_VALUE)) {
 				
 				// on vire le " en debut et en fin de chaine
-				explodedArgs[i] = StringUtils.substring(inputString, 1, -1);
-				needToContinue = false;
+				explodedArgs[i] = StringUtils.substring(inputStrings.get(k), 1, -1);
+				k++;
+				if (j == k) {
+					continueProcess = false;
+				}
 			}
 		}
 		
