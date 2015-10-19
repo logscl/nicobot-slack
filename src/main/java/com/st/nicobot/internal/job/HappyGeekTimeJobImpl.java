@@ -50,9 +50,7 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
     public void runJob() {
         greetingService.init();
         logger.info("Leet starting at "+ DateTime.now().toString());
-        for(SlackChannel channel : nicobot.getChannels()) {
-            nicobot.sendMessage(channel, null, messages.getOtherMessage("hgt"));
-        }
+        nicobot.getChannels().stream().filter(channel -> !channel.isDirect()).forEach(channel -> nicobot.sendMessage(channel, null, messages.getOtherMessage("hgt")));
 
         try {
             logger.info("Bot will now wait for 1 min to read mesages at "+ DateTime.now().toString());
