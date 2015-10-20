@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by Logs on 09-05-15.
@@ -151,7 +152,7 @@ public class NicoBotImpl implements NicoBot {
 
     @Override
     public Collection<SlackChannel> getChannels() {
-        return session.getChannels();
+        return session.getChannels().stream().filter(chan -> !chan.isDirect()).collect(Collectors.toList());
     }
 
     @Override
