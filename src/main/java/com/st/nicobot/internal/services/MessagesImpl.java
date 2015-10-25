@@ -80,7 +80,7 @@ public class MessagesImpl implements Messages {
 		reactions.add(new Reaction(".*gamin.*",						"Hein fieu"));
 		reactions.add(new Reaction(".*hey.*",						"Hey Hey !"));
 		reactions.add(new Reaction(".*grand.*",						"CMB !"));
-		reactions.add(new Reaction(".*long.*",						"CMB !"));
+		reactions.add(new Reaction(".*long .*",						"CMB !"));
 		reactions.add(new Reaction(".*petit.*",						"CMB ! ... euh ... merde."));
 		reactions.add(new Reaction(".*court.*",						"CTB ! Hahahaha... J'me marre."));
 		reactions.add(new Reaction(".*cham.*",						"Y'a de ces CHA-MELLES ici ! :D"));
@@ -171,7 +171,7 @@ public class MessagesImpl implements Messages {
 		otherMessages.put("weYesHours",		"Oui \\o/ Pour encore %d heures !");
 		otherMessages.put("weYesMinutes",	"Oui, mais c'est bientôt terminé...");
 
-		otherMessages.put("githubAdded",	"Ok. J'y penserai.");
+		otherMessages.put("githubAdded",	"Ok. J'y penserai : %s");
 		otherMessages.put("githubFailure",	"Ca marche pas maintenant, essaye plus tard.");
 
 		welcomeMessages = new HashMap<>();

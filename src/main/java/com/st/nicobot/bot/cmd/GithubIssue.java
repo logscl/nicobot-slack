@@ -8,6 +8,7 @@ import com.st.nicobot.services.PropertiesService;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
@@ -74,7 +75,7 @@ public class GithubIssue extends NiCommand {
                     .post(ClientResponse.class, issue);
 
             if(response.getClientResponseStatus() == ClientResponse.Status.CREATED) {
-                nicobot.sendMessage(opts.message, messages.getOtherMessage("githubAdded"));
+                nicobot.sendMessage(opts.message, String.format(messages.getOtherMessage("githubAdded"), getUrlWebFormat(response.getLocation().toString())));
             } else {
                 logger.warn("Unable to add new request to GitHub ! Error: "+response.getClientResponseStatus());
                 nicobot.sendMessage(opts.message, messages.getOtherMessage("githubFailure"));
@@ -87,6 +88,10 @@ public class GithubIssue extends NiCommand {
         } catch (JSONException ex) {
             logger.error("Unable to add issue to github !",ex);
         }
+    }
+
+    private String getUrlWebFormat(String apiUrl) {
+        return apiUrl.replace("api.", "").replace("repos/", "");
     }
 
     private String buildIssueStr(GithubArguments arguments, Option opts) throws JSONException {
@@ -108,8 +113,11 @@ public class GithubIssue extends NiCommand {
         public GithubArguments(String[] args) throws IllegalArgumentException {
             if(args != null && args.length > 0) {
                 issueTitle = args[0];
-                if(args.length> 1) {
+                if(args.length == 2) {
                     issueBody = args[1];
+                } else {
+                    issueBody = null;
+                    issueTitle = StringUtils.join(args, " ");
                 }
             } else {
                 throw new IllegalArgumentException("Too few arguments");
