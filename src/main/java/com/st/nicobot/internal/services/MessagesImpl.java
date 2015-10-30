@@ -149,7 +149,7 @@ public class MessagesImpl implements Messages {
 		otherMessages.put("gmCloseSoon",	"Plus personne ? On se magne là !");
 		otherMessages.put("gmPollClosed",	"Tant pis, je ferme !");
 		otherMessages.put("gmStartReason",	"%s veut mettre une gommette %s à %s : %s. \"!oui\" ou \"!non\" ? %d minutes pour voter !");
-		otherMessages.put("gmTrollVote",	"Désolé %s, ton vote ne compte pas. Disctute pas !");
+		otherMessages.put("gmTrollVote",	"Désolé %s, ton vote ne compte pas. Discute pas !");
 		otherMessages.put("gmNoVote",		"Toi tu peux pas voter...");
 		otherMessages.put("gmInsufficient",	"Tout le monde s'en fout ? J'peux pas décider avec si peu de participants...");
 		otherMessages.put("gmVoteOnce",		"On peut voter qu'une fois %s.");
