@@ -154,7 +154,7 @@ public class MessagesImpl implements Messages {
 		otherMessages.put("gmInsufficient",	"Tout le monde s'en fout ? J'peux pas décider avec si peu de participants...");
 		otherMessages.put("gmVoteOnce",		"On peut voter qu'une fois %s.");
 		otherMessages.put("gmVoteValid",	"Validé ! À %d contre %d, %s a sa gommette %s !");
-		otherMessages.put("gmVoteInvalid",	"On est pas d'accord avec toi %s... pas de gommette pour %s !");
+		otherMessages.put("gmVoteInvalid",	"On n'est pas d'accord avec toi %s... pas de gommette pour %s !");
 		otherMessages.put("gmVoteEquality",	"J'sais pas... alors on va dire euh... %s. Voilà.");
 		otherMessages.put("gmScore",		"%s a %d gommette%s verte%s et %d gommette%s rouge%s.");
 		otherMessages.put("gmScoreEmpty",	"%s n'a pas encore de gommettes... :(");
