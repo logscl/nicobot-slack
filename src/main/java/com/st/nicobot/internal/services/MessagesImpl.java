@@ -64,10 +64,13 @@ public class MessagesImpl implements Messages {
 		reactions.add(new Reaction("^psp$", 						"Enkuler de rire !"));
 		reactions.add(new Reaction("^pic$", 						"...or it didn't happen"));
 		reactions.add(new Reaction("^secret$", 						"J'ai un terrible secret aussi..."));
+		reactions.add(new Reaction("^pierre$", 						true, 0, "Papier !"));
+		reactions.add(new Reaction("^papier|feuile$", 				true, 0, "Ciseaux !"));
+		reactions.add(new Reaction("^ciseaux$", 					true, 0, "Pierre !"));
 
 
-		
-		
+
+
 		// strict calls
 		reactions.add(new Reaction("^!epicsong$",					"https://www.youtube.com/watch?v=MPjy55Y6hWU&feature=youtu.be&t=2m17s"));
 		reactions.add(new Reaction("^!wind$",						"https://www.youtube.com/watch?v=d-_q-md80VQ"));
