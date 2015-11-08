@@ -31,7 +31,7 @@ public class SaveMessage extends AbstractMessageEvent {
 
 	@Override
 	public void onEvent(SlackMessagePosted message, SlackSession session) {
-		if(message.getChannel().getName().equals("dev")) {
+		if(message.getChannel().getName().equals("general")) {
 			onMessage(message);
 		}
 	}
