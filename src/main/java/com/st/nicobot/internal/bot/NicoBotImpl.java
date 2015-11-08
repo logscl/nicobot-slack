@@ -9,8 +9,9 @@ import com.st.nicobot.services.BehaviorsService;
 import com.st.nicobot.services.PropertiesService;
 import com.ullink.slack.simpleslackapi.*;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
+import com.ullink.slack.simpleslackapi.impl.SlackChatConfiguration;
 import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
-import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
+import com.ullink.slack.simpleslackapi.listeners.*;
 import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,9 +42,6 @@ public class NicoBotImpl implements NicoBot {
 
     @Autowired
     private BehaviorsService behaviors;
-
-    //@Autowired
-    //private APIMessageService api;
 
     private SlackSession session;
 
@@ -141,6 +139,116 @@ public class NicoBotImpl implements NicoBot {
     }
 
     @Override
+    public void disconnect() throws IOException {
+        session.disconnect();
+    }
+
+    @Override
+    public SlackMessageHandle deleteMessage(String s, SlackChannel slackChannel) {
+        return null;
+    }
+
+    @Override
+    public SlackMessageHandle sendMessage(SlackChannel slackChannel, String s, SlackAttachment slackAttachment, SlackChatConfiguration slackChatConfiguration) {
+        throw new UnsupportedOperationException("Please use the other methods !");
+    }
+
+    @Override
+    public SlackMessageHandle sendMessage(SlackChannel slackChannel, String s, SlackAttachment slackAttachment) {
+        throw new UnsupportedOperationException("Please use the other methods !");
+    }
+
+    @Override
+    public SlackMessageHandle updateMessage(String s, SlackChannel slackChannel, String s1) {
+        return null;
+    }
+
+    @Override
+    public SlackMessageHandle sendMessageOverWebSocket(SlackChannel slackChannel, String s, SlackAttachment slackAttachment) {
+        return null;
+    }
+
+    @Override
+    public SlackMessageHandle addReactionToMessage(SlackChannel slackChannel, String s, String s1) {
+        return null;
+    }
+
+    @Override
+    public SlackMessageHandle joinChannel(String s) {
+        return null;
+    }
+
+    @Override
+    public SlackMessageHandle leaveChannel(SlackChannel slackChannel) {
+        return null;
+    }
+
+    @Override
+    public SlackPersona.SlackPresence getPresence(SlackPersona slackPersona) {
+        return session.getPresence(slackPersona);
+    }
+
+    @Override
+    public void addchannelArchivedListener(SlackChannelArchivedListener slackChannelArchivedListener) {
+
+    }
+
+    @Override
+    public void removeChannelArchivedListener(SlackChannelArchivedListener slackChannelArchivedListener) {
+
+    }
+
+    @Override
+    public void addchannelCreatedListener(SlackChannelCreatedListener slackChannelCreatedListener) {
+
+    }
+
+    @Override
+    public void removeChannelCreatedListener(SlackChannelCreatedListener slackChannelCreatedListener) {
+
+    }
+
+    @Override
+    public void addchannelDeletedListener(SlackChannelDeletedListener slackChannelDeletedListener) {
+
+    }
+
+    @Override
+    public void removeChannelDeletedListener(SlackChannelDeletedListener slackChannelDeletedListener) {
+
+    }
+
+    @Override
+    public void addChannelRenamedListener(SlackChannelRenamedListener slackChannelRenamedListener) {
+
+    }
+
+    @Override
+    public void removeChannelRenamedListener(SlackChannelRenamedListener slackChannelRenamedListener) {
+
+    }
+
+    @Override
+    public void addChannelUnarchivedListener(SlackChannelUnarchivedListener slackChannelUnarchivedListener) {
+
+    }
+
+    @Override
+    public void removeChannelUnarchivedListener(SlackChannelUnarchivedListener slackChannelUnarchivedListener) {
+
+    }
+
+    @Override
+    public void addMessageDeletedListener(SlackMessageDeletedListener slackMessageDeletedListener) {
+        session.addMessageDeletedListener(slackMessageDeletedListener);
+    }
+
+    @Override
+    public void removeMessageDeletedListener(SlackMessageDeletedListener slackMessageDeletedListener) {
+        session.removeMessageDeletedListener(slackMessageDeletedListener);
+    }
+
+    @Override
     public boolean isSelfMessage(SlackMessagePosted message) {
         return message.getSender().getId().equals(self.getId());
     }
@@ -156,13 +264,43 @@ public class NicoBotImpl implements NicoBot {
     }
 
     @Override
+    public Collection<SlackUser> getUsers() {
+        return session.getUsers();
+    }
+
+    @Override
+    public Collection<SlackBot> getBots() {
+        return session.getBots();
+    }
+
+    @Override
     public SlackChannel findChannelByName(String channelName) {
         return session.findChannelByName(channelName);
     }
 
     @Override
+    public SlackChannel findChannelById(String s) {
+        return session.findChannelById(s);
+    }
+
+    @Override
     public SlackUser findUserByUserName(String userName) {
         return session.findUserByUserName(userName);
+    }
+
+    @Override
+    public SlackUser findUserByEmail(String s) {
+        return session.findUserByEmail(s);
+    }
+
+    @Override
+    public SlackPersona sessionPersona() {
+        return session.sessionPersona();
+    }
+
+    @Override
+    public SlackBot findBotById(String s) {
+        return findBotById(s);
     }
 
     @Override
@@ -178,5 +316,25 @@ public class NicoBotImpl implements NicoBot {
     @Override
     public void removeMessagePostedListener(SlackMessagePostedListener event) {
         session.removeMessagePostedListener(event);
+    }
+
+    @Override
+    public void addMessageUpdatedListener(SlackMessageUpdatedListener slackMessageUpdatedListener) {
+        session.addMessageUpdatedListener(slackMessageUpdatedListener);
+    }
+
+    @Override
+    public void removeMessageUpdatedListener(SlackMessageUpdatedListener slackMessageUpdatedListener) {
+        session.removeMessageUpdatedListener(slackMessageUpdatedListener);
+    }
+
+    @Override
+    public void addGroupJoinedListener(SlackGroupJoinedListener slackGroupJoinedListener) {
+        session.addGroupJoinedListener(slackGroupJoinedListener);
+    }
+
+    @Override
+    public void removeGroupJoinedListener(SlackGroupJoinedListener slackGroupJoinedListener) {
+        session.removeGroupJoinedListener(slackGroupJoinedListener);
     }
 }

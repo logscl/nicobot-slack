@@ -3,17 +3,16 @@ package com.st.nicobot.bot;
 import com.st.nicobot.bot.utils.Emoji;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackMessageHandle;
+import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
-import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
 
 import java.io.IOException;
-import java.util.Collection;
 
 /**
  * Created by Logs on 09-05-15.
  */
-public interface NicoBot {
+public interface NicoBot extends SlackSession {
 
     void connect() throws IOException;
 
@@ -31,15 +30,4 @@ public interface NicoBot {
 
     String getBotName();
 
-    Collection<SlackChannel> getChannels();
-
-    SlackChannel findChannelByName(String channelName);
-
-    SlackUser findUserByUserName(String userName);
-
-    SlackUser findUserById(String userId);
-
-    void addMessagePostedListener(SlackMessagePostedListener event);
-
-    void removeMessagePostedListener(SlackMessagePostedListener event);
 }
