@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import java.util.Map;
 
 /**
  * Created by Logs on 22-08-15.
@@ -34,20 +35,22 @@ public abstract class AbstractSearch extends NiCommand {
     @Autowired
     private Messages messages;
 
-    protected abstract boolean imageSearch();
+    protected abstract Map<String, String> getSpecificQueryArguments();
 
 
     @Override
     protected void doCommand(String command, String[] args, Option opts) {
-        String searchType = "image"; // fixed, for now
         String searchUri = properties.get(NicobotProperty.SEARCH_URI);
         String searchArguments = StringUtils.join(args, "+");
 
         MultivaluedMap<String,String> queryParams = new MultivaluedMapImpl();
 
-        if(imageSearch()) {
-            queryParams.putSingle("searchType", searchType);
+        if(getSpecificQueryArguments() != null && getSpecificQueryArguments().size() > 0) {
+            for(Map.Entry<String,String> entry : getSpecificQueryArguments().entrySet()) {
+                queryParams.putSingle(entry.getKey(), entry.getValue());
+            }
         }
+
         queryParams.putSingle("cx", properties.get(NicobotProperty.SEARCH_CX_KEY));
         queryParams.putSingle("key", properties.get(NicobotProperty.SEARCH_API_KEY));
         queryParams.putSingle("q", searchArguments);

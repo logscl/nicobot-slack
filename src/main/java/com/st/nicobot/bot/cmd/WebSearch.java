@@ -2,6 +2,8 @@ package com.st.nicobot.bot.cmd;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 /**
  * Created by Logs on 22-08-15.
  */
@@ -28,7 +30,7 @@ public class WebSearch extends AbstractSearch {
     }
 
     @Override
-    protected boolean imageSearch() {
-        return false;
+    protected Map<String, String> getSpecificQueryArguments() {
+        return null;
     }
 }

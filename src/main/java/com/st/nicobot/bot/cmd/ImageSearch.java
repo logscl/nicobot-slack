@@ -2,6 +2,9 @@ package com.st.nicobot.bot.cmd;
 
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Logs on 22-08-15.
  */
@@ -28,7 +31,9 @@ public class ImageSearch extends AbstractSearch {
     }
 
     @Override
-    protected boolean imageSearch() {
-        return true;
+    protected Map<String, String> getSpecificQueryArguments() {
+        Map<String,String> map = new HashMap<>();
+        map.put("searchType","image");
+        return map;
     }
 }
