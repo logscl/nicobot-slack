@@ -12,7 +12,7 @@ public class WebSearch extends AbstractSearch {
 
     private static final String COMMAND = "!search";
     private static final String FORMAT = "!search query";
-    private static final String DESC = "Recherche un lien sur les internets et retourne le premier résultat";
+    private static final String DESC = "Recherche un lien sur les internets et retourne le premier résultat. !search next pour le résultat suivant";
 
     @Override
     public String getCommandName() {

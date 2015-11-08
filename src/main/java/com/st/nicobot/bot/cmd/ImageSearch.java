@@ -13,7 +13,7 @@ public class ImageSearch extends AbstractSearch {
 
     private static final String COMMAND = "!img";
     private static final String FORMAT = "!img query";
-    private static final String DESC = "Recherche une image sur les internets et retourne le premier résultat";
+    private static final String DESC = "Recherche une image sur les internets et retourne le premier résultat. !img next pour le résultat suivant";
 
     @Override
     public String getCommandName() {

@@ -10,6 +10,7 @@ import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +36,9 @@ public abstract class AbstractSearch extends NiCommand {
     @Autowired
     private Messages messages;
 
+    private JSONObject lastSearchResult = null;
+    private int searchIndex = 0;
+
     protected abstract Map<String, String> getSpecificQueryArguments();
 
 
@@ -43,10 +47,18 @@ public abstract class AbstractSearch extends NiCommand {
         String searchUri = properties.get(NicobotProperty.SEARCH_URI);
         String searchArguments = StringUtils.join(args, "+");
 
-        MultivaluedMap<String,String> queryParams = new MultivaluedMapImpl();
+        if ("next".equals(searchArguments) && lastSearchResult != null) {
+            searchIndex++;
+            searchAndSendLink(opts);
+            return;
+        } else {
+            searchIndex=0;
+        }
 
-        if(getSpecificQueryArguments() != null && getSpecificQueryArguments().size() > 0) {
-            for(Map.Entry<String,String> entry : getSpecificQueryArguments().entrySet()) {
+        MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
+
+        if (getSpecificQueryArguments() != null && getSpecificQueryArguments().size() > 0) {
+            for (Map.Entry<String, String> entry : getSpecificQueryArguments().entrySet()) {
                 queryParams.putSingle(entry.getKey(), entry.getValue());
             }
         }
@@ -63,12 +75,12 @@ public abstract class AbstractSearch extends NiCommand {
             JSONObject response = resource.type(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
 
             if(response.has("items")) {
-                String foundLink = response.getJSONArray("items").getJSONObject(0).getString("link");
-
-                nicobot.sendMessage(opts.message, foundLink);
+                lastSearchResult = response;
+                searchAndSendLink(opts);
             } else {
                 logger.info("Query [{}] has no results",searchArguments);
                 nicobot.sendMessage(opts.message, messages.getOtherMessage("nothingFound"));
+                lastSearchResult = null;
             }
         } catch (UniformInterfaceException e) {
             logger.error(e.getMessage(),e);
@@ -77,6 +89,15 @@ public abstract class AbstractSearch extends NiCommand {
             logger.error(e.getMessage(),e);
         }
 
+    }
+
+    private void searchAndSendLink(Option opts) {
+        try {
+            String foundLink = lastSearchResult.getJSONArray("items").getJSONObject(searchIndex).getString("link");
+            nicobot.sendMessage(opts.message, foundLink);
+        } catch (JSONException e) {
+            logger.error(e.getMessage(),e);
+        }
     }
 
 
