@@ -31,16 +31,16 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class WeekEndTest {
 
-    private static DateTime MONDAY_15_00 = new DateTime(2015,8,24,15,00);
-    private static DateTime THURSDAY_15_00 = new DateTime(2015,8,27,15,00);
+    private static DateTime MONDAY_15_00 = new DateTime(2015,8,24,15,0);
+    private static DateTime THURSDAY_15_00 = new DateTime(2015,8,27,15,0);
     private static DateTime FRIDAY_16_30 = new DateTime(2015,8,28,16,30);
-    private static DateTime FRIDAY_20_00 = new DateTime(2015,8,28,20,00);
-    private static DateTime SATURDAY_12_00 = new DateTime(2015,8,29,12,00);
-    private static DateTime SUNDAY_23_00 = new DateTime(2015,8,30,23,00);
-    private static DateTime MONDAY_03_00 = new DateTime(2015,8,31,3,00);
+    private static DateTime FRIDAY_20_00 = new DateTime(2015,8,28,20,0);
+    private static DateTime SATURDAY_12_00 = new DateTime(2015,8,29,12,0);
+    private static DateTime SUNDAY_23_00 = new DateTime(2015,8,30,23,0);
+    private static DateTime MONDAY_03_00 = new DateTime(2015,8,31,3,0);
 
-    private static DateTime EXPECTED_WEEKEND_START = new DateTime(2015,8,28,17,00);
-    private static DateTime EXPECTED_WEEKEND_END = new DateTime(2015,8,31,9,00);
+    private static DateTime EXPECTED_WEEKEND_START = new DateTime(2015,8,28,17,0);
+    private static DateTime EXPECTED_WEEKEND_END = new DateTime(2015,8,31,9,0);
 
     @InjectMocks
     private WeekEnd weekEnd = new WeekEnd();

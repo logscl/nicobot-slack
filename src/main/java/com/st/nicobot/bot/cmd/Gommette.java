@@ -19,10 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Logs on 17-08-15.
@@ -71,7 +68,7 @@ public class Gommette extends NiCommand {
 
     @Override
     public List<String> getAliases() {
-        return Arrays.asList("!gom");
+        return Collections.singletonList("!gom");
     }
 
     @Override

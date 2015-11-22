@@ -300,7 +300,7 @@ public class NicoBotImpl implements NicoBot {
 
     @Override
     public SlackBot findBotById(String s) {
-        return findBotById(s);
+        return session.findBotById(s);
     }
 
     @Override
