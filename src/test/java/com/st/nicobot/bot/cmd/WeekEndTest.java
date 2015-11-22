@@ -105,7 +105,9 @@ public class WeekEndTest {
     public void WeekEnd_Test_THURSDAY_15_00() {
         DateTimeUtils.setCurrentMillisFixed(THURSDAY_15_00.getMillis());
 
-        String expectedMsg = messages.getMessage("weNoHours", Hours.hoursBetween(THURSDAY_15_00, EXPECTED_WEEKEND_START).getHours());
+        int hours = Hours.hoursBetween(THURSDAY_15_00, EXPECTED_WEEKEND_START).getHours();
+
+        String expectedMsg = messages.getMessage("weNoHours", hours, hours > 1 ? "s" : "");
 
         checkMethod(expectedMsg);
     }
@@ -114,7 +116,9 @@ public class WeekEndTest {
     public void WeekEnd_Test_FRIDAY_16_30() {
         DateTimeUtils.setCurrentMillisFixed(FRIDAY_16_30.getMillis());
 
-        String expectedMsg = messages.getMessage("weNoMinutes", Minutes.minutesBetween(FRIDAY_16_30, EXPECTED_WEEKEND_START).getMinutes());
+        int minutes = Minutes.minutesBetween(FRIDAY_16_30, EXPECTED_WEEKEND_START).getMinutes();
+
+        String expectedMsg = messages.getMessage("weNoMinutes", minutes, minutes > 1 ? "s" : "");
 
         checkMethod(expectedMsg);
     }
