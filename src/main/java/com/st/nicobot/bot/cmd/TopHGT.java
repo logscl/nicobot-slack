@@ -50,14 +50,14 @@ public class TopHGT extends NiCommand {
     }
 
     private String buildTopUsers(Map<SlackUser, Integer> users) {
-        StringBuilder message = new StringBuilder(messages.getOtherMessage("allTopHGT"));
+        StringBuilder message = new StringBuilder(messages.getMessage("allTopHGT"));
         if(users != null && !users.isEmpty()) {
             for (Map.Entry<SlackUser, Integer> user : users.entrySet()) {
                 message.append(user.getKey().getUserName()).append(" (").append(user.getValue()).append("), ");
             }
             message.delete(message.lastIndexOf(","), message.length());
         } else {
-            message.append(messages.getOtherMessage("noOne"));
+            message.append(messages.getMessage("noOne"));
         }
         return message.toString();
     }

@@ -97,7 +97,7 @@ public class Gommette extends NiCommand {
                         break;
                 }
             } else {
-                nicobot.sendMessage(opts.message,messages.getOtherMessage("gmWrongArgs"));
+                nicobot.sendMessage(opts.message,messages.getMessage("gmWrongArgs"));
             }
 
         } catch (IllegalArgumentException e) {
@@ -107,19 +107,19 @@ public class Gommette extends NiCommand {
 
     private void doPollingMode(GommetteArguments arguments, String[] args, Option opts) {
         if(isPollAlreadyRunning()) {
-            nicobot.sendMessage(opts.message, messages.getOtherMessage("gmPollRunning"));
+            nicobot.sendMessage(opts.message, messages.getMessage("gmPollRunning"));
             return;
         }
 
         if(arguments.user == null) {
-            nicobot.sendMessage(opts.message, String.format(messages.getOtherMessage("gmUnknownUser"),args[1]));
+            nicobot.sendMessage(opts.message, messages.getMessage("gmUnknownUser",args[1]));
             return;
         }
 
         if(StringUtils.isBlank(arguments.reason)) {
-            nicobot.sendMessage(opts.message, String.format(messages.getOtherMessage("gmStartNoReason"),opts.message.getSender().getUserName(), arguments.gommette.getGommetteName(), arguments.user.getUserName(), VOTE_TIMER_MINUTES));
+            nicobot.sendMessage(opts.message, messages.getMessage("gmStartNoReason",opts.message.getSender().getUserName(), arguments.gommette.getGommetteName(), arguments.user.getUserName(), VOTE_TIMER_MINUTES));
         } else {
-            nicobot.sendMessage(opts.message, String.format(messages.getOtherMessage("gmStartReason"),opts.message.getSender().getUserName(), arguments.gommette.getGommetteName(), arguments.user.getUserName(), arguments.reason, VOTE_TIMER_MINUTES));
+            nicobot.sendMessage(opts.message, messages.getMessage("gmStartReason",opts.message.getSender().getUserName(), arguments.gommette.getGommetteName(), arguments.user.getUserName(), arguments.reason, VOTE_TIMER_MINUTES));
         }
 
         new Thread() {
@@ -142,9 +142,9 @@ public class Gommette extends NiCommand {
                                 }
 
                                 if(warns == 2) {
-                                    nicobot.sendMessage(opts.message, messages.getOtherMessage("gmCloseSoon"));
+                                    nicobot.sendMessage(opts.message, messages.getMessage("gmCloseSoon"));
                                 } else if(warns == 3) {
-                                    nicobot.sendMessage(opts.message, messages.getOtherMessage("gmPollClosed"));
+                                    nicobot.sendMessage(opts.message, messages.getMessage("gmPollClosed"));
                                     break;
                                 }
                             }
@@ -159,19 +159,19 @@ public class Gommette extends NiCommand {
                     if(listener.getTotalVotes() >= MIN_VOTES_TRIGGER) {
                         if(listener.getVoteYesCount() > listener.getVoteNoCount()) {
                             Emoji emoji = arguments.gommette == GommetteColor.GREEN ? Emoji.GOMMETTE : Emoji.GOMMETTE_ROUGE;
-                            nicobot.sendMessage(opts.message, String.format(messages.getOtherMessage("gmVoteValid"), listener.getVoteYesCount(), listener.getVoteNoCount(), arguments.user.getUserName(), arguments.gommette.getGommetteName()), emoji, true);
+                            nicobot.sendMessage(opts.message, messages.getMessage("gmVoteValid", listener.getVoteYesCount(), listener.getVoteNoCount(), arguments.user.getUserName(), arguments.gommette.getGommetteName()), emoji, true);
                             repositoryManager.addGommette(arguments.user, arguments.gommette);
                         } else if(listener.getVoteYesCount() == listener.getVoteNoCount()) {
                             boolean valid = RandomUtils.nextInt(0,2) == 1;
-                            nicobot.sendMessage(opts.message, String.format(messages.getOtherMessage("gmVoteEquality"), valid ? "oui": "non"));
+                            nicobot.sendMessage(opts.message,messages.getMessage("gmVoteEquality", valid ? "oui": "non"));
                             if(valid) {
                                 repositoryManager.addGommette(arguments.user, arguments.gommette);
                             }
                         } else {
-                            nicobot.sendMessage(opts.message, String.format(messages.getOtherMessage("gmVoteInvalid"), opts.message.getSender().getUserName(), arguments.user.getUserName()));
+                            nicobot.sendMessage(opts.message, messages.getMessage("gmVoteInvalid", opts.message.getSender().getUserName(), arguments.user.getUserName()));
                         }
                     } else {
-                        nicobot.sendMessage(opts.message, messages.getOtherMessage("gmInsufficient"));
+                        nicobot.sendMessage(opts.message, messages.getMessage("gmInsufficient"));
                     }
                 }  catch (InterruptedException e) {
                     logger.error("Error in waiting task", e);
@@ -188,7 +188,7 @@ public class Gommette extends NiCommand {
         if(gomm != null)  {
             sendGreetings(gomm, opts, opts.message.getSender());
         } else {
-            nicobot.sendMessage(opts.message, messages.getOtherMessage("gmNoBest"));
+            nicobot.sendMessage(opts.message, messages.getMessage("gmNoBest"));
         }
     }
 
@@ -197,7 +197,7 @@ public class Gommette extends NiCommand {
         Map<GommetteColor, Integer> gomm = repositoryManager.getGommettes(target);
 
         if (gomm == null) {
-            nicobot.sendMessage(opts.message, String.format(messages.getOtherMessage("gmScoreEmpty"), target.getUserName()));
+            nicobot.sendMessage(opts.message, messages.getMessage("gmScoreEmpty", target.getUserName()));
         } else {
             sendGreetings(gomm,opts,target);
         }
@@ -208,14 +208,14 @@ public class Gommette extends NiCommand {
     }
 
     private String buildTopUsers(Map<SlackUser, Integer> users) {
-        StringBuilder message = new StringBuilder(messages.getOtherMessage("gmTopUsers"));
+        StringBuilder message = new StringBuilder(messages.getMessage("gmTopUsers"));
         if(users != null && !users.isEmpty()) {
             for (Map.Entry<SlackUser, Integer> user : users.entrySet()) {
                 message.append(user.getKey().getUserName()).append(" (").append(user.getValue()).append("), ");
             }
             message.delete(message.lastIndexOf(","), message.length());
         } else {
-            message.append(messages.getOtherMessage("noOne"));
+            message.append(messages.getMessage("noOne"));
         }
         return message.toString();
     }
@@ -227,7 +227,7 @@ public class Gommette extends NiCommand {
         String greenPlural = green > 1 ? "s" : "";
         String redPlural = red > 1 ? "s" : "";
 
-        nicobot.sendMessage(opts.message, String.format(messages.getOtherMessage("gmScore"), target.getUserName(), green, greenPlural, greenPlural, red, redPlural, redPlural));
+        nicobot.sendMessage(opts.message, messages.getMessage("gmScore", target.getUserName(), green, greenPlural, greenPlural, red, redPlural, redPlural));
     }
 
     private class GommetteArguments {
@@ -291,13 +291,13 @@ public class Gommette extends NiCommand {
             }
 
             if(event.getSender().getId().equals(target.getId())) {
-                nicobot.sendMessage(event, messages.getOtherMessage("gmNoVote"));
+                nicobot.sendMessage(event, messages.getMessage("gmNoVote"));
                 return;
             }
 
             if(votes.get(event.getSender()) == null) {
                 if (trollMessage()) {
-                    nicobot.sendMessage(event, String.format(messages.getOtherMessage("gmTrollVote"), event.getSender().getUserName()));
+                    nicobot.sendMessage(event, messages.getMessage("gmTrollVote", event.getSender().getUserName()));
                     votes.put(event.getSender(), GommetteVoteType.CANCELLED);
                 } else if (getVoteYesStr().equals(message)) {
                     votes.put(event.getSender(), GommetteVoteType.YES);
@@ -306,7 +306,7 @@ public class Gommette extends NiCommand {
                 }
                 lastVoteDate = DateTime.now();
             } else {
-                nicobot.sendMessage(event, String.format(messages.getOtherMessage("gmVoteOnce"), event.getSender().getUserName()));
+                nicobot.sendMessage(event, messages.getMessage("gmVoteOnce", event.getSender().getUserName()));
             }
         }
 

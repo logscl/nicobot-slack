@@ -66,6 +66,7 @@ public abstract class AbstractSearch extends NiCommand {
         queryParams.putSingle("cx", properties.get(NicobotProperty.SEARCH_CX_KEY));
         queryParams.putSingle("key", properties.get(NicobotProperty.SEARCH_API_KEY));
         queryParams.putSingle("q", searchArguments);
+        queryParams.putSingle("fields", "items/link");
 
         try {
             WebResource resource = Client.create().resource(searchUri);
@@ -79,7 +80,7 @@ public abstract class AbstractSearch extends NiCommand {
                 searchAndSendLink(opts);
             } else {
                 logger.info("Query [{}] has no results",searchArguments);
-                nicobot.sendMessage(opts.message, messages.getOtherMessage("nothingFound"));
+                nicobot.sendMessage(opts.message, messages.getMessage("nothingFound"));
                 lastSearchResult = null;
             }
         } catch (UniformInterfaceException e) {

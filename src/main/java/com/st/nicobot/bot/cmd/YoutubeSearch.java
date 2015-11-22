@@ -78,7 +78,7 @@ public class YoutubeSearch extends NiCommand {
                 nicobot.sendMessage(opts.message, properties.get(NicobotProperty.YOUTUBE_VIDEO_URI)+videoId);
             } else {
                 logger.info("Query [{}] has no results",searchArguments);
-                nicobot.sendMessage(opts.message, messages.getOtherMessage("nothingFound"));
+                nicobot.sendMessage(opts.message, messages.getMessage("nothingFound"));
             }
         } catch (UniformInterfaceException e) {
             logger.error(e.getMessage(),e);

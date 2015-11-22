@@ -51,7 +51,7 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
         greetingService.init();
         logger.info("Leet starting at "+ DateTime.now().toString());
 
-        nicobot.getChannels().stream().forEach(channel -> nicobot.sendMessage(channel, null, messages.getOtherMessage("hgt")));
+        nicobot.getChannels().stream().forEach(channel -> nicobot.sendMessage(channel, null, messages.getMessage("hgt")));
 
         try {
             logger.info("Bot will now wait for 1 min to read mesages at "+ DateTime.now().toString());
@@ -83,14 +83,14 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
     }
 
     public String buildTopUsers(Map<SlackUser, Integer> users) {
-        StringBuilder message = new StringBuilder(messages.getOtherMessage("weekTopHGT"));
+        StringBuilder message = new StringBuilder(messages.getMessage("weekTopHGT"));
         if(users != null && !users.isEmpty()) {
             for (Map.Entry<SlackUser, Integer> user : users.entrySet()) {
                 message.append(user.getKey().getUserName()).append(" (").append(user.getValue()).append("), ");
             }
             message.delete(message.lastIndexOf(","), message.length());
         } else {
-            message.append(messages.getOtherMessage("noOne"));
+            message.append(messages.getMessage("noOne"));
         }
         return message.toString();
     }
@@ -103,7 +103,7 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
      * @return
      */
     public String buildMessageWithNames(Set<SlackUser> users) {
-        String message = messages.getOtherMessage("noHGT");
+        String message = messages.getMessage("noHGT");
 
         if (users != null && users.size() > 0) {
             message = createCongratulationMessageWithNames(users);
@@ -136,10 +136,10 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
      * @return
      */
     public String retrieveCongratulationMessage(boolean isMoreThanOneGreeters) {
-        String congratMessage = messages.getOtherMessage("congratSoloHGT");
+        String congratMessage = messages.getMessage("congratSoloHGT");
 
         if (isMoreThanOneGreeters) {
-            congratMessage = messages.getOtherMessage("congratHGT");
+            congratMessage = messages.getMessage("congratHGT");
         }
 
         return congratMessage;

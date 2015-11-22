@@ -38,28 +38,28 @@ public class HappyGeekTimeTaskTest {
 	@Test
 	public void retrieveCongratulationMessage_should_return_congratSoloHGT_if_there_is_no_more_than_one_greeters()
 			throws Exception {
-		when(mockMessages.getOtherMessage("congratSoloHGT")).thenReturn("congratSoloHGT");
+		when(mockMessages.getMessage("congratSoloHGT")).thenReturn("congratSoloHGT");
 
 		task.retrieveCongratulationMessage(false);
 
-		verify(mockMessages).getOtherMessage("congratSoloHGT");
+		verify(mockMessages).getMessage("congratSoloHGT");
 	}
 
 	@Test
 	public void retrieveCongratulationMessage_should_return_congratHGT_if_there_is_more_than_one_greeters()
 			throws Exception {
-		when(mockMessages.getOtherMessage("congratSoloHGT")).thenReturn("congratSoloHGT");
-		when(mockMessages.getOtherMessage("congratHGT")).thenReturn("congratHGT");
+		when(mockMessages.getMessage("congratSoloHGT")).thenReturn("congratSoloHGT");
+		when(mockMessages.getMessage("congratHGT")).thenReturn("congratHGT");
 
 		String message = task.retrieveCongratulationMessage(true);
 
-		verify(mockMessages).getOtherMessage("congratHGT");
+		verify(mockMessages).getMessage("congratHGT");
 		assertThat(message, is(equalTo("congratHGT")));
 	}
 
 	@Test
 	public void buildMessageWithNames_should_return_noHGT_if_names_is_null() throws Exception {
-		when(mockMessages.getOtherMessage("noHGT")).thenReturn("noHGT");
+		when(mockMessages.getMessage("noHGT")).thenReturn("noHGT");
 
 		assertThat(task.buildMessageWithNames(null), is(equalTo("noHGT")));
 	}

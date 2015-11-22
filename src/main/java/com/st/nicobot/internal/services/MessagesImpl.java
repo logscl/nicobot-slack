@@ -167,8 +167,8 @@ public class MessagesImpl implements Messages {
 		otherMessages.put("nothingFound",	"J'ai rien trouvé :(");
 
 		otherMessages.put("weNoDays",		"Non, encore %d jours :(");
-		otherMessages.put("weNoHours",		"C'est pour bientôt ! Encore %d heures !");
-		otherMessages.put("weNoMinutes",	"Ouvre les bières ! C'est dans %d minutes !");
+		otherMessages.put("weNoHours",		"C'est pour bientôt ! Encore %d heure%s !");
+		otherMessages.put("weNoMinutes",	"Ouvre les bières ! C'est dans %d minute%s !");
 
 		otherMessages.put("weYesDays",		"C'est le WEEEEKEEEEEND \\o/ !");
 		otherMessages.put("weYesHours",		"Oui \\o/ Pour encore %d heures !");
@@ -209,10 +209,15 @@ public class MessagesImpl implements Messages {
 	}
 
 	@Override
-	public String getOtherMessage(String key) {
+	public String getMessage(String key) {
 		return otherMessages.get(key);
 	}
-	
+
+	@Override
+	public String getMessage(String key, Object... formatArgs) {
+		return String.format(otherMessages.get(key), formatArgs);
+	}
+
 	@Override
 	public String getWelcomeMessage(Integer nbr) {
 		if(nbr.equals(0)) {

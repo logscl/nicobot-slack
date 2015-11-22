@@ -58,7 +58,7 @@ public class WeekEnd extends NiCommand {
         if(nextWeekendStart.isAfter(now)) {
             // exception
             if(now.getDayOfWeek() == DateTimeConstants.MONDAY && now.getHourOfDay() < WEEKEND_END_HOUR) {
-                nicobot.sendMessage(opts.message, messages.getOtherMessage("weYesMinutes"));
+                nicobot.sendMessage(opts.message, messages.getMessage("weYesMinutes"));
             } else {
                 nicobot.sendMessage(opts.message, buildRemainingTimeMessage(false, now, nextWeekendStart));
             }
@@ -71,16 +71,16 @@ public class WeekEnd extends NiCommand {
         Duration duration = new Duration(d1,d2);
         if(duration.getStandardHours() > HOUR_LIMIT) {
             if(yesWeekEnd) {
-                return messages.getOtherMessage("weYesDays");
+                return messages.getMessage("weYesDays");
             }
-            return String.format(messages.getOtherMessage("weNoDays"), duration.getStandardDays());
+            return messages.getMessage("weNoDays", duration.getStandardDays());
         } else if(duration.getStandardMinutes() > MIN_LIMIT) {
             if(yesWeekEnd) {
-                return String.format(messages.getOtherMessage("weYesHours"),duration.getStandardHours());
+                return messages.getMessage("weYesHours",duration.getStandardHours());
             }
-            return String.format(messages.getOtherMessage("weNoHours"),duration.getStandardHours());
+            return messages.getMessage("weNoHours",duration.getStandardHours(), duration.getStandardHours() > 1 ? "s":"");
         } else {
-            return String.format(messages.getOtherMessage("weNoMinutes"),duration.getStandardMinutes());
+            return messages.getMessage("weNoMinutes",duration.getStandardMinutes(), duration.getStandardMinutes() > 1 ? "s":"");
         }
     }
 }

@@ -37,7 +37,7 @@ public class RiamaskinWatcher extends ConditionalMessageEvent {
     	Option o = new Option(message);
     	
     	if (testCondition(o)) {
-    		nicobot.sendMessage(message, messages.getOtherMessage(RIAMASKIN_STRING));
+    		nicobot.sendMessage(message, messages.getMessage(RIAMASKIN_STRING));
     	}
     }
 

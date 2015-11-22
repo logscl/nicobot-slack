@@ -16,7 +16,15 @@ public interface Messages {
 	 */
 	Set<Reaction> getSentences();
 	
-	String getOtherMessage(String key);
+	String getMessage(String key);
+
+	/**
+	 * Return a string formatted with {@link String#format(String, Object...)}
+	 * @param key
+	 * @param formatArgs
+     * @return
+     */
+	String getMessage(String key, Object... formatArgs);
 	
 	/**
 	 * Retourne un message de bienvenue aléatoire, ou conditionné par le nombre d'arrivées
