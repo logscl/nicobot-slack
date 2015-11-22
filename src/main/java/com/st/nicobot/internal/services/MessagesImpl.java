@@ -177,6 +177,20 @@ public class MessagesImpl implements Messages {
 		otherMessages.put("githubAdded",	"Ok. J'y penserai : %s");
 		otherMessages.put("githubFailure",	"Ca marche pas maintenant, essaye plus tard.");
 
+		otherMessages.put("duelPollRunning","Un duel à la fois !");
+		otherMessages.put("duelStart",		"Un challenge est lancé par %s !");
+		otherMessages.put("duelNoVotes",	"Il manque des votes et j'attends pas la nuit...");
+		otherMessages.put("duelPRCResult",	"%s a joué %s, %s a joué %s...");
+		otherMessages.put("duelPRCWinner",	"%s a gagné !");
+		otherMessages.put("duelPRCDraw",	"Pas de gagnant :(");
+		otherMessages.put("duelRNResult",	"Il fallait trouver %d...");
+		otherMessages.put("duelRNWinner",	"%s est le plus proche avec %d");
+		otherMessages.put("duelRNWinnerPl",	"%s sont les plus proches avec %d");
+		otherMessages.put("duelPRCStart",	"%s, envoyez moi pierre/papier/ciseaux en privé MAINTENANT !");
+		otherMessages.put("duelPRCError",	"Non ! pierre / papier / ciseaux !");
+		otherMessages.put("duelRNStart",	"%s, envoyez moi un nombre entre %d et %d (inclus) en privé MAINTENANT !");
+		otherMessages.put("duelRNError",	"Non ! un nombre entre %d et %d inclus !");
+
 		welcomeMessages = new HashMap<>();
 		welcomeMessages.put("newJoin0",		"Yo les gars! Saluez %p !");
 		welcomeMessages.put("newJoin1",		"Coucou %p ! Ca va bien ?");
