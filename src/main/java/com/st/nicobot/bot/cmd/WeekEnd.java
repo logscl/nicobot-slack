@@ -6,6 +6,8 @@ import com.st.nicobot.services.Messages;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.Duration;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -73,14 +75,29 @@ public class WeekEnd extends NiCommand {
             if(yesWeekEnd) {
                 return messages.getMessage("weYesDays");
             }
-            return messages.getMessage("weNoDays", duration.getStandardDays());
+            return messages.getMessage("weNoDays", duration.getStandardDays(), getRemainingTimeStr(duration));
         } else if(duration.getStandardMinutes() > MIN_LIMIT) {
             if(yesWeekEnd) {
                 return messages.getMessage("weYesHours",duration.getStandardHours());
             }
-            return messages.getMessage("weNoHours",duration.getStandardHours(), duration.getStandardHours() > 1 ? "s":"");
+            return messages.getMessage("weNoHours",duration.getStandardHours(), duration.getStandardHours() > 1 ? "s":"", getRemainingTimeStr(duration));
         } else {
-            return messages.getMessage("weNoMinutes",duration.getStandardMinutes(), duration.getStandardMinutes() > 1 ? "s":"");
+            return messages.getMessage("weNoMinutes",duration.getStandardMinutes(), duration.getStandardMinutes() > 1 ? "s":"", getRemainingTimeStr(duration));
         }
+    }
+
+    private String getRemainingTimeStr(Duration duration) {
+        PeriodFormatter fmt = new PeriodFormatterBuilder()
+                .printZeroNever()
+                .appendDays().appendSeparator("j ")
+                .minimumPrintedDigits(2)
+                .appendHours().appendSeparator("h ")
+                .printZeroAlways()
+                .appendMinutes().appendLiteral("m")
+                .printZeroNever()
+                .appendSeparatorIfFieldsAfter(" ").appendSeconds().appendSeparatorIfFieldsBefore("s")
+                .toFormatter();
+
+        return fmt.print(duration.toPeriod().normalizedStandard());
     }
 }

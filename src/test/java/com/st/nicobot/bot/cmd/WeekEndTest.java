@@ -31,13 +31,13 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class WeekEndTest {
 
-    private static DateTime MONDAY_15_00 = new DateTime(2015,8,24,15,0);
-    private static DateTime THURSDAY_15_00 = new DateTime(2015,8,27,15,0);
-    private static DateTime FRIDAY_16_30 = new DateTime(2015,8,28,16,30);
-    private static DateTime FRIDAY_20_00 = new DateTime(2015,8,28,20,0);
-    private static DateTime SATURDAY_12_00 = new DateTime(2015,8,29,12,0);
-    private static DateTime SUNDAY_23_00 = new DateTime(2015,8,30,23,0);
-    private static DateTime MONDAY_03_00 = new DateTime(2015,8,31,3,0);
+    private static DateTime MONDAY_15_00 = new DateTime(2015,8,24,15,0,1);
+    private static DateTime THURSDAY_15_00 = new DateTime(2015,8,27,15,0,2);
+    private static DateTime FRIDAY_16_30 = new DateTime(2015,8,28,16,30,3);
+    private static DateTime FRIDAY_20_00 = new DateTime(2015,8,28,20,0,4);
+    private static DateTime SATURDAY_12_00 = new DateTime(2015,8,29,12,0,5);
+    private static DateTime SUNDAY_23_00 = new DateTime(2015,8,30,23,0,6);
+    private static DateTime MONDAY_03_00 = new DateTime(2015,8,31,3,0,7);
 
     private static DateTime EXPECTED_WEEKEND_START = new DateTime(2015,8,28,17,0);
     private static DateTime EXPECTED_WEEKEND_END = new DateTime(2015,8,31,9,0);
@@ -79,6 +79,10 @@ public class WeekEndTest {
         weekEnd.doCommand("!weekend", null, option);
     }
 
+    private String getRemainingTimeStr(DateTime d1, DateTime d2) {
+        return ReflectionTestUtils.invokeMethod(weekEnd, "getRemainingTimeStr", new Duration(d1,d2));
+    }
+
     private void checkMethod(String messageToCheck) {
         System.out.println(messageToCheck);
         handle();
@@ -96,7 +100,7 @@ public class WeekEndTest {
     public void WeekEnd_Test_MONDAY_15_00() {
         DateTimeUtils.setCurrentMillisFixed(MONDAY_15_00.getMillis());
 
-        String expectedMsg = messages.getMessage("weNoDays", Days.daysBetween(MONDAY_15_00, EXPECTED_WEEKEND_START).getDays());
+        String expectedMsg = messages.getMessage("weNoDays", Days.daysBetween(MONDAY_15_00, EXPECTED_WEEKEND_START).getDays(), getRemainingTimeStr(MONDAY_15_00, EXPECTED_WEEKEND_START));
 
         checkMethod(expectedMsg);
     }
@@ -107,7 +111,7 @@ public class WeekEndTest {
 
         int hours = Hours.hoursBetween(THURSDAY_15_00, EXPECTED_WEEKEND_START).getHours();
 
-        String expectedMsg = messages.getMessage("weNoHours", hours, hours > 1 ? "s" : "");
+        String expectedMsg = messages.getMessage("weNoHours", hours, hours > 1 ? "s" : "", getRemainingTimeStr(THURSDAY_15_00, EXPECTED_WEEKEND_START));
 
         checkMethod(expectedMsg);
     }
@@ -118,7 +122,7 @@ public class WeekEndTest {
 
         int minutes = Minutes.minutesBetween(FRIDAY_16_30, EXPECTED_WEEKEND_START).getMinutes();
 
-        String expectedMsg = messages.getMessage("weNoMinutes", minutes, minutes > 1 ? "s" : "");
+        String expectedMsg = messages.getMessage("weNoMinutes", minutes, minutes > 1 ? "s" : "", getRemainingTimeStr(FRIDAY_16_30, EXPECTED_WEEKEND_START));
 
         checkMethod(expectedMsg);
     }
