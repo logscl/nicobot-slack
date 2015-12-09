@@ -2,6 +2,7 @@ package com.st.nicobot.bot.cmd;
 
 import com.st.nicobot.bot.NicoBot;
 import com.st.nicobot.bot.utils.Option;
+import com.st.nicobot.services.UsernameService;
 import com.st.nicobot.services.memory.GreetersRepositoryManager;
 import com.st.nicobot.services.Messages;
 import com.ullink.slack.simpleslackapi.SlackUser;
@@ -29,6 +30,9 @@ public class TopHGT extends NiCommand {
     @Autowired
     private Messages messages;
 
+    @Autowired
+    private UsernameService usernameService;
+
     @Override
     public String getCommandName() {
         return COMMAND;
@@ -53,7 +57,7 @@ public class TopHGT extends NiCommand {
         StringBuilder message = new StringBuilder(messages.getMessage("allTopHGT"));
         if(users != null && !users.isEmpty()) {
             for (Map.Entry<SlackUser, Integer> user : users.entrySet()) {
-                message.append(user.getKey().getUserName()).append(" (").append(user.getValue()).append("), ");
+                message.append(usernameService.getNoHLName(user.getKey())).append(" (").append(user.getValue()).append("), ");
             }
             message.delete(message.lastIndexOf(","), message.length());
         } else {

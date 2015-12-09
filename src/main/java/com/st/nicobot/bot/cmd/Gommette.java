@@ -5,6 +5,7 @@ import com.st.nicobot.bot.utils.Emoji;
 import com.st.nicobot.bot.utils.GommetteColor;
 import com.st.nicobot.bot.utils.Option;
 import com.st.nicobot.services.Messages;
+import com.st.nicobot.services.UsernameService;
 import com.st.nicobot.services.memory.GommettesRepositoryManager;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
@@ -48,6 +49,9 @@ public class Gommette extends NiCommand {
 
     @Autowired
     private GommettesRepositoryManager repositoryManager;
+
+    @Autowired
+    private UsernameService usernameService;
 
     private GommetteEventListener listener = null;
 
@@ -194,7 +198,7 @@ public class Gommette extends NiCommand {
         Map<GommetteColor, Integer> gomm = repositoryManager.getGommettes(target);
 
         if (gomm == null) {
-            nicobot.sendMessage(opts.message, messages.getMessage("gmScoreEmpty", target.getUserName()));
+            nicobot.sendMessage(opts.message, messages.getMessage("gmScoreEmpty", usernameService.getNoHLName(target)));
         } else {
             sendGreetings(gomm,opts,target);
         }
@@ -208,7 +212,7 @@ public class Gommette extends NiCommand {
         StringBuilder message = new StringBuilder(messages.getMessage("gmTopUsers"));
         if(users != null && !users.isEmpty()) {
             for (Map.Entry<SlackUser, Integer> user : users.entrySet()) {
-                message.append(user.getKey().getUserName()).append(" (").append(user.getValue()).append("), ");
+                message.append(usernameService.getNoHLName(user.getKey())).append(" (").append(user.getValue()).append("), ");
             }
             message.delete(message.lastIndexOf(","), message.length());
         } else {
@@ -224,7 +228,7 @@ public class Gommette extends NiCommand {
         String greenPlural = green > 1 ? "s" : "";
         String redPlural = red > 1 ? "s" : "";
 
-        nicobot.sendMessage(opts.message, messages.getMessage("gmScore", target.getUserName(), green, greenPlural, greenPlural, red, redPlural, redPlural));
+        nicobot.sendMessage(opts.message, messages.getMessage("gmScore", usernameService.getNoHLName(target), green, greenPlural, greenPlural, red, redPlural, redPlural));
     }
 
     private class GommetteArguments {

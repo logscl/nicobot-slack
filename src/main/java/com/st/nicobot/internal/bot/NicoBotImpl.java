@@ -7,6 +7,7 @@ import com.st.nicobot.bot.utils.NicobotProperty;
 import com.st.nicobot.bot.utils.Option;
 import com.st.nicobot.services.BehaviorsService;
 import com.st.nicobot.services.PropertiesService;
+import com.st.nicobot.services.UsernameService;
 import com.ullink.slack.simpleslackapi.*;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import com.ullink.slack.simpleslackapi.impl.SlackChatConfiguration;
@@ -43,6 +44,9 @@ public class NicoBotImpl implements NicoBot {
     @Autowired
     private BehaviorsService behaviors;
 
+    @Autowired
+    private UsernameService usernameService;
+
     private SlackSession session;
 
     private SlackPersona self;
@@ -75,12 +79,12 @@ public class NicoBotImpl implements NicoBot {
      */
     private String formatMessage(String message, SlackUser sender, SlackChannel channel) {
         if(sender != null) {
-            message = message.replaceAll("%p", sender.getUserName());
+            message = message.replaceAll("%p", usernameService.getNoHLName(sender));
         }
         message = message.replaceAll("%c", channel.getName());
 
         if(sender != null && message.contains("%u")) {
-            message = message.replaceAll("%u", getRandomUserFromChannel(channel).getUserName());
+            message = message.replaceAll("%u", usernameService.getNoHLName(getRandomUserFromChannel(channel)));
         }
 
         return message;

@@ -4,10 +4,10 @@ import com.st.nicobot.bot.NicoBot;
 import com.st.nicobot.job.HappyGeekTimeJob;
 import com.st.nicobot.services.LeetGreetingService;
 import com.st.nicobot.services.Messages;
+import com.st.nicobot.services.UsernameService;
 import com.st.nicobot.services.memory.GreetersRepositoryManager;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackUser;
-import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
 import org.slf4j.Logger;
@@ -42,6 +42,9 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
 
     @Autowired
     private GreetersRepositoryManager greetersRepositoryManager;
+
+    @Autowired
+    private UsernameService usernameService;
 
     @Override
     @Async
@@ -86,7 +89,7 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
         StringBuilder message = new StringBuilder(messages.getMessage("weekTopHGT"));
         if(users != null && !users.isEmpty()) {
             for (Map.Entry<SlackUser, Integer> user : users.entrySet()) {
-                message.append(user.getKey().getUserName()).append(" (").append(user.getValue()).append("), ");
+                message.append(usernameService.getNoHLName(user.getKey())).append(" (").append(user.getValue()).append("), ");
             }
             message.delete(message.lastIndexOf(","), message.length());
         } else {
@@ -126,7 +129,7 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
 
         List<String> names = users.stream().map(SlackUser::getUserName).collect(Collectors.toList());
 
-        return String.format(congratulationMessage, StringUtils.join(names, ", "));
+        return String.format(congratulationMessage, usernameService.getNoHLName(names, ", "));
     }
 
     /**
