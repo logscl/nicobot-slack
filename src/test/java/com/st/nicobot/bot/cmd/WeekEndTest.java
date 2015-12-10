@@ -53,8 +53,6 @@ public class WeekEndTest {
     @Mock
     private NicoBot nicobot;
 
-    private Option option;
-
     @Captor
     private ArgumentCaptor<String> messageCaptor;
 
@@ -72,9 +70,7 @@ public class WeekEndTest {
         list.add(message.getChannel());
         when(nicobot.getChannels()).thenReturn(list);
 
-        option = new Option(message);
-
-        weekEnd.doCommand("!weekend", null, option);
+        weekEnd.doCommand("!weekend", null, new Option(message));
     }
 
     private String getRemainingTimeStr(DateTime d1, DateTime d2) {
