@@ -3,6 +3,8 @@ package com.st.nicobot.bot.handler;
 import com.st.nicobot.api.domain.model.Message;
 import com.st.nicobot.api.services.APIMessageService;
 import com.st.nicobot.bot.NicoBot;
+import com.st.nicobot.bot.utils.NicobotProperty;
+import com.st.nicobot.services.PropertiesService;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import org.joda.time.DateTime;
@@ -25,13 +27,16 @@ public class SaveMessage extends AbstractMessageEvent {
 	@Autowired
 	private NicoBot nicoBot;
 
+	@Autowired
+	private PropertiesService properties;
+
 	private Pattern nameIdPattern = Pattern.compile("<@([0-9A-Z]+)>");
 	private Pattern nameIdWithStrPattern = Pattern.compile("<@([0-9A-Z]+)\\|(.*?)>");
 	private Pattern channelIdPattern = Pattern.compile("<#([0-9A-Z]+)>");
 
 	@Override
 	public void onEvent(SlackMessagePosted message, SlackSession session) {
-		if(message.getChannel().getName().equals("general")) {
+		if(message.getChannel().getName().equals(properties.get(NicobotProperty.FEATURED_CHANNEL))) {
 			onMessage(message);
 		}
 	}

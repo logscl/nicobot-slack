@@ -64,7 +64,9 @@ public class NicoBotImpl implements NicoBot {
             logger.info("MSG [{}] ON CHAN {} BY {} : {}", message.getEventType(), message.getChannel().getName(), message.getSender().getUserName(), message.getMessageContent());
             //Message apiMessage = new Message(new DateTime(), message.getSender().getUserName(), message.getMessageContent());
             //api.saveMessages(Arrays.asList(apiMessage));
-            behaviors.randomBehave(new Option(message));
+            if(message.getChannel().getName().equals(props.get(NicobotProperty.FEATURED_CHANNEL))) {
+                behaviors.randomBehave(new Option(message));
+            }
         });
 
         for (Map.Entry<String, MessageEvent> entry : eventMap.entrySet()) {

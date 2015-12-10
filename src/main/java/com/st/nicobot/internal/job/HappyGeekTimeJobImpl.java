@@ -1,9 +1,11 @@
 package com.st.nicobot.internal.job;
 
 import com.st.nicobot.bot.NicoBot;
+import com.st.nicobot.bot.utils.NicobotProperty;
 import com.st.nicobot.job.HappyGeekTimeJob;
 import com.st.nicobot.services.LeetGreetingService;
 import com.st.nicobot.services.Messages;
+import com.st.nicobot.services.PropertiesService;
 import com.st.nicobot.services.UsernameService;
 import com.st.nicobot.services.memory.GreetersRepositoryManager;
 import com.ullink.slack.simpleslackapi.SlackChannel;
@@ -46,6 +48,9 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
     @Autowired
     private UsernameService usernameService;
 
+    @Autowired
+    private PropertiesService properties;
+
     @Override
     @Async
     @Scheduled(cron="0 37 13 * * *")
@@ -54,7 +59,8 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
         greetingService.init();
         logger.info("Leet starting at "+ DateTime.now().toString());
 
-        nicobot.getChannels().stream().forEach(channel -> nicobot.sendMessage(channel, null, messages.getMessage("hgt")));
+        nicobot.getChannels().stream().filter(channel -> channel.getName().equals(properties.get(NicobotProperty.FEATURED_CHANNEL))).forEach(channel -> nicobot.sendMessage(channel, null, messages.getMessage("hgt")));
+
 
         try {
             logger.info("Bot will now wait for 1 min to read mesages at "+ DateTime.now().toString());

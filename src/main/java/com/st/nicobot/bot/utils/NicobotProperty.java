@@ -15,7 +15,9 @@ public enum NicobotProperty {
 	YOUTUBE_VIDEO_URI("youtube.video.uri"),
 
 	GITHUB_ISSUE_ADD_URL("github.issue.add.url"),
-	GITHUB_API_KEY("github.api.key");
+	GITHUB_API_KEY("github.api.key"),
+
+	FEATURED_CHANNEL("nicobot.featured.channel");
 
 	private String key;
 	private String defaultValue;
