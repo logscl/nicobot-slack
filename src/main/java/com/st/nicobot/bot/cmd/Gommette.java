@@ -215,7 +215,7 @@ public class Gommette extends NiCommand {
                 Map<GommetteColor, Integer> gomm = repositoryManager.getGommettes(user.getKey());
                 int green = gomm.get(GommetteColor.GREEN) != null ? gomm.get(GommetteColor.GREEN) : 0;
                 int red = gomm.get(GommetteColor.RED) != null ? gomm.get(GommetteColor.RED) : 0;
-                message.append(usernameService.getNoHLName(user.getKey())).append(" (").append(user.getValue()).append(" [").append(green).append("|").append(red).append("]), ");
+                message.append(usernameService.getNoHLName(user.getKey())).append(" (*").append(user.getValue()).append("* [").append(green).append("|").append(red).append("]), ");
             }
             message.delete(message.lastIndexOf(","), message.length());
         } else {
