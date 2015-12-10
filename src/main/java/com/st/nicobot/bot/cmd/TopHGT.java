@@ -9,6 +9,8 @@ import com.ullink.slack.simpleslackapi.SlackUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,6 +22,7 @@ public class TopHGT extends NiCommand {
     private static final String COMMAND = "!topHGT";
     private static final String FORMAT = "!topHGT";
     private static final String DESC = "Donne le top score au HGT";
+    private static final String[] ALIASES = {"!hgt"};
 
     @Autowired
     private NicoBot nicobot;
@@ -46,6 +49,11 @@ public class TopHGT extends NiCommand {
     @Override
     public String getFormat() {
         return FORMAT;
+    }
+
+    @Override
+    public List<String> getAliases() {
+        return Arrays.asList(ALIASES);
     }
 
     @Override

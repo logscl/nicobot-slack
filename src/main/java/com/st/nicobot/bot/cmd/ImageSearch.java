@@ -2,7 +2,9 @@ package com.st.nicobot.bot.cmd;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,6 +16,7 @@ public class ImageSearch extends AbstractSearch {
     private static final String COMMAND = "!img";
     private static final String FORMAT = "!img query";
     private static final String DESC = "Recherche une image sur les internets et retourne le premier résultat. !img next pour le résultat suivant";
+    private static final String[] ALIASES = {"!sexy", "!brazzer"};
 
     @Override
     public String getCommandName() {
@@ -28,6 +31,11 @@ public class ImageSearch extends AbstractSearch {
     @Override
     public String getFormat() {
         return FORMAT;
+    }
+
+    @Override
+    public List<String> getAliases() {
+        return Arrays.asList(ALIASES);
     }
 
     @Override

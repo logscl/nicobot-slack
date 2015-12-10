@@ -4,6 +4,7 @@ import com.st.nicobot.bot.NicoBot;
 import com.st.nicobot.bot.utils.Option;
 import com.st.nicobot.services.Commands;
 import com.st.nicobot.services.Messages;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,7 +68,11 @@ public class Help extends NiCommand {
 		String message = messages.getMessage("helpHeader") + "\r\n";
 		
 		while (cmd != null) {
-			message += "    - " + cmd.getCommandName() + " : " + cmd.getDescription() + "\r\n";
+			message += "    - *" + cmd.getCommandName() + "*";
+			if(!cmd.getAliases().isEmpty()) {
+				message += " (" + StringUtils.join(cmd.getAliases(), ", ") + ")";
+			}
+			message += " : " + cmd.getDescription() + "\r\n";
 			cmd = cmd.nextCommand;
 		}
 

@@ -55,6 +55,10 @@ public abstract class AbstractSearch extends NiCommand {
             searchIndex=0;
         }
 
+        if(command.compareToIgnoreCase(getCommandName()) != 0) {
+            searchArguments = command.substring(1) + "+" + searchArguments;
+        }
+
         MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 
         if (getSpecificQueryArguments() != null && getSpecificQueryArguments().size() > 0) {
