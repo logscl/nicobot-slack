@@ -212,7 +212,10 @@ public class Gommette extends NiCommand {
         StringBuilder message = new StringBuilder(messages.getMessage("gmTopUsers"));
         if(users != null && !users.isEmpty()) {
             for (Map.Entry<SlackUser, Integer> user : users.entrySet()) {
-                message.append(usernameService.getNoHLName(user.getKey())).append(" (").append(user.getValue()).append("), ");
+                Map<GommetteColor, Integer> gomm = repositoryManager.getGommettes(user.getKey());
+                int green = gomm.get(GommetteColor.GREEN) != null ? gomm.get(GommetteColor.GREEN) : 0;
+                int red = gomm.get(GommetteColor.RED) != null ? gomm.get(GommetteColor.RED) : 0;
+                message.append(usernameService.getNoHLName(user.getKey())).append(" (").append(user.getValue()).append(" [").append(green).append("|").append(red).append("]), ");
             }
             message.delete(message.lastIndexOf(","), message.length());
         } else {
