@@ -1,6 +1,5 @@
 package com.st.nicobot.internal.services;
 
-import com.st.nicobot.bot.utils.NicobotProperty;
 import com.st.nicobot.bot.utils.Random;
 import com.st.nicobot.bot.utils.Reaction;
 import com.st.nicobot.services.Messages;
@@ -49,12 +48,10 @@ public class MessagesImpl implements Messages {
 		 *
 		 * TODO : valider les regex à l'init pour les rejeter si elles sont pourrites
 		 */
-		String botName = props.get(NicobotProperty.BOT_NAME);
-		
+
 		reactions = new LinkedHashSet<>();
 		
 		// messages complets
-		reactions.add(new Reaction("^"+botName+"( ?\\?)+?$", 		"Quoi ?"));
 		reactions.add(new Reaction("^(sisi|13)$", 					"la famille"));
 		reactions.add(new Reaction("^tf2$", 						"Bande de casus..."));
 		reactions.add(new Reaction("^(pour )??rien( \\!)??$", 		"Baaam ! Bien joué %p !"));
@@ -79,7 +76,6 @@ public class MessagesImpl implements Messages {
 		reactions.add(new Reaction("^!astuvu$",						"https://youtu.be/0jZf7jIjB5s?t=1m9s"));
 		
 		// fragments
-		reactions.add(new Reaction("^salut "+botName+".*", 			"Salut %p !"));
 		reactions.add(new Reaction(".*gamin.*",						"Hein fieu"));
 		reactions.add(new Reaction(".*hey.*",						"Hey Hey !"));
 		reactions.add(new Reaction(".*grand.*",						"CMB !"));
@@ -104,7 +100,6 @@ public class MessagesImpl implements Messages {
 		reactions.add(new Reaction(".*gomette.*",					"Ca s'écrit gomMette. Avec 2 m."));
 
 		// Random reacts
-		reactions.add(new Reaction(".*"+botName+"( ?\\?)+?$",		"Oui.", "Oui !", "Non...", "Non !", "Tu peux pas décider tout seul franchement ?", "Ché pas tséééé","Ché pas... Demande a slackbot !"));
 		reactions.add(new Reaction(".*qui .*\\?$",					"C'est %u !", "J'veux pas dénoncer... mais c'est %u.", "Si c'est pas %u, c'est ta mère !"));
 
 		// girls
@@ -216,6 +211,13 @@ public class MessagesImpl implements Messages {
         randomSpeeches.add("T'es qui ?");
         randomSpeeches.add("C'est une anecdote de MALADE ça !");
         randomSpeeches.add("J'connais un mec en Guadeloupe...");
+	}
+
+	@Override
+	public void addPostInitMessages(String botName) {
+		reactions.add(new Reaction("^"+botName+"( ?\\?)+?$", 		"Quoi ?"));
+		reactions.add(new Reaction("^salut "+botName+".*", 			"Salut %p !"));
+		reactions.add(new Reaction(".*"+botName+"( ?\\?)+?$",		"Oui.", "Oui !", "Non...", "Non !", "Tu peux pas décider tout seul franchement ?", "Ché pas tséééé","Ché pas... Demande a slackbot !"));
 	}
 
 	@Override

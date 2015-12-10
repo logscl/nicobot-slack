@@ -6,6 +6,7 @@ import com.st.nicobot.bot.utils.Emoji;
 import com.st.nicobot.bot.utils.NicobotProperty;
 import com.st.nicobot.bot.utils.Option;
 import com.st.nicobot.services.BehaviorsService;
+import com.st.nicobot.services.Messages;
 import com.st.nicobot.services.PropertiesService;
 import com.st.nicobot.services.UsernameService;
 import com.ullink.slack.simpleslackapi.*;
@@ -46,6 +47,9 @@ public class NicoBotImpl implements NicoBot {
 
     @Autowired
     private UsernameService usernameService;
+
+    @Autowired
+    private Messages messages;
 
     private SlackSession session;
 
@@ -140,6 +144,8 @@ public class NicoBotImpl implements NicoBot {
     public void connect() throws IOException {
         session.connect();
         self = session.sessionPersona();
+
+        messages.addPostInitMessages(self.getUserName());
     }
 
     @Override

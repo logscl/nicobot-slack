@@ -2,8 +2,6 @@ package com.st.nicobot.bot.utils;
 
 public enum NicobotProperty {
 
-	BOT_NAME("bot.name", "nicobot"),
-
 	SLACK_API_KEY("slack.api.key"),
 
 	API_URI("api.uri", "http://api.nicobot.cloudbees.net"),

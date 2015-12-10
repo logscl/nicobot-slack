@@ -35,4 +35,6 @@ public interface Messages {
 	String getWelcomeMessage(Integer nbr);
 
     String getRandomSpeech();
+
+	void addPostInitMessages(String botName);
 }

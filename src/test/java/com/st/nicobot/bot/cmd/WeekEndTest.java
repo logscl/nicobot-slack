@@ -1,7 +1,6 @@
 package com.st.nicobot.bot.cmd;
 
 import com.st.nicobot.bot.NicoBot;
-import com.st.nicobot.bot.utils.NicobotProperty;
 import com.st.nicobot.bot.utils.Option;
 import com.st.nicobot.internal.services.MessagesImpl;
 import com.st.nicobot.services.PropertiesService;
@@ -62,7 +61,6 @@ public class WeekEndTest {
     @Before
     public void setUp() {
         ReflectionTestUtils.setField(weekEnd, "messages", messages);
-        when(props.get(NicobotProperty.BOT_NAME)).thenReturn("nicobot");
         messages.start();
     }
 
