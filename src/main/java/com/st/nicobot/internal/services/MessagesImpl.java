@@ -211,6 +211,7 @@ public class MessagesImpl implements Messages {
         randomSpeeches.add("T'es qui ?");
         randomSpeeches.add("C'est une anecdote de MALADE ça !");
         randomSpeeches.add("J'connais un mec en Guadeloupe...");
+        randomSpeeches.add("Tu pinailles un peu quand même !");
 	}
 
 	@Override
