@@ -1,10 +1,12 @@
 package com.st.nicobot.bot.handler;
 
 import com.st.nicobot.bot.NicoBot;
+import com.st.nicobot.bot.utils.NicobotProperty;
 import com.st.nicobot.bot.utils.Reaction;
 import com.st.nicobot.services.Commands;
 import com.st.nicobot.services.LeetGreetingService;
 import com.st.nicobot.services.Messages;
+import com.st.nicobot.services.PropertiesService;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import org.junit.Before;
@@ -40,12 +42,16 @@ public class ParseReactionsTest {
     @Mock
     private Commands commands;
 
+    @Mock
+    private PropertiesService properties;
+
     @Before
     public void setup() {
         when(nicobot.isSelfMessage(any(SlackMessagePosted.class))).thenReturn(false);
         when(greetingService.isLeetHourActive()).thenReturn(false);
         when(nicobot.sendMessage(any(SlackMessagePosted.class), anyString())).thenReturn(null);
         when(commands.isProbableCommand(anyString())).thenReturn(false);
+        when(properties.get(NicobotProperty.FEATURED_CHANNEL)).thenReturn("general");
     }
 
     /**
@@ -56,6 +62,7 @@ public class ParseReactionsTest {
         SlackMessagePosted message = mock(SlackMessagePosted.class);
         when(message.getMessageContent()).thenReturn("bla bla julie bla bla");
         when(message.getChannel()).thenReturn(mock(SlackChannel.class));
+        when(message.getChannel().getName()).thenReturn("general");
         ArrayList<SlackChannel> list = new ArrayList<>();
         list.add(message.getChannel());
         when(nicobot.getChannels()).thenReturn(list);
