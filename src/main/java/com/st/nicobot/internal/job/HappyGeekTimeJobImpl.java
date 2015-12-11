@@ -8,7 +8,6 @@ import com.st.nicobot.services.Messages;
 import com.st.nicobot.services.PropertiesService;
 import com.st.nicobot.services.UsernameService;
 import com.st.nicobot.services.memory.GreetersRepositoryManager;
-import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
@@ -77,18 +76,18 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
             logger.info("Leet ended at " + DateTime.now().toString());
         }
 
-        for(SlackChannel chan : nicobot.getChannels()) {
+        nicobot.getChannels().stream().filter(chan -> chan.getName().equals(properties.get(NicobotProperty.FEATURED_CHANNEL))).forEach(chan -> {
             Set<SlackUser> users = greetingService.getGreeters().get(chan);
             String message = buildMessageWithNames(users);
 
             nicobot.sendMessage(chan, null, message);
 
-            if(users != null && !users.isEmpty()) {
+            if (users != null && !users.isEmpty()) {
                 greetersRepositoryManager.addGreeters(chan, users);
             }
 
             nicobot.sendMessage(chan, null, buildTopUsers(greetersRepositoryManager.getWeeklyGreeters(chan)));
-        }
+        });
     }
 
     public String buildTopUsers(Map<SlackUser, Integer> users) {
