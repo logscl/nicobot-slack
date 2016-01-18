@@ -20,7 +20,7 @@ public class Michel extends NiCommand {
     private static final String FORMAT = "!michel";
     private static final String DESC = "bisous michel ok";
 
-    private static List<String> FRAGMENTS = Arrays.asList("ok", "michel", "bisous", "merci", "michel smits", "bise", "appel moi", "gsm", "belle claire", "claire", "j'aime ca", "sva", "sva toi");
+    private static List<String> FRAGMENTS = Arrays.asList("ok", "michel", "bisous", "merci", "michel smits", "bise", "appel moi", "gsm", "belle claire", "claire", "j'aime ca", "sva", "sva toi", "grand fére", "parles gsm", "plus belle toi");
 
     @Autowired
     private NicoBot nicobot;
