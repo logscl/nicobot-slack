@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>nicobot</artifactId>
+        <groupId>com.st</groupId>
+        <version>1.1</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>nicobot-bot</artifactId>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <profile.name>dev</profile.name>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+
+        <profile>
+            <id>master</id>
+            <properties>
+                <profile.name>master</profile.name>
+            </properties>
+        </profile>
+    </profiles>
+
+    <build>
+        <finalName>${project.groupId}.${project.artifactId}</finalName>
+
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.st.nicobot.BotMain</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+        <filters>
+            <filter>src/main/filter/nicobot_${profile.name}.properties</filter>
+        </filters>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.st</groupId>
+            <artifactId>nicobot-api</artifactId>
+            <version>${nicobot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.st</groupId>
+            <artifactId>nicobot-persistence</artifactId>
+            <version>${nicobot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.st</groupId>
+            <artifactId>nicobot-services</artifactId>
+            <version>1.1</version>
+        </dependency>
+    </dependencies>
+
+
+</project>

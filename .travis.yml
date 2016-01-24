@@ -1,4 +1,4 @@
 language: java
 jdk:
   - oraclejdk8
-script: mvn clean install -Pmaster
+script: -pl nicobot-bot -am clean install -Pmaster
