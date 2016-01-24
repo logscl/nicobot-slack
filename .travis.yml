@@ -1,4 +1,5 @@
 language: java
 jdk:
   - oraclejdk8
-script: -pl nicobot-slack -am clean install -Pmaster
+script: 
+  - mvn -pl nicobot-slack -am clean install -Pmaster
