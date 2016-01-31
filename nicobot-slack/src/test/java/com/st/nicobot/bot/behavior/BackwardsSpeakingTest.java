@@ -27,7 +27,8 @@ public class BackwardsSpeakingTest {
 		resp = backwardsSpeaking.reverseString(message);
 		assertEquals("! dlroW olleh", resp);
 	}
-	
+
+	@Test
 	public void testMatchUrl() throws Exception {
 		String message = "http://www.test.com";
 		String resp = backwardsSpeaking.reverseString(message);
@@ -39,9 +40,10 @@ public class BackwardsSpeakingTest {
 		
 		message = "Sa nana snob porte de trop bons ananas";
 		resp = backwardsSpeaking.reverseString(message);
-		assertEquals("sanana snob port ed etrop bons anan aS", resp);
+		assertEquals("Sanana snob port ed etrop bons anan as", resp);
 	}
-	
+
+	@Test
 	public void testTooLongMessage() throws Exception {
 		String message = "Une phrase un peu trop longue que Nicobot ne doit pas répèter !";
 		String resp = backwardsSpeaking.reverseString(message);

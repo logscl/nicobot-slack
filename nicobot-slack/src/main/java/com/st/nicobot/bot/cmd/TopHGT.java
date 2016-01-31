@@ -2,16 +2,12 @@ package com.st.nicobot.bot.cmd;
 
 import com.st.nicobot.bot.NicoBot;
 import com.st.nicobot.bot.utils.Option;
-import com.st.nicobot.services.UsernameService;
-import com.st.nicobot.services.memory.GreetersRepositoryManager;
-import com.st.nicobot.services.Messages;
-import com.ullink.slack.simpleslackapi.SlackUser;
+import com.st.nicobot.services.HappyGeekTimeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Logs on 21-07-15.
@@ -28,13 +24,7 @@ public class TopHGT extends NiCommand {
     private NicoBot nicobot;
 
     @Autowired
-    private GreetersRepositoryManager greeters;
-
-    @Autowired
-    private Messages messages;
-
-    @Autowired
-    private UsernameService usernameService;
+    private HappyGeekTimeService hgtService;
 
     @Override
     public String getCommandName() {
@@ -58,20 +48,6 @@ public class TopHGT extends NiCommand {
 
     @Override
     protected void doCommand(String command, String[] args, Option opts) {
-        nicobot.sendMessage(opts.message, buildTopUsers(greeters.getAllTimeGreeters(opts.message.getChannel().getId())));
-    }
-
-    private String buildTopUsers(Map<String, Integer> users) {
-        StringBuilder message = new StringBuilder(messages.getMessage("allTopHGT"));
-        if(users != null && !users.isEmpty()) {
-            for (Map.Entry<String, Integer> user : users.entrySet()) {
-                SlackUser userName = nicobot.findUserById(user.getKey());
-                message.append(usernameService.getNoHLName(userName)).append(" (").append(user.getValue()).append("), ");
-            }
-            message.delete(message.lastIndexOf(","), message.length());
-        } else {
-            message.append(messages.getMessage("noOne"));
-        }
-        return message.toString();
+        nicobot.sendMessage(opts.message, hgtService.getAllTimeTopUsers(opts.message.getChannel().getId()));
     }
 }

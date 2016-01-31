@@ -1,13 +1,10 @@
 package com.st.nicobot.internal.job;
 
 import com.st.nicobot.bot.NicoBot;
-import com.st.nicobot.utils.NicobotProperty;
 import com.st.nicobot.job.HappyGeekTimeJob;
-import com.st.nicobot.services.LeetGreetingService;
-import com.st.nicobot.services.Messages;
-import com.st.nicobot.services.PropertiesService;
-import com.st.nicobot.services.UsernameService;
+import com.st.nicobot.services.*;
 import com.st.nicobot.services.memory.GreetersRepositoryManager;
+import com.st.nicobot.utils.NicobotProperty;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
@@ -19,7 +16,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -43,6 +39,9 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
 
     @Autowired
     private GreetersRepositoryManager greetersRepositoryManager;
+
+    @Autowired
+    private HappyGeekTimeService hgtService;
 
     @Autowired
     private UsernameService usernameService;
@@ -86,22 +85,8 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
                 greetersRepositoryManager.addGreeters(chan.getId(), users.stream().map(SlackUser::getId).collect(Collectors.toSet()));
             }
 
-            nicobot.sendMessage(chan, null, buildTopUsers(greetersRepositoryManager.getWeeklyGreeters(chan.getId())));
+            nicobot.sendMessage(chan, null, hgtService.getWeekTopUsers(chan.getId()));
         });
-    }
-
-    public String buildTopUsers(Map<String, Integer> users) {
-        StringBuilder message = new StringBuilder(messages.getMessage("weekTopHGT"));
-        if(users != null && !users.isEmpty()) {
-            for (Map.Entry<String, Integer> user : users.entrySet()) {
-                SlackUser username = nicobot.findUserById(user.getKey());
-                message.append(usernameService.getNoHLName(username)).append(" (").append(user.getValue()).append("), ");
-            }
-            message.delete(message.lastIndexOf(","), message.length());
-        } else {
-            message.append(messages.getMessage("noOne"));
-        }
-        return message.toString();
     }
 
     /**

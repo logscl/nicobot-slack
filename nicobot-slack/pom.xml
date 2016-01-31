@@ -31,8 +31,6 @@
     </profiles>
 
     <build>
-        <finalName>${project.groupId}.${project.artifactId}</finalName>
-
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
