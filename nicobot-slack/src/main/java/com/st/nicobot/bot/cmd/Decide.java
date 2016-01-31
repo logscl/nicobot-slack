@@ -42,8 +42,6 @@ public class Decide extends NiCommand {
         return FORMAT;
     }
 
-
-
     @Override
     protected void doCommand(String command, String[] args, Option opts) {
 
@@ -90,6 +88,4 @@ public class Decide extends NiCommand {
             }
         }
     }
-
-
 }
