@@ -186,6 +186,10 @@ public class MessagesImpl implements Messages {
 		otherMessages.put("duelRNStart",	"%s, envoyez moi un nombre entre %d et %d (inclus) en privé MAINTENANT !");
 		otherMessages.put("duelRNError",	"Non ! un nombre entre %d et %d inclus !");
 
+		otherMessages.put("yes",			"Oui !");
+		otherMessages.put("no",				"Non !");
+		otherMessages.put("noneOfThem",		"Aucun des %d !");
+
 		welcomeMessages = new HashMap<>();
 		welcomeMessages.put("newJoin0",		"Yo les gars! Saluez %p !");
 		welcomeMessages.put("newJoin1",		"Coucou %p ! Ca va bien ?");
