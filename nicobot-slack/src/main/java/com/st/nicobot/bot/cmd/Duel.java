@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -44,6 +46,7 @@ public class Duel extends NiCommand {
 
     private DuelEventListener listener = null;
     private Thread thread = null;
+    private CountDownLatch latch = null;
 
     @Override
     public String getCommandName() {
@@ -90,15 +93,14 @@ public class Duel extends NiCommand {
                     @Override
                     public void run() {
                         try {
+                            latch = new CountDownLatch(users.size());
                             listener = new DuelEventListener(nicobot, messages, users, opts);
                             nicobot.addMessagePostedListener(listener);
 
-                            synchronized (this) {
-                                this.wait(MAX_POLL_TIME_SEC * 1000);
-                            }
+                            latch.await(MAX_POLL_TIME_SEC, TimeUnit.SECONDS);
                             manageEndPoll(opts);
                         } catch (InterruptedException e) {
-                            logger.info("Poll ended before timeout");
+                            logger.info("Poll unexpectedly ended, but the bot will try to handle the votes anyway...");
                             manageEndPoll(opts);
                         } catch (Exception e) {
                             logger.error("Unexpected error in poll task", e);
@@ -253,16 +255,10 @@ public class Duel extends NiCommand {
         }
 
         public void addVoteAndDecrement(Vote vote) {
-            synchronized (remainingContestants) {
-                votes.add(vote);
-
-                remainingContestants.remove(vote.user);
-                logger.info("{} vode added, {} remaining", votes.size(), remainingContestants.size());
-                if (remainingContestants.size() == 0) {
-                    logger.info("No more votes needed, interrupt !");
-                    thread.interrupt();
-                }
-            }
+            votes.add(vote);
+            remainingContestants.remove(vote.user);
+            logger.info("{} vode added, {} remaining", votes.size(), remainingContestants.size());
+            latch.countDown();
         }
 
         public boolean missingVotes() {
