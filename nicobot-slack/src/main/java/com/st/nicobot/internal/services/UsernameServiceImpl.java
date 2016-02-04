@@ -16,7 +16,8 @@ import java.util.stream.Collectors;
 @Service
 public class UsernameServiceImpl implements UsernameService {
 
-    private static String ZERO_WIDTH_SPACE = "\u200B";
+    //private static String ZERO_WIDTH_SPACE = "\u200B"; Not working anymore. remaining untested: 200D/200E/200F/202F
+    private static String ZERO_WIDTH_SPACE = "\u200C";
 
     @Override
     public String getNoHLName(String userName) {
