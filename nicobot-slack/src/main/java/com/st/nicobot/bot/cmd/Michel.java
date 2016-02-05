@@ -20,7 +20,7 @@ public class Michel extends NiCommand {
     private static final String FORMAT = "!michel";
     private static final String DESC = "bisous michel ok";
 
-    private static List<String> FRAGMENTS = Arrays.asList("ok", "michel", "bisous", "merci", "michel smits", "bise", "appel moi", "gsm", "belle claire", "claire", "j'aime ca", "sva", "sva toi", "grand fére", "parles gsm", "plus belle toi");
+    private static List<String> FRAGMENTS = Arrays.asList("ok", "michel", "bisous", "merci", "michel smits", "bise", "appel moi", "gsm", "belle claire", "claire", "j'aime ca", "sva", "sva toi", "grand fére", "parles gsm", "plus belle toi", "talme", "la plus belle", "ma grande soeur", "bise a elle", "toi", "joile pied");
 
     @Autowired
     private NicoBot nicobot;
@@ -42,7 +42,7 @@ public class Michel extends NiCommand {
 
     @Override
     protected void doCommand(String command, String[] args, Option opts) {
-        int wordCount = RandomUtils.nextInt(2, 6);
+        int wordCount = RandomUtils.nextInt(2, 8);
 
         StringBuilder phrase = new StringBuilder();
 
