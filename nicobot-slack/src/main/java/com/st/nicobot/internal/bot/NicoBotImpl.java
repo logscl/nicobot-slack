@@ -14,6 +14,10 @@ import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import com.ullink.slack.simpleslackapi.impl.SlackChatConfiguration;
 import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 import com.ullink.slack.simpleslackapi.listeners.*;
+import com.ullink.slack.simpleslackapi.replies.GenericSlackReply;
+import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
+import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
+import com.ullink.slack.simpleslackapi.replies.SlackReply;
 import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,44 +106,58 @@ public class NicoBotImpl implements NicoBot {
     }
 
     @Override
-    public SlackMessageHandle sendMessage(SlackChannel channel, SlackUser origin, String message) {
+    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, SlackUser origin, String message) {
         return session.sendMessage(channel, formatMessage(message, origin, channel), null);
     }
 
     @Override
-    public SlackMessageHandle sendMessage(SlackChannel channel, SlackUser sender, String message, Emoji emoji) {
-        SlackMessageHandle handle = sendMessage(channel, sender, message);
+    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, SlackUser sender, String message, Emoji emoji) {
+        SlackMessageHandle<SlackMessageReply> handle = sendMessage(channel, sender, message);
 
-        session.addReactionToMessage(channel, handle.getSlackReply().getTimestamp(), emoji.getEmojiName());
+        session.addReactionToMessage(channel, handle.getReply().getTimestamp(), emoji.getEmojiName());
 
         return handle;
     }
 
     @Override
-    public SlackMessageHandle sendMessage(SlackMessagePosted originator, String message) {
+    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackMessagePosted originator, String message) {
         return sendMessage(originator.getChannel(), originator.getSender(), message);
     }
 
     @Override
-    public SlackMessageHandle sendMessage(SlackMessagePosted originator, String message, Emoji emoji, boolean placeReactionOnBotMsg) {
-        SlackMessageHandle handle = sendMessage(originator.getChannel(), originator.getSender(), message);
+    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackMessagePosted originator, String message, Emoji emoji, boolean placeReactionOnBotMsg) {
+        SlackMessageHandle<SlackMessageReply> handle = sendMessage(originator.getChannel(), originator.getSender(), message);
         String tstamp = originator.getTimeStamp();
         if(placeReactionOnBotMsg) {
-            tstamp = handle.getSlackReply().getTimestamp();
+            tstamp = handle.getReply().getTimestamp();
         }
         session.addReactionToMessage(originator.getChannel(), tstamp, emoji.getEmojiName());
         return handle;
     }
 
     @Override
-    public SlackMessageHandle sendPrivateMessage(SlackMessagePosted originator, String message) {
-        for(SlackChannel channel : session.getChannels()) {
-            if(channel.isDirect() && channel.getMembers().contains(originator.getSender())) {
-                return session.sendMessage(channel, message, null);
-            }
-        }
-        logger.warn("Direct channel with user {} not found !", originator.getSender());
-        return null;
+    public SlackMessageHandle<SlackMessageReply> sendPrivateMessage(SlackMessagePosted originator, String message) {
+        return session.sendMessageToUser(originator.getSender(), message, null);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, String message, SlackAttachment attachment) {
+        return session.sendMessageToUser(user, message, attachment);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessageToUser(String userName, String message, SlackAttachment attachment) {
+        return session.sendMessageToUser(userName, message, attachment);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackChannelReply> openDirectMessageChannel(SlackUser user) {
+        return session.openDirectMessageChannel(user);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackChannelReply> openMultipartyDirectMessageChannel(SlackUser... users) {
+        return session.openMultipartyDirectMessageChannel(users);
     }
 
     @Override
@@ -153,6 +171,11 @@ public class NicoBotImpl implements NicoBot {
     @Override
     public void disconnect() throws IOException {
         session.disconnect();
+    }
+
+    @Override
+    public boolean isConnected() {
+        return session.isConnected();
     }
 
     @Override
@@ -192,6 +215,16 @@ public class NicoBotImpl implements NicoBot {
 
     @Override
     public SlackMessageHandle leaveChannel(SlackChannel slackChannel) {
+        return null;
+    }
+
+    @Override
+    public SlackMessageHandle<GenericSlackReply> inviteUser(String email, String firstName, boolean setActive) {
+        return null;
+    }
+
+    @Override
+    public SlackMessageHandle<SlackChannelReply> inviteToChannel(SlackChannel channel, SlackUser user) {
         return null;
     }
 
@@ -258,6 +291,46 @@ public class NicoBotImpl implements NicoBot {
     @Override
     public void removeMessageDeletedListener(SlackMessageDeletedListener slackMessageDeletedListener) {
         session.removeMessageDeletedListener(slackMessageDeletedListener);
+    }
+
+    @Override
+    public void addReactionAddedListener(ReactionAddedListener reactionAddedListener) {
+
+    }
+
+    @Override
+    public void removeReactionAddedListener(ReactionAddedListener reactionAddedListener) {
+
+    }
+
+    @Override
+    public void addReactionRemovedListener(ReactionRemovedListener reactionRemovedListener) {
+
+    }
+
+    @Override
+    public void removeReactionRemovedListener(ReactionRemovedListener reactionRemovedListener) {
+
+    }
+
+    @Override
+    public void addSlackConnectedListener(SlackConnectedListener slackConnectedListener) {
+
+    }
+
+    @Override
+    public void removeSlackConnectedListener(SlackConnectedListener slackConnectedListener) {
+
+    }
+
+    @Override
+    public SlackMessageHandle<GenericSlackReply> postGenericSlackCommand(Map<String, String> map, String s) {
+        return session.postGenericSlackCommand(map, s);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackReply> archiveChannel(SlackChannel slackChannel) {
+        return session.archiveChannel(slackChannel);
     }
 
     @Override
