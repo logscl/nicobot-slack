@@ -57,7 +57,7 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
         greetingService.init();
         logger.info("Leet starting at "+ DateTime.now().toString());
 
-        nicobot.getChannels().stream().filter(channel -> channel.getName().equals(properties.get(NicobotProperty.FEATURED_CHANNEL))).forEach(channel -> nicobot.sendMessage(channel, null, messages.getMessage("hgt")));
+        nicobot.getSession().getChannels().stream().filter(channel -> channel.getName().equals(properties.get(NicobotProperty.FEATURED_CHANNEL))).forEach(channel -> nicobot.sendMessage(channel, null, messages.getMessage("hgt")));
 
 
         try {
@@ -75,7 +75,7 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
             logger.info("Leet ended at " + DateTime.now().toString());
         }
 
-        nicobot.getChannels().stream().filter(chan -> chan.getName().equals(properties.get(NicobotProperty.FEATURED_CHANNEL))).forEach(chan -> {
+        nicobot.getSession().getChannels().stream().filter(chan -> chan.getName().equals(properties.get(NicobotProperty.FEATURED_CHANNEL))).forEach(chan -> {
             Set<SlackUser> users = greetingService.getGreeters().get(chan);
             String message = buildMessageWithNames(users);
 

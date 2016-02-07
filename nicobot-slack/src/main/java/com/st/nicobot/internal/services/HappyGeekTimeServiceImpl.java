@@ -56,7 +56,7 @@ public class HappyGeekTimeServiceImpl implements HappyGeekTimeService {
         } else {
             String usersString = users.entrySet().stream()
                     .map(entry -> {
-                        SlackUser user = nicobot.findUserById(entry.getKey());
+                        SlackUser user = nicobot.getSession().findUserById(entry.getKey());
                         String noHlName = usernameService.getNoHLName(user);
 
                         return noHlName + " (" + entry.getValue() + ")";

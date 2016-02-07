@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  * Created by Logs on 09-05-15.
  */
-public interface NicoBot extends SlackSession {
+public interface NicoBot {
 
     void connect() throws IOException;
 
@@ -29,6 +29,5 @@ public interface NicoBot extends SlackSession {
 
     boolean isSelfMessage(SlackMessagePosted message);
 
-    String getBotName();
-
+    SlackSession getSession();
 }

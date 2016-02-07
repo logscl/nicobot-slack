@@ -20,7 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Logs on 17-08-15.
@@ -129,7 +132,7 @@ public class Gommette extends NiCommand {
                 try {
                     listener = new GommetteEventListener(nicobot, messages, arguments.user);
                     listener.addInitiatorVote(opts.message.getSender());
-                    nicobot.addMessagePostedListener(listener);
+                    nicobot.getSession().addMessagePostedListener(listener);
                     synchronized (this) {
                         int i = 0;
                         int warns = 0;
@@ -155,7 +158,7 @@ public class Gommette extends NiCommand {
                         }
                     }
 
-                    nicobot.removeMessagePostedListener(listener);
+                    nicobot.getSession().removeMessagePostedListener(listener);
 
                     if(listener.getTotalVotes() >= MIN_VOTES_TRIGGER) {
                         if(listener.getVoteYesCount() > listener.getVoteNoCount()) {
@@ -212,7 +215,7 @@ public class Gommette extends NiCommand {
         StringBuilder message = new StringBuilder(messages.getMessage("gmTopUsers"));
         if(users != null && !users.isEmpty()) {
             for (Map.Entry<String, Integer> user : users.entrySet()) {
-                SlackUser username = nicobot.findUserById(user.getKey());
+                SlackUser username = nicobot.getSession().findUserById(user.getKey());
                 Map<GommetteColor, Integer> gomm = repositoryManager.getGommettes(username.getId());
                 int green = gomm.get(GommetteColor.GREEN) != null ? gomm.get(GommetteColor.GREEN) : 0;
                 int red = gomm.get(GommetteColor.RED) != null ? gomm.get(GommetteColor.RED) : 0;
@@ -247,13 +250,13 @@ public class Gommette extends NiCommand {
                 if(subCmd != null) {
                     if(subCmd.color != null) {
                         gommette = subCmd.color;
-                        user = nicobot.findUserByUserName(args[1]);
+                        user = nicobot.getSession().findUserByUserName(args[1]);
                         if(args.length > 2) {
                             reason = args[2];
                         }
                     } else if(subCmd == GommetteSubCmd.SCORE) {
                         if(args.length > 1) {
-                            user = nicobot.findUserByUserName(args[1]);
+                            user = nicobot.getSession().findUserByUserName(args[1]);
                         }
                     }
                 }

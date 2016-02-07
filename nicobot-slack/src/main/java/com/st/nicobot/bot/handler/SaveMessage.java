@@ -3,8 +3,8 @@ package com.st.nicobot.bot.handler;
 import com.st.nicobot.api.domain.model.Message;
 import com.st.nicobot.api.services.APIMessageService;
 import com.st.nicobot.bot.NicoBot;
-import com.st.nicobot.utils.NicobotProperty;
 import com.st.nicobot.services.PropertiesService;
+import com.st.nicobot.utils.NicobotProperty;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import org.joda.time.DateTime;
@@ -58,8 +58,8 @@ public class SaveMessage extends AbstractMessageEvent {
 		Matcher nameIdMatcher = nameIdPattern.matcher(message);
 		while(nameIdMatcher.find()) {
 			String userID = nameIdMatcher.group(1);
-			if(nicoBot.findUserById(userID) != null) {
-				String username = nicoBot.findUserById(userID).getUserName();
+			if(nicoBot.getSession().findUserById(userID) != null) {
+				String username = nicoBot.getSession().findUserById(userID).getUserName();
 				returnMessage = returnMessage.replaceAll("<@"+userID+">", username);
 			}
 		}
@@ -74,8 +74,8 @@ public class SaveMessage extends AbstractMessageEvent {
 		Matcher channelIdMatcher = channelIdPattern.matcher(message);
 		while(channelIdMatcher.find()) {
 			String chanID = channelIdMatcher.group(1);
-			if(nicoBot.findChannelById(chanID) != null) {
-				String username = nicoBot.findChannelById(chanID).getName();
+			if(nicoBot.getSession().findChannelById(chanID) != null) {
+				String username = nicoBot.getSession().findChannelById(chanID).getName();
 				returnMessage = returnMessage.replaceAll("<#"+chanID+">", username);
 			}
 		}

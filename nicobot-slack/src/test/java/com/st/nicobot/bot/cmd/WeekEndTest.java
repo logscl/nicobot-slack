@@ -5,6 +5,7 @@ import com.st.nicobot.bot.utils.Option;
 import com.st.nicobot.internal.services.MessagesImpl;
 import com.st.nicobot.services.PropertiesService;
 import com.ullink.slack.simpleslackapi.SlackChannel;
+import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import org.joda.time.*;
 import org.junit.Before;
@@ -68,7 +69,8 @@ public class WeekEndTest {
         when(message.getChannel()).thenReturn(mock(SlackChannel.class));
         ArrayList<SlackChannel> list = new ArrayList<>();
         list.add(message.getChannel());
-        when(nicobot.getChannels()).thenReturn(list);
+        when(nicobot.getSession()).thenReturn(mock(SlackSession.class));
+        when(nicobot.getSession().getChannels()).thenReturn(list);
 
         weekEnd.doCommand("!weekend", null, new Option(message));
     }

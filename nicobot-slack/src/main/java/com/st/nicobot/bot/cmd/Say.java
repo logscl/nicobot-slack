@@ -56,7 +56,7 @@ public class Say extends NiCommand {
 				throw new IllegalArgumentException(); 
 			}
 			
-			channel = nicobot.findChannelByName(arguments[0]);
+			channel = nicobot.getSession().findChannelByName(arguments[0]);
 			message = arguments[1];
 		}
 	}

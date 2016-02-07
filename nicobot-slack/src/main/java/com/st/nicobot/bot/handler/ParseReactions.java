@@ -1,12 +1,12 @@
 package com.st.nicobot.bot.handler;
 
 import com.st.nicobot.bot.NicoBot;
-import com.st.nicobot.utils.NicobotProperty;
 import com.st.nicobot.bot.utils.Reaction;
 import com.st.nicobot.services.Commands;
 import com.st.nicobot.services.LeetGreetingService;
 import com.st.nicobot.services.Messages;
 import com.st.nicobot.services.PropertiesService;
+import com.st.nicobot.utils.NicobotProperty;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class ParseReactions extends AbstractMessageEvent {
 	@Override
 	public void onEvent(SlackMessagePosted message, SlackSession session) {
 		if(!nicobot.isSelfMessage(message)) {
-			if(nicobot.getChannels().contains(message.getChannel())) {
+			if(nicobot.getSession().getChannels().contains(message.getChannel())) {
 				onMessage(message);
 			}
 		}

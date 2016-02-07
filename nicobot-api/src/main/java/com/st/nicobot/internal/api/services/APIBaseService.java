@@ -2,8 +2,8 @@ package com.st.nicobot.internal.api.services;
 
 import com.st.nicobot.api.domain.model.response.UnmarshalledResponse;
 import com.st.nicobot.api.services.PersistenceStrategy;
-import com.st.nicobot.utils.NicobotProperty;
 import com.st.nicobot.services.PropertiesService;
+import com.st.nicobot.utils.NicobotProperty;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.slf4j.Logger;

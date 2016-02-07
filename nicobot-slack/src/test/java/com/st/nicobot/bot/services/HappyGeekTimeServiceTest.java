@@ -5,6 +5,7 @@ import com.st.nicobot.internal.services.HappyGeekTimeServiceImpl;
 import com.st.nicobot.services.Messages;
 import com.st.nicobot.services.UsernameService;
 import com.st.nicobot.services.memory.GreetersRepositoryManager;
+import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,7 +55,8 @@ public class HappyGeekTimeServiceTest {
         when(messages.getMessage("weekTopHGT")).thenReturn(WEEK_TOP);
         when(messages.getMessage("noOne")).thenReturn(NO_ONE);
 
-        when(nicobot.findUserById(anyString())).thenReturn(mock(SlackUser.class));
+        when(nicobot.getSession()).thenReturn(mock(SlackSession.class));
+        when(nicobot.getSession().findUserById(anyString())).thenReturn(mock(SlackUser.class));
         when(usernameService.getNoHLName(any(SlackUser.class))).thenReturn(names.get(0), names.get(1), names.get(2));
     }
 

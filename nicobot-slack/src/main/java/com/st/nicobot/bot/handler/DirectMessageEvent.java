@@ -22,7 +22,7 @@ public class DirectMessageEvent extends AbstractMessageEvent {
 
     @Override
     public void onEvent(SlackMessagePosted message, SlackSession session) {
-        if(!nicoBot.isSelfMessage(message) && !nicoBot.getChannels().contains(message.getChannel())) {
+        if(!nicoBot.isSelfMessage(message) && !nicoBot.getSession().getChannels().contains(message.getChannel())) {
             onMessage(message);
         }
     }

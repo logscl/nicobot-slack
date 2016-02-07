@@ -1,10 +1,10 @@
 package com.st.nicobot.bot.cmd;
 
 import com.st.nicobot.bot.NicoBot;
-import com.st.nicobot.utils.NicobotProperty;
 import com.st.nicobot.bot.utils.Option;
 import com.st.nicobot.services.Messages;
 import com.st.nicobot.services.PropertiesService;
+import com.st.nicobot.utils.NicobotProperty;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;

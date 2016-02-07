@@ -1,13 +1,14 @@
 package com.st.nicobot.bot.handler;
 
 import com.st.nicobot.bot.NicoBot;
-import com.st.nicobot.utils.NicobotProperty;
 import com.st.nicobot.bot.utils.Reaction;
 import com.st.nicobot.services.Commands;
 import com.st.nicobot.services.LeetGreetingService;
 import com.st.nicobot.services.Messages;
 import com.st.nicobot.services.PropertiesService;
+import com.st.nicobot.utils.NicobotProperty;
 import com.ullink.slack.simpleslackapi.SlackChannel;
+import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import org.junit.Before;
 import org.junit.Test;
@@ -65,7 +66,8 @@ public class ParseReactionsTest {
         when(message.getChannel().getName()).thenReturn("general");
         ArrayList<SlackChannel> list = new ArrayList<>();
         list.add(message.getChannel());
-        when(nicobot.getChannels()).thenReturn(list);
+        when(nicobot.getSession()).thenReturn(mock(SlackSession.class));
+        when(nicobot.getSession().getChannels()).thenReturn(list);
 
         HashSet<Reaction> set = new HashSet<>();
         set.add(new Reaction(".*(julie|hercot) .*",			true, 30, "On en reparle quand elle aura arrêté avec son équipe de meeeerde celle là.  Iiiimmmmbécile."));

@@ -78,7 +78,7 @@ public class Duel extends NiCommand {
 
             while (iter.hasNext()) {
                 SlackUser user = iter.next();
-                if (user.isBot() || user.getId().equals(nicobot.sessionPersona().getId()) || user.getUserName().equals("slackbot")) {
+                if (user.isBot() || user.getId().equals(nicobot.getSession().sessionPersona().getId()) || user.getUserName().equals("slackbot")) {
                     iter.remove();
                 }
             }
@@ -95,7 +95,7 @@ public class Duel extends NiCommand {
                         try {
                             latch = new CountDownLatch(users.size());
                             listener = new DuelEventListener(nicobot, messages, users, opts);
-                            nicobot.addMessagePostedListener(listener);
+                            nicobot.getSession().addMessagePostedListener(listener);
 
                             latch.await(MAX_POLL_TIME_SEC, TimeUnit.SECONDS);
                             manageEndPoll(opts);
@@ -105,7 +105,7 @@ public class Duel extends NiCommand {
                         } catch (Exception e) {
                             logger.error("Unexpected error in poll task", e);
                         } finally {
-                            nicobot.removeMessagePostedListener(listener);
+                            nicobot.getSession().removeMessagePostedListener(listener);
                             listener = null;
                         }
                     }
@@ -191,7 +191,7 @@ public class Duel extends NiCommand {
         public DuelArguments(String[] args) throws IllegalArgumentException, UnknwownUserException {
             if (args != null && args.length > 0) {
                 for (String arg : args) {
-                    SlackUser user = nicobot.findUserByUserName(arg);
+                    SlackUser user = nicobot.getSession().findUserByUserName(arg);
                     if (user != null) {
                         users.add(user);
                     } else {
