@@ -48,7 +48,7 @@ public class Decide extends NiCommand {
         try {
             DecideArguments arguments = new DecideArguments(args);
 
-            if (arguments.choices.size() == 1) {
+            if (arguments.choices.size() < 2) {
                 if(RandomUtils.nextInt(0,2) == 1) {
                     nicobot.sendMessage(opts.message, messages.getMessage("yes"));
                 } else {
@@ -77,14 +77,12 @@ public class Decide extends NiCommand {
         public DecideArguments(String[] args) throws IllegalArgumentException {
             if(args != null && args.length > 0) {
                 String fullArgs = StringUtils.join(args, " "); // Rebuild args to regex it
-                String[] splits = fullArgs.split(",|ou");
+                String[] splits = fullArgs.split(",| ou ");
                 for(String str : splits) {
                     String cleanedString = StringUtils.trim(str);
                     cleanedString = StringUtils.trim(StringUtils.removeEnd(cleanedString, "?"));
                     choices.add(cleanedString);
                 }
-            } else {
-                throw new IllegalArgumentException("Too few arguments");
             }
         }
     }
