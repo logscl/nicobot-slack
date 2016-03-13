@@ -101,7 +101,7 @@ public class NicoBotImpl implements NicoBot {
 
     @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, SlackUser origin, String message) {
-        return session.sendMessage(channel, formatMessage(message, origin, channel), null);
+        return session.sendMessage(channel, formatMessage(message, origin, channel));
     }
 
     @Override
