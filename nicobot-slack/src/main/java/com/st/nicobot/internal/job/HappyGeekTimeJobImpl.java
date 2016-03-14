@@ -5,6 +5,7 @@ import com.st.nicobot.job.HappyGeekTimeJob;
 import com.st.nicobot.services.*;
 import com.st.nicobot.services.memory.GreetersRepositoryManager;
 import com.st.nicobot.utils.NicobotProperty;
+import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -57,7 +59,10 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
         greetingService.init();
         logger.info("Leet starting at "+ DateTime.now().toString());
 
-        nicobot.getSession().getChannels().stream().filter(channel -> channel.getName().equals(properties.get(NicobotProperty.FEATURED_CHANNEL))).forEach(channel -> nicobot.sendMessage(channel, null, messages.getMessage("hgt")));
+        Predicate<SlackChannel> isGroupChannel = slackChannel -> slackChannel.getType() != SlackChannel.SlackChannelType.INSTANT_MESSAGING;
+        Predicate<SlackChannel> isFeatured = slackChannel -> slackChannel.getName().equals(properties.get(NicobotProperty.FEATURED_CHANNEL));
+
+        nicobot.getSession().getChannels().stream().filter(isGroupChannel.and(isFeatured)).forEach(channel ->nicobot.sendMessage(channel, null, messages.getMessage("hgt")));
 
 
         try {
