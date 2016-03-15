@@ -80,7 +80,7 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
             logger.info("Leet ended at " + DateTime.now().toString());
         }
 
-        nicobot.getSession().getChannels().stream().filter(chan -> chan.getName().equals(properties.get(NicobotProperty.FEATURED_CHANNEL))).forEach(chan -> {
+        nicobot.getSession().getChannels().stream().filter(isGroupChannel.and(isFeatured)).forEach(chan -> {
             Set<SlackUser> users = greetingService.getGreeters().get(chan);
             String message = buildMessageWithNames(users);
 
