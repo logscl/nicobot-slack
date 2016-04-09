@@ -72,7 +72,7 @@ public class YoutubeSearch extends NiCommand {
 
             JSONObject response = resource.type(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
 
-            if(response.has("items")) {
+            if(response.has("items") && response.getJSONArray("items").length() > 0) {
                 String videoId = response.getJSONArray("items").getJSONObject(0).getJSONObject("id").getString("videoId");
 
                 nicobot.sendMessage(opts.message, properties.get(NicobotProperty.YOUTUBE_VIDEO_URI)+videoId);
