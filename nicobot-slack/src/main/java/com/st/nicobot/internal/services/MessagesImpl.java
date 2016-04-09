@@ -98,6 +98,7 @@ public class MessagesImpl implements Messages {
 		reactions.add(new Reaction(".*\\bparc\\b.*",				"parque!"));
 		reactions.add(new Reaction(".*\\blac\\b.*",					"laque!"));
 		reactions.add(new Reaction(".*gomette.*",					"Ca s'écrit gomMette. Avec 2 m."));
+		reactions.add(new Reaction(".* lance.*",					true, 60, "Oui, mais pas trop loin... hein qn7o ?"));
 
 		// Random reacts
 		reactions.add(new Reaction(".*qui .*\\?$",					"C'est %u !", "J'veux pas dénoncer... mais c'est %u.", "Si c'est pas %u, c'est ta mère !"));
