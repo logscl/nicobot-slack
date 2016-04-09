@@ -99,6 +99,10 @@ public abstract class AbstractSearch extends NiCommand {
     private void searchAndSendLink(Option opts) {
         try {
             String foundLink = lastSearchResult.getJSONArray("items").getJSONObject(searchIndex).getString("link");
+            while (foundLink.contains("x-raw-image")) {
+                searchIndex++;
+                foundLink = lastSearchResult.getJSONArray("items").getJSONObject(searchIndex).getString("link");
+            }
             nicobot.sendMessage(opts.message, foundLink);
         } catch (JSONException e) {
             logger.error(e.getMessage(),e);
