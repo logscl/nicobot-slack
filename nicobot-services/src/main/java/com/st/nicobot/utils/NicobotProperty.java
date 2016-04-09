@@ -17,6 +17,9 @@ public enum NicobotProperty {
 	GITHUB_ISSUE_ADD_URL("github.issue.add.url"),
 	GITHUB_API_KEY("github.api.key"),
 
+	GOOGLE_MAPS_URI("google.maps.uri"),
+	GOOGLE_MAPS_PLACE_URI("google.maps.place.uri"),
+
 	FEATURED_CHANNEL("nicobot.featured.channel");
 
 	private String key;

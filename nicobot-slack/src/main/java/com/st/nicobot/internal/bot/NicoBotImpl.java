@@ -9,10 +9,7 @@ import com.st.nicobot.services.Messages;
 import com.st.nicobot.services.PropertiesService;
 import com.st.nicobot.services.UsernameService;
 import com.st.nicobot.utils.NicobotProperty;
-import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackMessageHandle;
-import com.ullink.slack.simpleslackapi.SlackSession;
-import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.*;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
@@ -72,6 +69,24 @@ public class NicoBotImpl implements NicoBot {
             logger.info("{} loaded", entry.getValue().getClass().getSimpleName());
         }
 
+        new Thread() {
+            @Override
+            public void run() {
+                while(!session.isConnected()) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                for(SlackUser user : session.getUsers()) {
+                    logger.info("{} - {}",user.getId(), user.getUserName());
+                }
+
+            }
+        }.start();
+
+
     }
 
     /**
@@ -82,13 +97,15 @@ public class NicoBotImpl implements NicoBot {
      * @return
      */
     private String formatMessage(String message, SlackUser sender, SlackChannel channel) {
-        if(sender != null) {
-            message = message.replaceAll("%p", usernameService.getNoHLName(sender));
-        }
-        message = message.replaceAll("%c", channel.getName());
+        if(message != null) {
+            if (sender != null) {
+                message = message.replaceAll("%p", usernameService.getNoHLName(sender));
+            }
+            message = message.replaceAll("%c", channel.getName());
 
-        if(sender != null && message.contains("%u")) {
-            message = message.replaceAll("%u", usernameService.getNoHLName(getRandomUserFromChannel(channel)));
+            if (sender != null && message.contains("%u")) {
+                message = message.replaceAll("%u", usernameService.getNoHLName(getRandomUserFromChannel(channel)));
+            }
         }
 
         return message;
@@ -101,7 +118,12 @@ public class NicoBotImpl implements NicoBot {
 
     @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, SlackUser origin, String message) {
-        return session.sendMessage(channel, formatMessage(message, origin, channel));
+        return session.sendMessage(channel, formatMessage(message, origin, channel), (SlackAttachment)null);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, SlackUser origin, String message, SlackAttachment attachment) {
+        return session.sendMessage(channel, formatMessage(message, origin, channel), attachment);
     }
 
     @Override
@@ -116,6 +138,11 @@ public class NicoBotImpl implements NicoBot {
     @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(SlackMessagePosted originator, String message) {
         return sendMessage(originator.getChannel(), originator.getSender(), message);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackMessagePosted originator, String message, SlackAttachment attachment) {
+        return sendMessage(originator.getChannel(), originator.getSender(), message, attachment);
     }
 
     @Override
