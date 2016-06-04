@@ -307,9 +307,9 @@ public class Gommette extends NiCommand {
                 if (trollMessage()) {
                     nicobot.sendMessage(event, messages.getMessage("gmTrollVote", event.getSender().getUserName()));
                     votes.put(event.getSender(), GommetteVoteType.CANCELLED);
-                } else if (getVoteYesStr().equals(message)) {
+                } else if (getVoteYesStr().contains(message)) {
                     votes.put(event.getSender(), GommetteVoteType.YES);
-                } else if (getVoteNoStr().equals(message)) {
+                } else if (getVoteNoStr().contains(message)) {
                     votes.put(event.getSender(), GommetteVoteType.NO);
                 }
                 lastVoteDate = DateTime.now();
