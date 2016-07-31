@@ -219,6 +219,7 @@ public class MessagesImpl implements Messages {
         randomSpeeches.add("Tu pinailles un peu quand même !");
         randomSpeeches.add("J'suis chaud ! J'suis chaud chaud chaud !!");
         randomSpeeches.add("Un bijou !");
+        randomSpeeches.add("A méditer...");
 	}
 
 	@Override
