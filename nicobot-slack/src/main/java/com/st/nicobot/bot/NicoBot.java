@@ -28,6 +28,8 @@ public interface NicoBot {
 
     SlackMessageHandle<SlackMessageReply> sendPrivateMessage(SlackMessagePosted originator, String message);
 
+    SlackMessageHandle<SlackMessageReply> sendFile(SlackMessagePosted originator, byte[] fileBytes, String fileName);
+
     boolean isSelfMessage(SlackMessagePosted message);
 
     SlackSession getSession();

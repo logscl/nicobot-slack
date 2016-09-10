@@ -26,7 +26,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.targetEncoding>UTF-8</project.build.targetEncoding>
         <slf4j.version>[1.7,)</slf4j.version>
-        <simpleslackapi.version>0.5.1</simpleslackapi.version>
+        <simpleslackapi.version>0.6.0</simpleslackapi.version>
+        <phantomjs-wrapper.version>3.0.0</phantomjs-wrapper.version>
         <spring.version>4.1.5.RELEASE</spring.version>
         <nicobot.version>1.1</nicobot.version>
     </properties>
@@ -86,6 +87,29 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.moodysalem</groupId>
+            <artifactId>phantomjs-wrapper</artifactId>
+            <version>${phantomjs-wrapper.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.moodysalem</groupId>
+            <artifactId>phantomjs-wrapper-windows-binary</artifactId>
+            <version>${phantomjs-wrapper.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.moodysalem</groupId>
+            <artifactId>phantomjs-wrapper-linux-binary</artifactId>
+            <version>${phantomjs-wrapper.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.5</version>
+        </dependency>
     </dependencies>
 
     <modules>

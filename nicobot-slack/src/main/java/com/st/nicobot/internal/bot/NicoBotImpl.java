@@ -143,6 +143,11 @@ public class NicoBotImpl implements NicoBot {
     }
 
     @Override
+    public SlackMessageHandle<SlackMessageReply> sendFile(SlackMessagePosted originator, byte[] fileBytes, String fileName) {
+        return session.sendFile(originator.getChannel(), fileBytes, fileName);
+    }
+
+    @Override
     public void connect() throws IOException {
         session.connect();
 
