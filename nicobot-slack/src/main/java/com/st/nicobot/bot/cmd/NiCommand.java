@@ -76,7 +76,7 @@ public abstract class NiCommand {
 	public boolean handle(String command, String[] arguments, Option opts) {
 		boolean handled = false;
 		
-		if (command.equals(getCommandName()) || getAliases().contains(command)){
+		if (command.toLowerCase().equals(getCommandName().toLowerCase()) || getAliases().contains(command.toLowerCase())){
 			this.doCommand(command, arguments, opts);
 			return true;
 		}
