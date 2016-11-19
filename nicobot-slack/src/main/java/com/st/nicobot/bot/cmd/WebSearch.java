@@ -1,8 +1,7 @@
 package com.st.nicobot.bot.cmd;
 
+import com.google.api.services.customsearch.Customsearch;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
 
 /**
  * Created by Logs on 22-08-15.
@@ -30,7 +29,7 @@ public class WebSearch extends AbstractSearch {
     }
 
     @Override
-    protected Map<String, String> getSpecificQueryArguments() {
-        return null;
+    protected void addSpecificQueryArguments(Customsearch.Cse.List search) {
+
     }
 }

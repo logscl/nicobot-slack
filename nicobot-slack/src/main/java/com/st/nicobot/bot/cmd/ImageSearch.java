@@ -1,11 +1,10 @@
 package com.st.nicobot.bot.cmd;
 
+import com.google.api.services.customsearch.Customsearch;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Logs on 22-08-15.
@@ -39,9 +38,7 @@ public class ImageSearch extends AbstractSearch {
     }
 
     @Override
-    protected Map<String, String> getSpecificQueryArguments() {
-        Map<String,String> map = new HashMap<>();
-        map.put("searchType","image");
-        return map;
+    protected void addSpecificQueryArguments(Customsearch.Cse.List search) {
+        search.setSearchType("image");
     }
 }

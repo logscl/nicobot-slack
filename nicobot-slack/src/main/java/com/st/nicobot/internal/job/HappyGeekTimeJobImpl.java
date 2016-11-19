@@ -62,8 +62,7 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
         Predicate<SlackChannel> isGroupChannel = slackChannel -> slackChannel.getType() != SlackChannel.SlackChannelType.INSTANT_MESSAGING;
         Predicate<SlackChannel> isFeatured = slackChannel -> slackChannel.getName().equals(properties.get(NicobotProperty.FEATURED_CHANNEL));
 
-        nicobot.getSession().getChannels().stream().filter(isGroupChannel.and(isFeatured)).forEach(channel ->nicobot.sendMessage(channel, null, messages.getMessage("hgt")));
-
+        //nicobot.getSession().getChannels().stream().filter(isGroupChannel.and(isFeatured)).forEach(channel ->nicobot.sendMessage(channel, null, messages.getMessage("hgt")));
 
         try {
             logger.info("Bot will now wait for 1 min to read mesages at "+ DateTime.now().toString());
@@ -84,6 +83,7 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
             Set<SlackUser> users = greetingService.getGreeters().get(chan);
             String message = buildMessageWithNames(users);
 
+            nicobot.sendMessage(chan, null, messages.getMessage("hgt"));
             nicobot.sendMessage(chan, null, message);
 
             if (users != null && !users.isEmpty()) {

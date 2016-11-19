@@ -1,9 +1,7 @@
 package com.st.nicobot.bot.cmd;
 
+import com.google.api.services.customsearch.Customsearch;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Logs on 27-10-15.
@@ -31,12 +29,10 @@ public class GifSearch extends AbstractSearch {
     }
 
     @Override
-    protected Map<String, String> getSpecificQueryArguments() {
-        Map<String,String> map = new HashMap<>();
-        map.put("searchType","image");
-        map.put("fileType","gif");
-        map.put("hq","animated");
-        map.put("tbs","itp:animated");
-        return map;
+    protected void addSpecificQueryArguments(Customsearch.Cse.List search) {
+        //map.put("tbs","itp:animated");
+        search.setSearchType("image");
+        search.setFileType("gif");
+        search.setHq("animated");
     }
 }

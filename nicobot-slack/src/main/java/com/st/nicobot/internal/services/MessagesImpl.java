@@ -236,12 +236,12 @@ public class MessagesImpl implements Messages {
 
 	@Override
 	public String getMessage(String key) {
-		return otherMessages.get(key);
+		return otherMessages.get(key) == null ? String.format("unknown key [%s]", key) : otherMessages.get(key);
 	}
 
 	@Override
 	public String getMessage(String key, Object... formatArgs) {
-		return String.format(otherMessages.get(key), formatArgs);
+		return otherMessages.get(key) == null ? String.format("unknown key [%s]", key) : String.format(otherMessages.get(key), formatArgs);
 	}
 
 	@Override

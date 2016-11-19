@@ -1,23 +1,23 @@
 package com.st.nicobot.bot.cmd;
 
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.youtube.YouTube;
+import com.google.api.services.youtube.model.SearchListResponse;
+import com.google.api.services.youtube.model.SearchResult;
 import com.st.nicobot.bot.NicoBot;
 import com.st.nicobot.bot.utils.Option;
 import com.st.nicobot.services.Messages;
 import com.st.nicobot.services.PropertiesService;
 import com.st.nicobot.utils.NicobotProperty;
-import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.UniformInterfaceException;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
+import java.util.List;
 
 /**
  * Created by Logs on 22-08-15.
@@ -57,25 +57,26 @@ public class YoutubeSearch extends NiCommand {
 
     @Override
     protected void doCommand(String command, String[] args, Option opts) {
-        String searchUri = properties.get(NicobotProperty.YOUTUBE_QUERY_URI);
         String searchArguments = StringUtils.join(args, "+");
 
-        MultivaluedMap<String,String> queryParams = new MultivaluedMapImpl();
-
-        queryParams.putSingle("key", properties.get(NicobotProperty.SEARCH_API_KEY));
-        queryParams.putSingle("q", searchArguments);
-
         try {
-            WebResource resource = Client.create().resource(searchUri);
+            YouTube youtube = new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), httpRequest -> {
+            }).setApplicationName("youtube-search").build();
 
-            resource = resource.queryParams(queryParams);
+            YouTube.Search.List search = youtube.search().list("id");
 
-            JSONObject response = resource.type(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
+            search.setKey(properties.get(NicobotProperty.SEARCH_API_KEY));
+            search.setQ(searchArguments);
 
-            if(response.has("items") && response.getJSONArray("items").length() > 0) {
-                String videoId = response.getJSONArray("items").getJSONObject(0).getJSONObject("id").getString("videoId");
+            search.setType("video");
 
-                nicobot.sendMessage(opts.message, properties.get(NicobotProperty.YOUTUBE_VIDEO_URI)+videoId);
+            search.setFields("items(id/videoId)");
+            search.setMaxResults(1L);
+
+            SearchListResponse searchListResponse = search.execute();
+            List<SearchResult> searchResults = searchListResponse.getItems();
+            if(searchResults != null && !searchResults.isEmpty()) {
+                nicobot.sendMessage(opts.message, properties.get(NicobotProperty.YOUTUBE_VIDEO_URI)+searchResults.get(0).getId().getVideoId());
             } else {
                 logger.info("Query [{}] has no results",searchArguments);
                 nicobot.sendMessage(opts.message, messages.getMessage("nothingFound"));
