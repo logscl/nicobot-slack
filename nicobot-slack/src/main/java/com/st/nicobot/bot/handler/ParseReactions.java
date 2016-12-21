@@ -1,6 +1,7 @@
 package com.st.nicobot.bot.handler;
 
 import com.st.nicobot.bot.NicoBot;
+import com.st.nicobot.bot.utils.Option;
 import com.st.nicobot.bot.utils.Reaction;
 import com.st.nicobot.services.Commands;
 import com.st.nicobot.services.LeetGreetingService;
@@ -13,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ParseReactions extends AbstractMessageEvent {
+public class ParseReactions extends ConditionalMessageEvent {
 
 	@Autowired
 	private Messages messages;
@@ -29,6 +30,17 @@ public class ParseReactions extends AbstractMessageEvent {
 
 	@Autowired
 	private PropertiesService properties;
+
+	@Override
+	public int getChance() {
+		return 500;
+	}
+
+	@Override
+	public boolean testImpl(Option option) {
+		// N'importe quel message peut trigger le random talk
+		return true;
+	}
 
 	@Override
 	public void onEvent(SlackMessagePosted message, SlackSession session) {

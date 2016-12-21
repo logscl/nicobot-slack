@@ -24,7 +24,7 @@ public class TrollBackwardsSpeaking extends ConditionalMessageEvent {
 	
     @Override
     public int getChance() {
-        return 250;
+        return 150;
     }
 
     @Override
