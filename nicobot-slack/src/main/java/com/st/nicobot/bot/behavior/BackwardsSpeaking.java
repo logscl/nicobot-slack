@@ -75,10 +75,10 @@ public class BackwardsSpeaking implements NiConduct {
 			builder.replace(builder.length()-1, builder.length(), StringUtils.lowerCase(lastCharSequence));
 		}
 
-		return fixSmileysAndNicks(builder.toString());
+		return fixTags(builder.toString());
 	}
 
-	private String fixSmileysAndNicks(String string) {
+	private String fixTags(String string) {
 		Pattern pattern = Pattern.compile(":[^:]*:");
 
 		Matcher match = pattern.matcher(string);
@@ -88,7 +88,7 @@ public class BackwardsSpeaking implements NiConduct {
 			string = string.replace(text, StringUtils.reverse(text));
 		}
 
-		pattern = Pattern.compile(">[^<]*@<");
+		pattern = Pattern.compile(">[^<]*(@|#)<");
 
 		match = pattern.matcher(string);
 
