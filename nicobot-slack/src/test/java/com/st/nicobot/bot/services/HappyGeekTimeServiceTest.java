@@ -7,6 +7,7 @@ import com.st.nicobot.services.UsernameService;
 import com.st.nicobot.services.memory.GreetersRepositoryManager;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,7 +52,7 @@ public class HappyGeekTimeServiceTest {
 
     @Before
     public void setUp() {
-        when(messages.getMessage("allTopHGT")).thenReturn(ALL_TOP);
+        when(messages.getMessage("allTopHGT", DateTime.now().getYear(), DateTime.now().getDayOfYear())).thenReturn(ALL_TOP);
         when(messages.getMessage("weekTopHGT")).thenReturn(WEEK_TOP);
         when(messages.getMessage("noOne")).thenReturn(NO_ONE);
 

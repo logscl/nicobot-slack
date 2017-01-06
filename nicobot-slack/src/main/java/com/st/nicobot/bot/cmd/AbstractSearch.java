@@ -8,10 +8,12 @@ import com.google.api.services.customsearch.model.Search;
 import com.st.nicobot.bot.NicoBot;
 import com.st.nicobot.bot.utils.Option;
 import com.st.nicobot.services.Messages;
+import com.st.nicobot.services.NudityDectionService;
 import com.st.nicobot.services.PropertiesService;
 import com.st.nicobot.utils.NicobotProperty;
 import com.ullink.slack.simpleslackapi.SlackAttachment;
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,30 +36,32 @@ public abstract class AbstractSearch extends NiCommand {
     @Autowired
     private Messages messages;
 
+    @Autowired
+    private NudityDectionService nudityDectionService;
+
     private List<Result> lastSearchResult = null;
     private int searchIndex = 0;
 
     protected abstract void addSpecificQueryArguments(Customsearch.Cse.List search);
+
+    protected boolean needNSFWCheck() {
+        return false;
+    }
 
 
     @Override
     protected void doCommand(String command, String[] args, Option opts) {
         String searchArguments = StringUtils.join(args, "+");
 
-        boolean potentialNSFW = false;
-        if(command.contains("sexy") || command.contains("brazzer")) {
-            potentialNSFW = true;
-        }
-
         if ("next".equals(searchArguments) && lastSearchResult != null) {
             searchIndex++;
-            searchAndSendLink(opts, potentialNSFW);
+            searchAndSendLink(opts);
             return;
         } else {
-            searchIndex=0;
+            searchIndex = 0;
         }
 
-        if(command.compareToIgnoreCase(getCommandName()) != 0) {
+        if (command.compareToIgnoreCase(getCommandName()) != 0) {
             searchArguments = command.substring(1) + "+" + searchArguments;
         }
 
@@ -76,33 +80,41 @@ public abstract class AbstractSearch extends NiCommand {
             Search searchResponse = search.execute();
             List<Result> results = searchResponse.getItems();
 
-            if(results != null && !results.isEmpty()) {
+            if (results != null && !results.isEmpty()) {
                 lastSearchResult = results;
-                searchAndSendLink(opts, potentialNSFW);
+                searchAndSendLink(opts);
             } else {
-                logger.info("Query [{}] has no results",searchArguments);
+                logger.info("Query [{}] has no results", searchArguments);
                 nicobot.sendMessage(opts.message, messages.getMessage("nothingFound"));
                 lastSearchResult = null;
             }
         } catch (Exception e) {
-            logger.error(e.getMessage(),e);
+            logger.error(e.getMessage(), e);
         }
 
     }
 
-    private void searchAndSendLink(Option opts, boolean potentialNSFW) {
+    private void searchAndSendLink(Option opts) {
         String foundLink = lastSearchResult.get(searchIndex).getLink();
         while (foundLink.contains("x-raw-image")) {
             searchIndex++;
             foundLink = lastSearchResult.get(searchIndex).getLink();
         }
-        
-        if(potentialNSFW) {
-            SlackAttachment attachment = new SlackAttachment();
-            attachment.setColor("danger");
-            attachment.setText("Potentiel NSFW !");
-            nicobot.sendMessage(opts.message, foundLink, attachment);
-            //nicobot.sendMessage(opts.message, foundLink, Emoji.NO_ENTRY, true);
+
+        if(needNSFWCheck()) {
+            try {
+                JSONObject result = nudityDectionService.checkUrl(foundLink);
+                SlackAttachment attachment = new SlackAttachment();
+                logger.info("Result from Nudity Detection Service: "+result.toString());
+                if (result.getBoolean("nude")) {
+                    attachment.setColor("danger");
+                    attachment.setText(messages.getMessage("nsfwDetected"));
+                } else {
+                }
+                nicobot.sendMessage(opts.message, foundLink, attachment);
+            } catch (Exception e) {
+                logger.error("Unable to parse nudity Service result",e);
+            }
         } else {
             nicobot.sendMessage(opts.message, foundLink);
         }

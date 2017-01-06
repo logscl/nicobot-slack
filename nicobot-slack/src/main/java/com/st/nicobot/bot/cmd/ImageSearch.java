@@ -38,6 +38,11 @@ public class ImageSearch extends AbstractSearch {
     }
 
     @Override
+    protected boolean needNSFWCheck() {
+        return true;
+    }
+
+    @Override
     protected void addSpecificQueryArguments(Customsearch.Cse.List search) {
         search.setSearchType("image");
     }

@@ -20,7 +20,10 @@ public enum NicobotProperty {
 	GOOGLE_MAPS_URI("google.maps.uri"),
 	GOOGLE_MAPS_PLACE_URI("google.maps.place.uri"),
 
-	FEATURED_CHANNEL("nicobot.featured.channel");
+	FEATURED_CHANNEL("nicobot.featured.channel"),
+
+	ALGORITHMIA_API_KEY("algorithmia.api.key"),
+	ALGORITHMIA_NUDITY_ALGORITHM("algorithmia.nudity.algorithm");
 
 	private String key;
 	private String defaultValue;

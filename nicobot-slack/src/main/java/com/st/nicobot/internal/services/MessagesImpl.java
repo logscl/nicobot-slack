@@ -161,6 +161,7 @@ public class MessagesImpl implements Messages {
 		otherMessages.put("gmNoBest",		"Personne !");
 
 		otherMessages.put("nothingFound",	"J'ai rien trouvé :(");
+		otherMessages.put("nsfwDetected",	"Attention, lien NSFW détecté !");
 
 		otherMessages.put("weNoDays",		"Non, encore %d jours :( (%s)");
 		otherMessages.put("weNoHours",		"C'est pour bientôt ! Encore %d heure%s ! (%s)");
