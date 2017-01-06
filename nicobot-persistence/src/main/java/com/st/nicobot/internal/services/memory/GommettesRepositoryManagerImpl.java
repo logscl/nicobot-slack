@@ -158,6 +158,11 @@ public class GommettesRepositoryManagerImpl extends AbstractRepositoryManager<Go
         }
     }
 
+    @Override
+    public String getGommettesFormatted() {
+        return create.selectFrom(GOMMETTE).fetch().format();
+    }
+
     public static void main(String[] args) {
         GommettesRepositoryManagerImpl impl = new GommettesRepositoryManagerImpl();
         impl.loadFile();

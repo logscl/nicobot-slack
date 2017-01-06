@@ -19,4 +19,6 @@ public interface GommettesRepositoryManager {
     Map<GommetteColor, Integer> getBestGommettes();
 
     List<GommetteUserScore> getGommettesTop();
+
+    String getGommettesFormatted();
 }

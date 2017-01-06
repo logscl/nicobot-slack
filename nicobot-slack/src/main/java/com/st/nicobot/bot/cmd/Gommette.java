@@ -105,6 +105,9 @@ public class Gommette extends NiCommand {
                     case TOP:
                         doTopMode(arguments, args, opts);
                         break;
+                    case CSV:
+                        doCsvMode(arguments, args, opts);
+                        break;
                 }
             } else {
                 nicobot.sendMessage(opts.message,messages.getMessage("gmWrongArgs"));
@@ -113,6 +116,10 @@ public class Gommette extends NiCommand {
         } catch (IllegalArgumentException e) {
             nicobot.sendMessage(opts.message, "Malformed command, format : " + getFormat());
         }
+    }
+
+    private void doCsvMode(GommetteArguments arguments, String[] args, Option opts) {
+        nicobot.sendMessage(opts.message, "```"+repositoryManager.getGommettesFormatted()+"```");
     }
 
     private void doPollingMode(GommetteArguments arguments, String[] args, Option opts) {
@@ -386,7 +393,8 @@ public class Gommette extends NiCommand {
         RED("rouge", GommetteColor.RED),
         SCORE("score"),
         BEST("best"),
-        TOP("top");
+        TOP("top"),
+        CSV("csv");
 
         private String txtArg;
         private GommetteColor color;

@@ -6,6 +6,7 @@ import com.st.nicobot.services.Messages;
 import com.st.nicobot.services.UsernameService;
 import com.st.nicobot.services.memory.GreetersRepositoryManager;
 import com.ullink.slack.simpleslackapi.SlackUser;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -34,7 +35,7 @@ public class HappyGeekTimeServiceImpl implements HappyGeekTimeService {
 
     @Override
     public String getAllTimeTopUsers(String channel) {
-        String startSentence = messages.getMessage("allTopHGT");
+        String startSentence = messages.getMessage("allTopHGT", DateTime.now().getYear(), DateTime.now().getDayOfYear());
         String noOne = messages.getMessage("noOne");
         Map<String, Integer> users = greeters.getAllTimeGreeters(channel);
         return buildUserList(startSentence,noOne,users);
@@ -50,6 +51,7 @@ public class HappyGeekTimeServiceImpl implements HappyGeekTimeService {
 
     private String buildUserList(String startSentence, String noOneSentence, Map<String, Integer> users) {
         StringBuilder message = new StringBuilder(startSentence);
+        int daysOfYear = DateTime.now().getDayOfYear();
 
         if (CollectionUtils.isEmpty(users)) {
             message.append(noOneSentence);
@@ -58,6 +60,9 @@ public class HappyGeekTimeServiceImpl implements HappyGeekTimeService {
                     .map(entry -> {
                         SlackUser user = nicobot.getSession().findUserById(entry.getKey());
                         String noHlName = usernameService.getNoHLName(user);
+
+                        //double percentDone = (entry.getValue() / (double)daysOfYear) * 100;
+                        //return String.format("%s (%d-_%.0f%%_)",noHlName, entry.getValue(), percentDone);
 
                         return noHlName + " (" + entry.getValue() + ")";
                     })

@@ -138,7 +138,7 @@ public class MessagesImpl implements Messages {
 		otherMessages.put("congratHGT", 	"Félicitations à %s ! Propre sur vous !");
 		otherMessages.put("congratSoloHGT",	"Bravo %s ! Au moins toi tu y as pensé <3 !");
 		otherMessages.put("weekTopHGT",		"Le top de la semaine: ");
-		otherMessages.put("allTopHGT",		"Les meilleurs au MONDE: ");
+		otherMessages.put("allTopHGT",		"Les meilleurs en %s (%s jours cette année): ");
 		otherMessages.put("noOne",			"Personne ! Bande de clinches ! :(");
 
 		otherMessages.put("gmWrongArgs",	"La commande c'est !gommette verte|rouge|score|top|best.");
