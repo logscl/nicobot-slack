@@ -10,7 +10,7 @@ import com.st.nicobot.bot.utils.Option;
 import com.st.nicobot.services.Messages;
 import com.st.nicobot.services.PropertiesService;
 import com.st.nicobot.utils.NicobotProperty;
-import com.sun.jersey.api.client.UniformInterfaceException;
+import com.ullink.slack.simpleslackapi.SlackAttachment;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,9 +44,14 @@ public abstract class AbstractSearch extends NiCommand {
     protected void doCommand(String command, String[] args, Option opts) {
         String searchArguments = StringUtils.join(args, "+");
 
+        boolean potentialNSFW = false;
+        if(command.contains("sexy") || command.contains("brazzer")) {
+            potentialNSFW = true;
+        }
+
         if ("next".equals(searchArguments) && lastSearchResult != null) {
             searchIndex++;
-            searchAndSendLink(opts);
+            searchAndSendLink(opts, potentialNSFW);
             return;
         } else {
             searchIndex=0;
@@ -73,7 +78,7 @@ public abstract class AbstractSearch extends NiCommand {
 
             if(results != null && !results.isEmpty()) {
                 lastSearchResult = results;
-                searchAndSendLink(opts);
+                searchAndSendLink(opts, potentialNSFW);
             } else {
                 logger.info("Query [{}] has no results",searchArguments);
                 nicobot.sendMessage(opts.message, messages.getMessage("nothingFound"));
@@ -85,13 +90,22 @@ public abstract class AbstractSearch extends NiCommand {
 
     }
 
-    private void searchAndSendLink(Option opts) {
+    private void searchAndSendLink(Option opts, boolean potentialNSFW) {
         String foundLink = lastSearchResult.get(searchIndex).getLink();
         while (foundLink.contains("x-raw-image")) {
             searchIndex++;
             foundLink = lastSearchResult.get(searchIndex).getLink();
         }
-        nicobot.sendMessage(opts.message, foundLink);
+        
+        if(potentialNSFW) {
+            SlackAttachment attachment = new SlackAttachment();
+            attachment.setColor("danger");
+            attachment.setText("Potentiel NSFW !");
+            nicobot.sendMessage(opts.message, foundLink, attachment);
+            //nicobot.sendMessage(opts.message, foundLink, Emoji.NO_ENTRY, true);
+        } else {
+            nicobot.sendMessage(opts.message, foundLink);
+        }
     }
 
 
