@@ -37,7 +37,7 @@
                 <configuration>
                     <jdbc>
                         <driver>org.h2.Driver</driver>
-                        <url>jdbc:h2:D:\Dev\GitHub\nicobot-slack\nicobot</url>
+                        <url>jdbc:h2:../nicobot</url>
                     </jdbc>
                     <generator>
                         <name>org.jooq.util.JavaGenerator</name>
