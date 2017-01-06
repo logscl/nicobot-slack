@@ -88,3 +88,4 @@ pip-log.txt
 nicobot-slack/src/main/resources/slack.properties
 nicobot-slack/src/main/resources/externalapis.properties
 *.ser
+/nicobot.*.db

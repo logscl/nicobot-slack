@@ -1,7 +1,10 @@
 package com.st.nicobot.services.memory;
 
 import com.st.nicobot.bot.utils.GommetteColor;
+import com.st.nicobot.db.tables.records.GommetteRecord;
+import com.st.nicobot.internal.services.memory.GommettesRepositoryManagerImpl.GommetteUserScore;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -9,11 +12,11 @@ import java.util.Map;
  */
 public interface GommettesRepositoryManager {
 
-    void addGommette(String user, GommetteColor color);
+    void addGommette(GommetteRecord record);
 
     Map<GommetteColor, Integer> getGommettes(String user);
 
     Map<GommetteColor, Integer> getBestGommettes();
 
-    Map<String, Integer> getGommettesTop();
+    List<GommetteUserScore> getGommettesTop();
 }

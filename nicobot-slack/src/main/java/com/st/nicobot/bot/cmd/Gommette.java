@@ -4,6 +4,8 @@ import com.st.nicobot.bot.NicoBot;
 import com.st.nicobot.bot.utils.Emoji;
 import com.st.nicobot.bot.utils.GommetteColor;
 import com.st.nicobot.bot.utils.Option;
+import com.st.nicobot.db.tables.records.GommetteRecord;
+import com.st.nicobot.internal.services.memory.GommettesRepositoryManagerImpl.GommetteUserScore;
 import com.st.nicobot.services.Messages;
 import com.st.nicobot.services.UsernameService;
 import com.st.nicobot.services.memory.GommettesRepositoryManager;
@@ -20,10 +22,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.st.nicobot.bot.utils.GommetteColor.GREEN;
+import static com.st.nicobot.bot.utils.GommetteColor.RED;
 
 /**
  * Created by Logs on 17-08-15.
@@ -161,19 +167,18 @@ public class Gommette extends NiCommand {
                     nicobot.getSession().removeMessagePostedListener(listener);
 
                     if(listener.getTotalVotes() >= MIN_VOTES_TRIGGER) {
+                        boolean valid = false;
                         if(listener.getVoteYesCount() > listener.getVoteNoCount()) {
-                            Emoji emoji = arguments.gommette == GommetteColor.GREEN ? Emoji.GOMMETTE : Emoji.GOMMETTE_ROUGE;
+                            Emoji emoji = arguments.gommette == GREEN ? Emoji.GOMMETTE : Emoji.GOMMETTE_ROUGE;
                             nicobot.sendMessage(opts.message, messages.getMessage("gmVoteValid", listener.getVoteYesCount(), listener.getVoteNoCount(), arguments.user.getUserName(), arguments.gommette.getGommetteName()), emoji, true);
-                            repositoryManager.addGommette(arguments.user.getId(), arguments.gommette);
+                            valid = true;
                         } else if(listener.getVoteYesCount() == listener.getVoteNoCount()) {
-                            boolean valid = RandomUtils.nextInt(0,2) == 1;
+                            valid = RandomUtils.nextInt(0,2) == 1;
                             nicobot.sendMessage(opts.message,messages.getMessage("gmVoteEquality", valid ? "oui": "non"));
-                            if(valid) {
-                                repositoryManager.addGommette(arguments.user.getId(), arguments.gommette);
-                            }
                         } else {
                             nicobot.sendMessage(opts.message, messages.getMessage("gmVoteInvalid", opts.message.getSender().getUserName(), arguments.user.getUserName()));
                         }
+                        addGommette(arguments, opts, valid);
                     } else {
                         nicobot.sendMessage(opts.message, messages.getMessage("gmInsufficient"));
                     }
@@ -184,6 +189,20 @@ public class Gommette extends NiCommand {
                 }
             }
         }.start();
+    }
+
+    private void addGommette(GommetteArguments arguments, Option opts, boolean valid) {
+        GommetteRecord record = new GommetteRecord();
+        record.setUserId(arguments.user.getId());
+        record.setGiverId(opts.message.getSender().getId());
+        record.setReason(arguments.reason);
+        record.setType(arguments.gommette.ordinal());
+        record.setYesCount(listener.getVoteYesCount());
+        record.setNoCount(listener.getVoteNoCount());
+        record.setDate(new Timestamp(DateTime.now().getMillis()));
+        record.setCoefficient(arguments.gommette == RED ? -1 : 2);
+        record.setValid(valid);
+        repositoryManager.addGommette(record);
     }
 
     private void doBestUserMode(GommetteArguments arguments, String[] args, Option opts) {
@@ -211,15 +230,12 @@ public class Gommette extends NiCommand {
         nicobot.sendMessage(opts.message, buildTopUsers(repositoryManager.getGommettesTop()));
     }
 
-    private String buildTopUsers(Map<String, Integer> users) {
+    private String buildTopUsers(List<GommetteUserScore> users) {
         StringBuilder message = new StringBuilder(messages.getMessage("gmTopUsers"));
         if(users != null && !users.isEmpty()) {
-            for (Map.Entry<String, Integer> user : users.entrySet()) {
-                SlackUser username = nicobot.getSession().findUserById(user.getKey());
-                Map<GommetteColor, Integer> gomm = repositoryManager.getGommettes(username.getId());
-                int green = gomm.get(GommetteColor.GREEN) != null ? gomm.get(GommetteColor.GREEN) : 0;
-                int red = gomm.get(GommetteColor.RED) != null ? gomm.get(GommetteColor.RED) : 0;
-                message.append(usernameService.getNoHLName(username)).append(" (*").append(user.getValue()).append("* [").append(green).append("|").append(red).append("]), ");
+            for(GommetteUserScore score : users) {
+                SlackUser username = nicobot.getSession().findUserById(score.getUserId());
+                message.append(usernameService.getNoHLName(username)).append(" (*").append(score.getTotalScore()).append("* [").append(score.getGreenCount()).append("|").append(score.getRedCount()).append("]), ");
             }
             message.delete(message.lastIndexOf(","), message.length());
         } else {
@@ -229,8 +245,8 @@ public class Gommette extends NiCommand {
     }
 
     private void sendGreetings(Map<GommetteColor, Integer> gomm, Option opts, SlackUser target) {
-        int green = gomm.get(GommetteColor.GREEN) != null ? gomm.get(GommetteColor.GREEN) : 0;
-        int red = gomm.get(GommetteColor.RED) != null ? gomm.get(GommetteColor.RED) : 0;
+        int green = gomm.get(GREEN) != null ? gomm.get(GREEN) : 0;
+        int red = gomm.get(RED) != null ? gomm.get(RED) : 0;
 
         String greenPlural = green > 1 ? "s" : "";
         String redPlural = red > 1 ? "s" : "";

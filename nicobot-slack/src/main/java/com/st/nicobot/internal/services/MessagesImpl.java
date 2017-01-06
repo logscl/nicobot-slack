@@ -157,7 +157,7 @@ public class MessagesImpl implements Messages {
 		otherMessages.put("gmVoteEquality",	"J'sais pas... alors on va dire euh... %s. Voilà.");
 		otherMessages.put("gmScore",		"%s a %d gommette%s verte%s et %d gommette%s rouge%s.");
 		otherMessages.put("gmScoreEmpty",	"%s n'a pas encore de gommettes... :(");
-		otherMessages.put("gmTopUsers",		"Classement gommettes (verte = 2pts, rouge = -1pt) : ");
+		otherMessages.put("gmTopUsers",		"Classement gommettes : ");
 		otherMessages.put("gmNoBest",		"Personne !");
 
 		otherMessages.put("nothingFound",	"J'ai rien trouvé :(");
