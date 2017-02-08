@@ -227,7 +227,7 @@ public class GommettesRepositoryManagerImpl extends AbstractRepositoryManager<Go
         }
 
         public int getTotalScore() {
-            return greenScore - redScore;
+            return greenScore + redScore;
         }
 
         @Override
