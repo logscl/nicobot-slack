@@ -34,7 +34,7 @@ public class BackwardsSpeakingTest {
 		String resp = backwardsSpeaking.reverseString(message);
 		assertNull(resp);
 		
-		message = "Cliques ici : http://lol.fnu/ :D";
+		message = "Clique ici : http://lol.fnu/ :D";
 		resp = backwardsSpeaking.reverseString(message);
 		assertNull(resp);
 		
@@ -45,7 +45,7 @@ public class BackwardsSpeakingTest {
 
 	@Test
 	public void testTooLongMessage() throws Exception {
-		String message = "Une phrase un peu trop longue que Nicobot ne doit pas répèter !";
+		String message = "Une phrase un peu trop longue que Nicobot ne doit pas répéter !";
 		String resp = backwardsSpeaking.reverseString(message);
 		assertNull(resp);
 	}
