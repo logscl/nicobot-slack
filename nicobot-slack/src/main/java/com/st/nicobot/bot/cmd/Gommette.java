@@ -119,7 +119,9 @@ public class Gommette extends NiCommand {
     }
 
     private void doCsvMode(GommetteArguments arguments, String[] args, Option opts) {
-        nicobot.sendMessage(opts.message, "```"+repositoryManager.getGommettesFormatted()+"```");
+        String gomCSV = repositoryManager.getGommettesFormatted();
+        nicobot.sendFile(opts.message, gomCSV.getBytes(),"gommettes.csv");
+        //nicobot.sendMessage(opts.message, "```"+repositoryManager.getGommettesFormatted()+"```");
     }
 
     private void doPollingMode(GommetteArguments arguments, String[] args, Option opts) {

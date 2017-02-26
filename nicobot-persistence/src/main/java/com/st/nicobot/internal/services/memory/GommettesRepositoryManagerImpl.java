@@ -118,30 +118,23 @@ public class GommettesRepositoryManagerImpl extends AbstractRepositoryManager<Go
 
     @Override
     public List<GommetteUserScore> getGommettesTop() {
-        List<GommetteUserScore> list = new ArrayList<>();
-        String previousUserId = null;
-        GommetteUserScore currentUserScore = new GommetteUserScore();
+        List<GommetteUserScore> list;
         Result<Record4<String, Integer, Integer, BigDecimal>> records =  create
                 .select(GOMMETTE.USER_ID, GOMMETTE.TYPE, count().as("count"), sum(GOMMETTE.COEFFICIENT).as("sum"))
                 .from(GOMMETTE)
                 .where(year(GOMMETTE.DATE).equal(DateTime.now().getYear()))
                 .and(GOMMETTE.VALID.isTrue())
                 .groupBy(GOMMETTE.USER_ID, GOMMETTE.TYPE)
-                .orderBy(GOMMETTE.USER_ID.asc(), GOMMETTE.TYPE.desc())
                 .fetch();
 
+        Map<String, GommetteUserScore> userScores = new HashMap<>();
         for(Record4<String, Integer, Integer, BigDecimal> record : records) {
             String userId = record.get(GOMMETTE.USER_ID);
-            if(previousUserId == null || previousUserId.equals(userId)) {
-                previousUserId = userId;
-                fillGommetteUserScore(currentUserScore, record);
-            } else {
-                list.add(currentUserScore);
-                currentUserScore = new GommetteUserScore();
-                fillGommetteUserScore(currentUserScore, record);
-            }
+            userScores.putIfAbsent(userId, new GommetteUserScore());
+            GommetteUserScore score = userScores.get(userId);
+            fillGommetteUserScore(score, record);
         }
-        list.add(currentUserScore);
+        list = new ArrayList<>( userScores.values());
         Collections.sort(list);
         return list;
     }
@@ -160,7 +153,7 @@ public class GommettesRepositoryManagerImpl extends AbstractRepositoryManager<Go
 
     @Override
     public String getGommettesFormatted() {
-        return create.selectFrom(GOMMETTE).fetch().format();
+        return create.selectFrom(GOMMETTE).fetch().formatCSV(true, ';', "");
     }
 
     public static void main(String[] args) {
