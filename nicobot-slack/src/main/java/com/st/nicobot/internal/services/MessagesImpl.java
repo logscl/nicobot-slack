@@ -82,7 +82,7 @@ public class MessagesImpl implements Messages {
 		reactions.add(new Reaction(".*long .*",						"CMB !"));
 		reactions.add(new Reaction(".*petit.*",						"CMB ! ... euh ... merde."));
 		reactions.add(new Reaction(".*court.*",						"CTB ! Hahahaha... J'me marre."));
-		reactions.add(new Reaction(".*cham.*",						"Y'a de ces CHA-MELLES ici ! :D"));
+		reactions.add(new Reaction(".*chamelle.*",					"Y'a de ces CHA-MELLES ici ! :D"));
 		reactions.add(new Reaction(".*ha(i|ï)ku.*",					"Mais lol, y a pas plus débile que la formulation d'un haïku: 5-7-5.  \"Trente trois jours de pluie, Toi tu n'as que des soucis, Bite sur le gateau.\""));
 		reactions.add(new Reaction(".*amis de (m|t|s)es amis.*",	"Si tu as un ami, en fait tu en as deux. Puisque les amis de tes amis sont tes amis, et que tu es l'ami de ton ami, tu es donc ton propre ami !"));
 		reactions.add(new Reaction(".*garagiste.*", 				"PUTAIN QU'ELLE EST BONNE LA GARAGIIIIISTE ! :D"));

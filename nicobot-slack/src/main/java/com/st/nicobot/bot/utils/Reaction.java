@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 public class Reaction implements Serializable {
 
 	private static final long serialVersionUID = -9167874891022108827L;
+	private static final int DEFAULT_COOLDOWN_TIMER = 60;
 	
 	private Pattern pattern;
 	private List<String> response;
@@ -42,7 +43,7 @@ public class Reaction implements Serializable {
 	public Reaction(String regex, String... response) {
 		pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
 		this.response = Arrays.asList(response);
-		this.cooldownTimer = 0;
+		this.cooldownTimer = DEFAULT_COOLDOWN_TIMER;
 	}
 	
 	/**
