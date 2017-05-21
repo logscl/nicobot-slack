@@ -221,6 +221,8 @@ public class MessagesImpl implements Messages {
         randomSpeeches.add("J'suis chaud ! J'suis chaud chaud chaud !!");
         randomSpeeches.add("Un bijou !");
         randomSpeeches.add("A méditer...");
+        randomSpeeches.add("La vie ne vaut rien, mais rien de vaut la vie.");
+        randomSpeeches.add("Ké Nouvelles ?!");
 	}
 
 	@Override
