@@ -99,7 +99,7 @@ public class NicoBotImpl implements NicoBot {
 
     @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, SlackUser origin, String message) {
-        return session.sendMessage(channel, formatMessage(message, origin, channel), (SlackAttachment)null);
+        return session.sendMessage(channel, formatMessage(message, origin, channel));
     }
 
     @Override
@@ -118,7 +118,11 @@ public class NicoBotImpl implements NicoBot {
 
     @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(SlackMessagePosted originator, String message) {
-        return sendMessage(originator.getChannel(), originator.getSender(), message);
+        SlackPreparedMessage preparedMessage = new SlackPreparedMessage.Builder()
+                .withMessage(formatMessage(message, originator.getSender(), originator.getChannel()))
+                // .withThreadTimestamp(originator.getThreadTimestamp())
+                .build();
+        return session.sendMessage(originator.getChannel(), preparedMessage);
     }
 
     @Override
@@ -128,7 +132,7 @@ public class NicoBotImpl implements NicoBot {
 
     @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(SlackMessagePosted originator, String message, Emoji emoji, boolean placeReactionOnBotMsg) {
-        SlackMessageHandle<SlackMessageReply> handle = sendMessage(originator.getChannel(), originator.getSender(), message);
+        SlackMessageHandle<SlackMessageReply> handle = sendMessage(originator, message);
         String tstamp = originator.getTimeStamp();
         if(placeReactionOnBotMsg) {
             tstamp = handle.getReply().getTimestamp();
