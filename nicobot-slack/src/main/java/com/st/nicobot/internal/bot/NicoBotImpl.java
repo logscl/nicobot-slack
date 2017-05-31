@@ -120,6 +120,7 @@ public class NicoBotImpl implements NicoBot {
     public SlackMessageHandle<SlackMessageReply> sendMessage(SlackMessagePosted originator, String message) {
         SlackPreparedMessage preparedMessage = new SlackPreparedMessage.Builder()
                 .withMessage(formatMessage(message, originator.getSender(), originator.getChannel()))
+                .withUnfurl(true)
                 // .withThreadTimestamp(originator.getThreadTimestamp())
                 .build();
         return session.sendMessage(originator.getChannel(), preparedMessage);
