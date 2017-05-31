@@ -3,9 +3,11 @@ package com.st.nicobot.internal.api.services;
 import com.st.nicobot.api.services.PersistenceStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import javax.ws.rs.core.MultivaluedMap;
 
+@Service
 public class NoPersistenceStrategy implements PersistenceStrategy {
 
 	private static Logger logger = LoggerFactory.getLogger(NoPersistenceStrategy.class);

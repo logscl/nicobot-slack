@@ -6,6 +6,7 @@ public enum NicobotProperty {
 
 	API_URI("api.uri", "http://api.nicobot.cloudbees.net"),
 	API_PERSISTENCE_STRATEGY("api.persistence.stragegy", "NoPersistenceStrategy"),
+	API_KEY("nicobot.persitence.api.key"),
 
 	SEARCH_URI("search.uri"),
 	SEARCH_CX_KEY("search.cx.key"),
