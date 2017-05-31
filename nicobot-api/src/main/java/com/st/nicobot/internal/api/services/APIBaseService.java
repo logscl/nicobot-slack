@@ -9,6 +9,7 @@ import org.codehaus.jackson.map.SerializationConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 import javax.ws.rs.core.MultivaluedMap;
 
@@ -22,6 +23,9 @@ public abstract class APIBaseService<T extends UnmarshalledResponse> {
 
 	@Autowired
 	private PropertiesService propertiesService;
+
+	@Autowired
+	private ApplicationContext ctx;
 
 	private PersistenceStrategy persistenceStrategy;
 
@@ -44,7 +48,7 @@ public abstract class APIBaseService<T extends UnmarshalledResponse> {
 		if (persistenceStrategy == null) {
 			String strategyName = propertiesService.get(NicobotProperty.API_PERSISTENCE_STRATEGY);
 			try {
-				persistenceStrategy = (PersistenceStrategy) Class.forName(strategyName).newInstance();
+				persistenceStrategy = ctx.getBean(strategyName, PersistenceStrategy.class);
 			} catch (Exception ex) {
 				logger.error("", ex);
 			}
