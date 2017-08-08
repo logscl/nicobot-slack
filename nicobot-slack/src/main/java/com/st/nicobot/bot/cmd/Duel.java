@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -74,14 +73,8 @@ public class Duel extends NiCommand {
             DuelArguments arguments = new DuelArguments(args);
 
             List<SlackUser> users = arguments.users;
-            Iterator<SlackUser> iter = users.iterator();
 
-            while (iter.hasNext()) {
-                SlackUser user = iter.next();
-                if (user.isBot() || user.getId().equals(nicobot.getSession().sessionPersona().getId()) || user.getUserName().equals("slackbot")) {
-                    iter.remove();
-                }
-            }
+            users.removeIf(user -> user.isBot() || user.getId().equals(nicobot.getSession().sessionPersona().getId()) || user.getUserName().equals("slackbot"));
 
             if (!users.contains(opts.message.getSender())) {
                 users.add(opts.message.getSender());

@@ -38,6 +38,6 @@ public class TrollBackwardsSpeaking extends ConditionalMessageEvent {
     
     @Override
     public boolean testImpl(Option o) {
-    	return StringUtils.reverse(o.message.getMessageContent()).equals(o.message.getMessageContent());
+    	return o.message.getMessageContent().length() > 1 && StringUtils.reverse(o.message.getMessageContent()).equals(o.message.getMessageContent());
     }
 }

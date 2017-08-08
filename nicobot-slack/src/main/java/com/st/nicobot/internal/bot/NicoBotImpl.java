@@ -71,7 +71,7 @@ public class NicoBotImpl implements NicoBot {
     }
 
     /**
-     * Format une chaine de caractere en remplacant les "%p" par {@code sender} et les "%c" par {@code channel}.
+     * Format une chaine de caractere en remplacant les "#p" par {@code sender} et les "#c" par {@code channel}.
      * @param message
      * @param sender
      * @param channel
@@ -80,12 +80,12 @@ public class NicoBotImpl implements NicoBot {
     private String formatMessage(String message, SlackUser sender, SlackChannel channel) {
         if(message != null) {
             if (sender != null) {
-                message = message.replaceAll("%p", usernameService.getNoHLName(sender));
+                message = message.replaceAll("#p", usernameService.getNoHLName(sender));
             }
-            message = message.replaceAll("%c", channel.getName());
+            message = message.replaceAll("#c", channel.getName());
 
-            if (sender != null && message.contains("%u")) {
-                message = message.replaceAll("%u", usernameService.getNoHLName(getRandomUserFromChannel(channel)));
+            if (sender != null && message.contains("#u")) {
+                message = message.replaceAll("#u", usernameService.getNoHLName(getRandomUserFromChannel(channel)));
             }
         }
 
@@ -121,7 +121,7 @@ public class NicoBotImpl implements NicoBot {
         SlackPreparedMessage preparedMessage = new SlackPreparedMessage.Builder()
                 .withMessage(formatMessage(message, originator.getSender(), originator.getChannel()))
                 .withUnfurl(true)
-                .withThreadTimestamp(originator.getThreadTimestamp())
+                //.withThreadTimestamp(originator.getThreadTimestamp())
                 .build();
         return session.sendMessage(originator.getChannel(), preparedMessage);
     }

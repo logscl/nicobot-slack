@@ -54,8 +54,8 @@ public class MessagesImpl implements Messages {
 		// messages complets
 		reactions.add(new Reaction("^(sisi|13)$", 					"la famille"));
 		reactions.add(new Reaction("^tf2$", 						"Bande de casus..."));
-		reactions.add(new Reaction("^(pour )??rien( \\!)??$", 		"Baaam ! Bien joué %p !"));
-		reactions.add(new Reaction("^chut( !)??$", 					"Oh, tu m'dis pas chut %p, déjà"));
+		reactions.add(new Reaction("^(pour )??rien( \\!)??$", 		"Baaam ! Bien joué #p !"));
+		reactions.add(new Reaction("^chut( !)??$", 					"Oh, tu m'dis pas chut #p, déjà"));
 		reactions.add(new Reaction("^propre sur toi$", 				"De dingue !"));
 		reactions.add(new Reaction("^\\(=\\^;\\^=\\) pika pi$", 	"Toi aussi tu joues à Pokemon ?"));
 		reactions.add(new Reaction("^psp$", 						"Enkuler de rire !"));
@@ -78,10 +78,10 @@ public class MessagesImpl implements Messages {
 		// fragments
 		reactions.add(new Reaction(".*gamin.*",						"Hein fieu"));
 		reactions.add(new Reaction(".*hey.*",						"Hey Hey !"));
-		reactions.add(new Reaction(".*grand.*",						"CMB !"));
+		/*reactions.add(new Reaction(".*grand.*",						"CMB !"));
 		reactions.add(new Reaction(".*long .*",						"CMB !"));
 		reactions.add(new Reaction(".*petit.*",						"CMB ! ... euh ... merde."));
-		reactions.add(new Reaction(".*court.*",						"CTB ! Hahahaha... J'me marre."));
+		reactions.add(new Reaction(".*court.*",						"CTB ! Hahahaha... J'me marre."));*/
 		reactions.add(new Reaction(".*chamelle.*",					"Y'a de ces CHA-MELLES ici ! :D"));
 		reactions.add(new Reaction(".*ha(i|ï)ku.*",					"Mais lol, y a pas plus débile que la formulation d'un haïku: 5-7-5.  \"Trente trois jours de pluie, Toi tu n'as que des soucis, Bite sur le gateau.\""));
 		reactions.add(new Reaction(".*amis de (m|t|s)es amis.*",	"Si tu as un ami, en fait tu en as deux. Puisque les amis de tes amis sont tes amis, et que tu es l'ami de ton ami, tu es donc ton propre ami !"));
@@ -101,7 +101,7 @@ public class MessagesImpl implements Messages {
 		reactions.add(new Reaction(".* lance.*",					true, 60, "Oui, mais pas trop loin..."));
 
 		// Random reacts
-		reactions.add(new Reaction(".*qui .*\\?$",					"C'est %u !", "J'veux pas dénoncer... mais c'est %u.", "Si c'est pas %u, c'est ta mère !"));
+		reactions.add(new Reaction(".*qui .*\\?$",					"C'est #u !", "J'veux pas dénoncer... mais c'est #u.", "Si c'est pas #u, c'est ta mère !"));
 
 		// girls
 		reactions.add(new Reaction(".*sarah?.*",					true, 30, "Mhmmm...  \"Avec tes deux obus, j'crois que tu te sens plus. Du quatre-vingt dix D, il en faut plus pour me faire trembler !\""));
@@ -112,9 +112,9 @@ public class MessagesImpl implements Messages {
 		reactions.add(new Reaction(".*(fairy|aur(e|é)lie|hanut).*",	true, 30, "Heuuu, ouais, salut...  T'aurais pas de_cbble stp ?  En fait j'l'ai pas et on a war dans 4 minutes :("));
 
 		otherMessages = new HashMap<>();
-		otherMessages.put("onKick", 		"Merci pour le kick, %p...");
-		otherMessages.put("onSelfJoin",		"Yo les gars! Ovation pour %p ! Woup Woup !!");
-		otherMessages.put("onInvite", "remercie %p");
+		otherMessages.put("onKick", 		"Merci pour le kick, #p...");
+		otherMessages.put("onSelfJoin",		"Yo les gars! Ovation pour #p ! Woup Woup !!");
+		otherMessages.put("onInvite", 		"remercie #p");
 		otherMessages.put("onLeave", 		"A plus les nb's !");
 		otherMessages.put("onPart", 		"Casse toi, aller ... j'veux plus jamais t'voir !");
 
@@ -188,20 +188,25 @@ public class MessagesImpl implements Messages {
 		otherMessages.put("duelRNStart",	"%s, envoyez moi un nombre entre %d et %d (inclus) en privé MAINTENANT !");
 		otherMessages.put("duelRNError",	"Non ! un nombre entre %d et %d inclus !");
 
+		otherMessages.put("hmRunning",		"Il y a déjà un pendu en cours... faut le finir avant !");
+		otherMessages.put("hmStart",		"#p a démarré un pendu !");
+		otherMessages.put("hmWinner",		"Bravo #p! Tu as trouvé la bonne réponse: %s");
+		otherMessages.put("hmLost",			"Vous êtes tous très nuls, il fallait trouver: %s");
+
 		otherMessages.put("yes",			"Oui !");
 		otherMessages.put("no",				"Non !");
 		otherMessages.put("noneOfThem",		"Aucun des %d !");
 
 		welcomeMessages = new HashMap<>();
-		welcomeMessages.put("newJoin0",		"Yo les gars! Saluez %p !");
-		welcomeMessages.put("newJoin1",		"Coucou %p ! Ca va bien ?");
-		welcomeMessages.put("newJoin2",		"BOOM ! %p est dans la place !");
+		welcomeMessages.put("newJoin0",		"Yo les gars! Saluez #p !");
+		welcomeMessages.put("newJoin1",		"Coucou #p ! Ca va bien ?");
+		welcomeMessages.put("newJoin2",		"BOOM ! #p est dans la place !");
 		
-		welcomeMessages.put("join1", 		"Hé ! Encore toi %p !");
-		welcomeMessages.put("join2", 		"OMG T'es revenu %p !");
-		welcomeMessages.put("join3",		"Euh Ca fait 3 fois aujourd'hui %p, T'en as pas marre ?");
-		welcomeMessages.put("join4",		"T'es branché sur une guirlande de Noël %p ?");
-		welcomeMessages.put("join5",		"CA SUFFIT %p ! Maintenant, tu t'achètes une connexion !!");
+		welcomeMessages.put("join1", 		"Hé ! Encore toi #p !");
+		welcomeMessages.put("join2", 		"OMG T'es revenu #p !");
+		welcomeMessages.put("join3",		"Euh Ca fait 3 fois aujourd'hui #p, T'en as pas marre ?");
+		welcomeMessages.put("join4",		"T'es branché sur une guirlande de Noël #p ?");
+		welcomeMessages.put("join5",		"CA SUFFIT #p ! Maintenant, tu t'achètes une connexion !!");
 
         randomSpeeches = new ArrayList<>();
         randomSpeeches.add("Riverside motherfoker");
@@ -228,7 +233,7 @@ public class MessagesImpl implements Messages {
 	@Override
 	public void addPostInitMessages(String botName) {
 		reactions.add(new Reaction("^"+botName+"( ?\\?)+?$", 		"Quoi ?"));
-		reactions.add(new Reaction("^salut "+botName+".*", 			"Salut %p !"));
+		reactions.add(new Reaction("^salut "+botName+".*", 			"Salut #p !"));
 		reactions.add(new Reaction(".*"+botName+"( ?\\?)+?$",		"Oui.", "Oui !", "Non...", "Non !", "Tu peux pas décider tout seul franchement ?", "Ché pas tséééé","Ché pas... Demande a slackbot !"));
 	}
 
