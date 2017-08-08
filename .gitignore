@@ -1,5 +1,3 @@
-nicobot.log*
-
 #################
 ## Eclipse
 #################
@@ -88,3 +86,5 @@ pip-log.txt
 nicobot-slack/src/main/filter/nicobot_secret_*.properties
 *.ser
 /nicobot.*.db
+
+nicobot*.log*
