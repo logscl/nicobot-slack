@@ -11,8 +11,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableAsync
 @PropertySource("classpath:nicobot.properties")
-@PropertySource(value = "classpath:slack.properties", ignoreResourceNotFound = true)
-@PropertySource(value = "classpath:externalapis.properties", ignoreResourceNotFound = true)
 @Import(PersistenceContext.class)
 public class BotMain {
 

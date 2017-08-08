@@ -71,6 +71,7 @@
 
         <filters>
             <filter>src/main/filter/nicobot_${profile.name}.properties</filter>
+            <filter>src/main/filter/nicobot_secret_${profile.name}.properties</filter>
         </filters>
 
         <resources>
