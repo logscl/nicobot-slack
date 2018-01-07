@@ -27,7 +27,7 @@
         <project.build.targetEncoding>UTF-8</project.build.targetEncoding>
         <slf4j.version>1.7.25</slf4j.version>
         <log4j2.version>[2.8,)</log4j2.version>
-        <simpleslackapi.version>0.6.0</simpleslackapi.version>
+        <simpleslackapi.version>1.2.0</simpleslackapi.version>
         <phantomjs-wrapper.version>3.0.0</phantomjs-wrapper.version>
         <spring.version>4.1.5.RELEASE</spring.version>
         <nicobot.version>1.1</nicobot.version>
