@@ -88,3 +88,4 @@ nicobot-slack/src/main/filter/nicobot_secret_*.properties
 /nicobot.*.db
 
 nicobot*.log*
+upload.sh

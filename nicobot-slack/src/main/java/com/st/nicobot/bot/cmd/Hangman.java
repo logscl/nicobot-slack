@@ -9,6 +9,9 @@ import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Minutes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +46,8 @@ public class Hangman extends NiCommand {
     private HangmanEventListener listener = null;
     private CountDownLatch latch = null;
 
+    private DateTime lastHangman = null;
+
     @Override
     public String getCommandName() {
         return COMMAND;
@@ -71,10 +76,19 @@ public class Hangman extends NiCommand {
             String hangmanQuery;
             SlackChannel channel;
 
+            if(lastHangman != null && Minutes.minutesBetween(lastHangman, DateTime.now(DateTimeZone.UTC)).getMinutes() < 15) {
+                nicobot.sendMessage(opts.message, "Essaye plus tard...");
+                return;
+            }
+
             if(arguments.hangmanQuery != null) {
                 hangmanQuery = arguments.hangmanQuery;
             } else {
                 throw new IllegalArgumentException("Missing Query");
+            }
+
+            if(arguments.hangmanQuery.length() > 50) {
+                throw new IllegalArgumentException("Too long query (max 50 chars)");
             }
 
             if(arguments.channel != null) {
@@ -102,12 +116,13 @@ public class Hangman extends NiCommand {
                     } finally {
                         nicobot.getSession().removeMessagePostedListener(listener);
                         listener = null;
+                        lastHangman = DateTime.now(DateTimeZone.UTC);
                     }
                 }
             }.start();
 
         } catch (IllegalArgumentException e) {
-            nicobot.sendMessage(opts.message, "Malformed command, format : " + getFormat());
+            nicobot.sendMessage(opts.message, e.getMessage() + "! Malformed command, format : " + getFormat());
         } catch (UnknownChannelException e) {
             nicobot.sendMessage(opts.message, String.format(messages.getMessage("hmUnknownChannel"), e.getMessage()));
         }

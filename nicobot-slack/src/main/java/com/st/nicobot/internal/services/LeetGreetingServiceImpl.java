@@ -41,7 +41,7 @@ public class LeetGreetingServiceImpl implements LeetGreetingService {
 
     @Override
     public void addGreeter(SlackMessagePosted message) {
-        if(!hasAlreadyGreeted(message)) {
+        if(!hasAlreadyGreeted(message) && !message.getSender().isBot()) {
             for(Pattern pattern : triggers) {
                 if(pattern.matcher(message.getMessageContent()).find()) {
                 	logger.debug("Cha-ching ! trigger found");
