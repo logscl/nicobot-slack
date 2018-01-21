@@ -1,17 +1,18 @@
 package com.st.nicobot.internal.services;
 
+import com.st.nicobot.api.domain.model.Hgt;
+import com.st.nicobot.api.services.APIHgtService;
 import com.st.nicobot.bot.NicoBot;
 import com.st.nicobot.services.HappyGeekTimeService;
 import com.st.nicobot.services.Messages;
 import com.st.nicobot.services.UsernameService;
-import com.st.nicobot.services.memory.GreetersRepositoryManager;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Map;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -27,7 +28,7 @@ public class HappyGeekTimeServiceImpl implements HappyGeekTimeService {
     private UsernameService usernameService;
 
     @Autowired
-    private GreetersRepositoryManager greeters;
+    private APIHgtService greeters;
 
     @Autowired
     private Messages messages;
@@ -37,7 +38,7 @@ public class HappyGeekTimeServiceImpl implements HappyGeekTimeService {
     public String getAllTimeTopUsers(String channel) {
         String startSentence = messages.getMessage("allTopHGT", DateTime.now().getYear(), DateTime.now().getDayOfYear());
         String noOne = messages.getMessage("noOne");
-        Map<String, Integer> users = greeters.getAllTimeGreeters(channel);
+        List<Hgt> users = greeters.getYearlyScores(channel, DateTime.now().getYear());
         return buildUserList(startSentence,noOne,users);
     }
 
@@ -45,26 +46,22 @@ public class HappyGeekTimeServiceImpl implements HappyGeekTimeService {
     public String getWeekTopUsers(String channel) {
         String startSentence = messages.getMessage("weekTopHGT");
         String noOne = messages.getMessage("noOne");
-        Map<String, Integer> users = greeters.getWeeklyGreeters(channel);
+        List<Hgt> users = greeters.getWeeklyScores(channel);
         return buildUserList(startSentence,noOne,users);
     }
 
-    private String buildUserList(String startSentence, String noOneSentence, Map<String, Integer> users) {
+    private String buildUserList(String startSentence, String noOneSentence, List<Hgt> users) {
         StringBuilder message = new StringBuilder(startSentence);
-        int daysOfYear = DateTime.now().getDayOfYear();
 
         if (CollectionUtils.isEmpty(users)) {
             message.append(noOneSentence);
         } else {
-            String usersString = users.entrySet().stream()
-                    .map(entry -> {
-                        SlackUser user = nicobot.getSession().findUserById(entry.getKey());
+            String usersString = users.stream()
+                    .map(hgt -> {
+                        SlackUser user = nicobot.getSession().findUserById(hgt.getUserId());
                         String noHlName = usernameService.getNoHLName(user);
 
-                        //double percentDone = (entry.getValue() / (double)daysOfYear) * 100;
-                        //return String.format("%s (%d-_%.0f%%_)",noHlName, entry.getValue(), percentDone);
-
-                        return noHlName + " (" + entry.getValue() + ")";
+                        return noHlName + " (" + hgt.getScore() + ")";
                     })
                     .collect(Collectors.joining(", "));
 

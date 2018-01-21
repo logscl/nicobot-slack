@@ -1,9 +1,9 @@
 package com.st.nicobot.internal.job;
 
+import com.st.nicobot.api.services.APIHgtService;
 import com.st.nicobot.bot.NicoBot;
 import com.st.nicobot.job.HappyGeekTimeJob;
 import com.st.nicobot.services.*;
-import com.st.nicobot.services.memory.GreetersRepositoryManager;
 import com.st.nicobot.utils.NicobotProperty;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackUser;
@@ -39,13 +39,10 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
     private LeetGreetingService greetingService;
 
     @Autowired
-    private GreetersRepositoryManager greetersRepositoryManager;
+    private APIHgtService apiHgtService;
 
     @Autowired
     private HappyGeekTimeService hgtService;
-
-    @Autowired
-    private UsernameService usernameService;
 
     @Autowired
     private PropertiesService properties;
@@ -86,7 +83,7 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
             nicobot.sendMessage(chan, null, message);
 
             if (users != null && !users.isEmpty()) {
-                greetersRepositoryManager.addGreeters(chan.getId(), users.stream().map(SlackUser::getId).collect(Collectors.toSet()));
+                apiHgtService.addScores(chan.getId(), users.stream().map(SlackUser::getId).collect(Collectors.toList()));
             }
 
             nicobot.sendMessage(chan, null, hgtService.getWeekTopUsers(chan.getId()));
