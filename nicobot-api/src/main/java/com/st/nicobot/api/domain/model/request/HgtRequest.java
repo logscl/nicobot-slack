@@ -2,11 +2,11 @@ package com.st.nicobot.api.domain.model.request;
 
 import java.util.List;
 
-public class ScoreRequest {
+public class HgtRequest {
 
     private List<String> users;
 
-    public ScoreRequest() {
+    public HgtRequest() {
     }
 
     public List<String> getUsers() {

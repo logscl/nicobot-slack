@@ -1,15 +1,15 @@
 package com.st.nicobot.api.domain.model;
 
-public class Score {
+public class Hgt {
 
     private String userId;
 
     private Integer score;
 
-    public Score() {
+    public Hgt() {
     }
 
-    public Score(String userId, Integer score) {
+    public Hgt(String userId, Integer score) {
         this.userId = userId;
         this.score = score;
     }
