@@ -136,9 +136,9 @@ public class Gommette extends NiCommand {
         }
 
         if(StringUtils.isBlank(arguments.reason)) {
-            nicobot.sendMessage(opts.message, messages.getMessage("gmStartNoReason",opts.message.getSender().getUserName(), arguments.gommette.getGommetteName(), arguments.user.getUserName(), VOTE_TIMER_MINUTES));
+            nicobot.sendMessage(opts.message, messages.getMessage("gmStartNoReason", usernameService.getHLName(opts.message.getSender()), arguments.gommette.getGommetteName(), usernameService.getHLName(arguments.user), VOTE_TIMER_MINUTES));
         } else {
-            nicobot.sendMessage(opts.message, messages.getMessage("gmStartReason",opts.message.getSender().getUserName(), arguments.gommette.getGommetteName(), arguments.user.getUserName(), arguments.reason, VOTE_TIMER_MINUTES));
+            nicobot.sendMessage(opts.message, messages.getMessage("gmStartReason", usernameService.getHLName(opts.message.getSender()), arguments.gommette.getGommetteName(),  usernameService.getHLName(arguments.user), arguments.reason, VOTE_TIMER_MINUTES));
         }
 
         new Thread() {
@@ -179,13 +179,13 @@ public class Gommette extends NiCommand {
                         boolean valid = false;
                         if(listener.getVoteYesCount() > listener.getVoteNoCount()) {
                             Emoji emoji = arguments.gommette == GREEN ? Emoji.GOMMETTE : Emoji.GOMMETTE_ROUGE;
-                            nicobot.sendMessage(opts.message, messages.getMessage("gmVoteValid", listener.getVoteYesCount(), listener.getVoteNoCount(), arguments.user.getUserName(), arguments.gommette.getGommetteName()), emoji, true);
+                            nicobot.sendMessage(opts.message, messages.getMessage("gmVoteValid", listener.getVoteYesCount(), listener.getVoteNoCount(), usernameService.getHLName(arguments.user), arguments.gommette.getGommetteName()), emoji, true);
                             valid = true;
                         } else if(listener.getVoteYesCount() == listener.getVoteNoCount()) {
                             valid = RandomUtils.nextInt(0,2) == 1;
                             nicobot.sendMessage(opts.message,messages.getMessage("gmVoteEquality", valid ? "oui": "non"));
                         } else {
-                            nicobot.sendMessage(opts.message, messages.getMessage("gmVoteInvalid", opts.message.getSender().getUserName(), arguments.user.getUserName()));
+                            nicobot.sendMessage(opts.message, messages.getMessage("gmVoteInvalid", usernameService.getHLName(opts.message.getSender()), usernameService.getHLName(arguments.user)));
                         }
                         addGommette(arguments, opts, valid);
                     } else {
@@ -275,13 +275,13 @@ public class Gommette extends NiCommand {
                 if(subCmd != null) {
                     if(subCmd.color != null) {
                         gommette = subCmd.color;
-                        user = nicobot.getSession().findUserByUserName(args[1]);
+                        user = nicobot.findUser(args[1]);
                         if(args.length > 2) {
                             reason = args[2];
                         }
                     } else if(subCmd == GommetteSubCmd.SCORE) {
                         if(args.length > 1) {
-                            user = nicobot.getSession().findUserByUserName(args[1]);
+                            user = nicobot.findUser(args[1]);
                         }
                     }
                 }

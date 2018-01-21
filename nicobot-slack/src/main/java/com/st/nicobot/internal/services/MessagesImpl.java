@@ -4,6 +4,7 @@ import com.st.nicobot.bot.utils.Random;
 import com.st.nicobot.bot.utils.Reaction;
 import com.st.nicobot.services.Messages;
 import com.st.nicobot.services.PropertiesService;
+import com.ullink.slack.simpleslackapi.SlackPersona;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -231,10 +232,11 @@ public class MessagesImpl implements Messages {
 	}
 
 	@Override
-	public void addPostInitMessages(String botName) {
-		reactions.add(new Reaction("^"+botName+"( ?\\?)+?$", 		"Quoi ?"));
-		reactions.add(new Reaction("^salut "+botName+".*", 			"Salut #p !"));
-		reactions.add(new Reaction(".*"+botName+"( ?\\?)+?$",		"Oui.", "Oui !", "Non...", "Non !", "Tu peux pas décider tout seul franchement ?", "Ché pas tséééé","Ché pas... Demande a slackbot !"));
+	public void addPostInitMessages(SlackPersona bot) {
+		String regexBotReac = String.format("(%s|<@%s>)", bot.getUserName(), bot.getId());
+		reactions.add(new Reaction("^"+regexBotReac+"( ?\\?)+?$", 		"Quoi ?"));
+		reactions.add(new Reaction("^salut "+regexBotReac+".*", 			"Salut #p !"));
+		reactions.add(new Reaction(".*"+regexBotReac+"( ?\\?)+?$",		"Oui.", "Oui !", "Non...", "Non !", "Tu peux pas décider tout seul franchement ?", "Ché pas tséééé","Ché pas... Demande a slackbot !"));
 	}
 
 	@Override

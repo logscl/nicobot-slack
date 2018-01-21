@@ -184,7 +184,7 @@ public class Duel extends NiCommand {
         public DuelArguments(String[] args) throws IllegalArgumentException, UnknwownUserException {
             if (args != null && args.length > 0) {
                 for (String arg : args) {
-                    SlackUser user = nicobot.getSession().findUserByUserName(arg);
+                    SlackUser user = nicobot.findUser(arg);
                     if (user != null) {
                         users.add(user);
                     } else {

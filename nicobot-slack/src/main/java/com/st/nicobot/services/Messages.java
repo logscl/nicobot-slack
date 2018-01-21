@@ -1,6 +1,7 @@
 package com.st.nicobot.services;
 
 import com.st.nicobot.bot.utils.Reaction;
+import com.ullink.slack.simpleslackapi.SlackPersona;
 
 import java.util.Set;
 
@@ -36,5 +37,5 @@ public interface Messages {
 
     String getRandomSpeech();
 
-	void addPostInitMessages(String botName);
+	void addPostInitMessages(SlackPersona bot);
 }

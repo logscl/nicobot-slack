@@ -16,7 +16,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -123,9 +122,9 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
     public String createCongratulationMessageWithNames(Set<SlackUser> users) {
         String congratulationMessage = retrieveCongratulationMessage(users.size() > 1);
 
-        List<String> names = users.stream().map(SlackUser::getUserName).collect(Collectors.toList());
+        String names = users.stream().map(SlackUser::getUserName).collect(Collectors.joining(", "));
 
-        return String.format(congratulationMessage, usernameService.getNoHLName(names, ", "));
+        return String.format(congratulationMessage, names);
     }
 
     /**

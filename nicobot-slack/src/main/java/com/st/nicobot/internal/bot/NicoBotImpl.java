@@ -24,6 +24,8 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Logs on 09-05-15.
@@ -49,6 +51,8 @@ public class NicoBotImpl implements NicoBot {
     private Messages messages;
 
     private SlackSession session;
+
+    private static Pattern userIDPattern = Pattern.compile("<@(U[0-9A-Z]+)>");
 
     @PostConstruct
     private void postConstruct() {
@@ -121,7 +125,7 @@ public class NicoBotImpl implements NicoBot {
         SlackPreparedMessage preparedMessage = new SlackPreparedMessage.Builder()
                 .withMessage(formatMessage(message, originator.getSender(), originator.getChannel()))
                 .withUnfurl(true)
-                //.withThreadTimestamp(originator.getThreadTimestamp())
+                .withThreadTimestamp(originator.getThreadTimestamp())
                 .build();
         return session.sendMessage(originator.getChannel(), preparedMessage);
     }
@@ -153,10 +157,21 @@ public class NicoBotImpl implements NicoBot {
     }
 
     @Override
+    public SlackUser findUser(String userQuery) {
+        Matcher m = userIDPattern.matcher(userQuery);
+        if(m.matches()) {
+            String id = m.group(1);
+            return session.findUserById(id);
+        } else {
+            return session.findUserByUserName(userQuery);
+        }
+    }
+
+    @Override
     public void connect() throws IOException {
         session.connect();
 
-        messages.addPostInitMessages(session.sessionPersona().getUserName());
+        messages.addPostInitMessages(session.sessionPersona());
     }
 
     @Override
