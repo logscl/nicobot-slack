@@ -4,6 +4,7 @@ import com.st.nicobot.api.domain.model.response.UnmarshalledResponse;
 import com.st.nicobot.api.services.PersistenceStrategy;
 import com.st.nicobot.services.PropertiesService;
 import com.st.nicobot.utils.NicobotProperty;
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.slf4j.Logger;
@@ -62,8 +63,9 @@ public abstract class APIBaseService<T extends UnmarshalledResponse> {
 		return propertiesService.get(NicobotProperty.API_URI) + "/" + getServiceName();
 	}
 
-	T sendGetRequest(MultivaluedMap<String, String> queryParams) {
-		String responseString = getPersistenceStrategy().sendGetRequest(getServiceURI(), queryParams);
+	T sendGetRequest(String uriContext, MultivaluedMap<String, String> queryParams) {
+		String uri = getURI(uriContext);
+		String responseString = getPersistenceStrategy().sendGetRequest(uri, queryParams);
 
 		if (responseString != null) {
 			return unmarshalResponse(responseString);
@@ -72,10 +74,15 @@ public abstract class APIBaseService<T extends UnmarshalledResponse> {
 		return null;
 	}
 
-	T sendPostRequest(Object payload) {
+	T sendGetRequest(MultivaluedMap<String, String> queryParams) {
+		return sendGetRequest(null, queryParams);
+	}
+
+	T sendPostRequest(String uriContext, Object payload) {
 		try {
+			String uri = getURI(uriContext);
 			String json = getObjectMapper().writeValueAsString(payload);
-			String responseString = getPersistenceStrategy().sendPostRequest(getServiceURI(), json);
+			String responseString = getPersistenceStrategy().sendPostRequest(uri, json);
 
 			if (responseString != null) {
 				return unmarshalResponse(responseString);
@@ -88,6 +95,18 @@ public abstract class APIBaseService<T extends UnmarshalledResponse> {
 		}
 
 		return null;
+	}
+
+	T sendPostRequest(Object payload) {
+		return sendPostRequest(null, payload);
+	}
+
+	private String getURI(String urlContext) {
+		String url = getServiceURI();
+		if(StringUtils.isNotBlank(urlContext)) {
+			url += (!urlContext.startsWith("/") ? "/" : "") + urlContext;
+		}
+		return url;
 	}
 
 	@SuppressWarnings("unchecked")
