@@ -47,6 +47,9 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
     @Autowired
     private PropertiesService properties;
 
+    @Autowired
+    private UsernameService usernameService;
+
     @Override
     @Async
     @Scheduled(cron="0 37 13 * * *")
@@ -57,8 +60,6 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
 
         Predicate<SlackChannel> isGroupChannel = slackChannel -> slackChannel.getType() != SlackChannel.SlackChannelType.INSTANT_MESSAGING;
         Predicate<SlackChannel> isFeatured = slackChannel -> slackChannel.getName().equals(properties.get(NicobotProperty.FEATURED_CHANNEL));
-
-        //nicobot.getSession().getChannels().stream().filter(isGroupChannel.and(isFeatured)).forEach(channel ->nicobot.sendMessage(channel, null, messages.getMessage("hgt")));
 
         try {
             logger.info("Bot will now wait for 1 min to read mesages at "+ DateTime.now().toString());
@@ -119,7 +120,7 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
     public String createCongratulationMessageWithNames(Set<SlackUser> users) {
         String congratulationMessage = retrieveCongratulationMessage(users.size() > 1);
 
-        String names = users.stream().map(SlackUser::getUserName).collect(Collectors.joining(", "));
+        String names = users.stream().map(usernameService::getNoHLName).collect(Collectors.joining(", "));
 
         return String.format(congratulationMessage, names);
     }
