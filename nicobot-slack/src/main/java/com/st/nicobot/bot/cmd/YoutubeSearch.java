@@ -40,6 +40,9 @@ public class YoutubeSearch extends NiCommand {
     @Autowired
     private Messages messages;
 
+    private List<SearchResult> lastSearchResult = null;
+    private int searchIndex = 0;
+
     @Override
     public String getCommandName() {
         return COMMAND;
@@ -59,6 +62,14 @@ public class YoutubeSearch extends NiCommand {
     protected void doCommand(String command, String[] args, Option opts) {
         String searchArguments = StringUtils.join(args, "+");
 
+        if ("next".equals(searchArguments) && lastSearchResult != null) {
+            searchIndex++;
+            nicobot.sendMessage(opts.message, properties.get(NicobotProperty.YOUTUBE_VIDEO_URI)+lastSearchResult.get(searchIndex).getId().getVideoId());
+            return;
+        } else {
+            searchIndex = 0;
+        }
+
         try {
             YouTube youtube = new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), httpRequest -> {
             }).setApplicationName("youtube-search").build();
@@ -71,11 +82,12 @@ public class YoutubeSearch extends NiCommand {
             search.setType("video");
 
             search.setFields("items(id/videoId)");
-            search.setMaxResults(1L);
+            search.setMaxResults(10L);
 
             SearchListResponse searchListResponse = search.execute();
             List<SearchResult> searchResults = searchListResponse.getItems();
             if(searchResults != null && !searchResults.isEmpty()) {
+                lastSearchResult = searchResults;
                 nicobot.sendMessage(opts.message, properties.get(NicobotProperty.YOUTUBE_VIDEO_URI)+searchResults.get(0).getId().getVideoId());
             } else {
                 logger.info("Query [{}] has no results",searchArguments);
