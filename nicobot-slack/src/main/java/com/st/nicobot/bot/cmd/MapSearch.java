@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Logs on 09-04-16.
@@ -31,6 +33,7 @@ public class MapSearch extends NiCommand {
     private static final String COMMAND = "!map";
     private static final String FORMAT = "!map query";
     private static final String DESC = "Recherche un emplacement sur Google Maps";
+    private static final String[] ALIASES = {"!maps"};
 
     @Autowired
     private NicoBot nicobot;
@@ -54,6 +57,11 @@ public class MapSearch extends NiCommand {
     @Override
     public String getFormat() {
         return FORMAT;
+    }
+
+    @Override
+    public List<String> getAliases() {
+        return Arrays.asList(ALIASES);
     }
 
     @Override
