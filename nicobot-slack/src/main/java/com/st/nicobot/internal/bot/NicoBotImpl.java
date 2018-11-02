@@ -157,6 +157,11 @@ public class NicoBotImpl implements NicoBot {
     }
 
     @Override
+    public SlackMessageHandle<SlackMessageReply> addReactionToMessage(SlackChannel channel, String messageTimeStamp, String emojiCode) {
+        return session.addReactionToMessage(channel, messageTimeStamp, emojiCode);
+    }
+
+    @Override
     public SlackUser findUser(String userQuery) {
         Matcher m = userIDPattern.matcher(userQuery);
         if(m.matches()) {
