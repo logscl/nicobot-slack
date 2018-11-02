@@ -39,7 +39,7 @@ public class ImageSearch extends AbstractSearch {
 
     @Override
     protected boolean needNSFWCheck() {
-        return false;
+        return true;
     }
 
     @Override

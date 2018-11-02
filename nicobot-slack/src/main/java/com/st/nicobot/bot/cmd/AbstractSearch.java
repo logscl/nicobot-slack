@@ -11,9 +11,9 @@ import com.st.nicobot.services.Messages;
 import com.st.nicobot.services.NudityDectionService;
 import com.st.nicobot.services.PropertiesService;
 import com.st.nicobot.utils.NicobotProperty;
-import com.ullink.slack.simpleslackapi.SlackAttachment;
+import com.ullink.slack.simpleslackapi.SlackMessageHandle;
+import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,22 +101,16 @@ public abstract class AbstractSearch extends NiCommand {
             foundLink = lastSearchResult.get(searchIndex).getLink();
         }
 
+        SlackMessageHandle<SlackMessageReply> postedMessage = nicobot.sendMessage(opts.message, foundLink);
         if(needNSFWCheck()) {
             try {
-                JSONObject result = nudityDectionService.checkUrl(foundLink);
-                SlackAttachment attachment = new SlackAttachment();
-                logger.info("Result from Nudity Detection Service: "+result.toString());
-                if (result.getBoolean("nude")) {
-                    attachment.setColor("danger");
-                    attachment.setText(messages.getMessage("nsfwDetected"));
-                } else {
+                boolean hasNudity = nudityDectionService.hasNudity(foundLink);
+                if(hasNudity) {
+                    nicobot.addReactionToMessage(opts.message.getChannel(), postedMessage.getReply().getTimestamp(), ":nsfw:");
                 }
-                nicobot.sendMessage(opts.message, foundLink, attachment);
             } catch (Exception e) {
                 logger.error("Unable to parse nudity Service result",e);
             }
-        } else {
-            nicobot.sendMessage(opts.message, foundLink);
         }
     }
 

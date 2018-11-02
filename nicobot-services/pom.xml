@@ -19,9 +19,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.algorithmia</groupId>
-            <artifactId>algorithmia-client</artifactId>
-            <version>[,1.1.0)</version>
+            <groupId>com.google.apis</groupId>
+            <artifactId>google-api-services-vision</artifactId>
+            <version>v1-rev386-1.22.0</version>
         </dependency>
     </dependencies>
 
