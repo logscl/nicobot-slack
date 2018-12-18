@@ -107,11 +107,6 @@
         </dependency>
         <dependency>
             <groupId>com.st</groupId>
-            <artifactId>nicobot-persistence</artifactId>
-            <version>${nicobot.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.st</groupId>
             <artifactId>nicobot-services</artifactId>
             <version>${nicobot.version}</version>
         </dependency>

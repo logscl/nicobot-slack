@@ -1,14 +1,13 @@
 package com.st.nicobot.bot.cmd;
 
+import com.st.nicobot.api.domain.model.Gommette.GommetteColor;
+import com.st.nicobot.api.services.APIGommetteService;
 import com.st.nicobot.bot.NicoBot;
 import com.st.nicobot.bot.utils.Emoji;
-import com.st.nicobot.bot.utils.GommetteColor;
 import com.st.nicobot.bot.utils.Option;
-import com.st.nicobot.db.tables.records.GommetteRecord;
-import com.st.nicobot.internal.services.memory.GommettesRepositoryManagerImpl.GommetteUserScore;
+import com.st.nicobot.services.GommetteService;
 import com.st.nicobot.services.Messages;
 import com.st.nicobot.services.UsernameService;
-import com.st.nicobot.services.memory.GommettesRepositoryManager;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
@@ -22,14 +21,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.st.nicobot.bot.utils.GommetteColor.GREEN;
-import static com.st.nicobot.bot.utils.GommetteColor.RED;
+import static com.st.nicobot.api.domain.model.Gommette.GommetteColor.GREEN;
 
 /**
  * Created by Logs on 17-08-15.
@@ -43,12 +40,12 @@ public class Gommette extends NiCommand {
     private static final String FORMAT = "!gommette <rouge|verte|score"/*+"|best"*/+"|top> <nickname> [\"raison\"]";
     private static final String DESC = "Attribue une gommette rouge ou verte à l'utilisateur <nickname>.";
 
-    private static final int VOTE_TIMER_MINUTES = 5;
-    private static final int TICK_DURATION_SECONDS = 10;
+    private static final int VOTE_TIMER_MINUTES = 1;
+    private static final int TICK_DURATION_SECONDS = 1;
     private static final int TICKS = VOTE_TIMER_MINUTES * 60 / TICK_DURATION_SECONDS;
     private static final int GRACE_TICKS = 2 * 60 / TICK_DURATION_SECONDS;
 
-    private static final int MIN_VOTES_TRIGGER = 3;
+    private static final int MIN_VOTES_TRIGGER = 2;
 
     @Autowired
     private NicoBot nicobot;
@@ -57,10 +54,13 @@ public class Gommette extends NiCommand {
     private Messages messages;
 
     @Autowired
-    private GommettesRepositoryManager repositoryManager;
+    private GommetteService gommetteService;
 
     @Autowired
     private UsernameService usernameService;
+
+    @Autowired
+    private APIGommetteService apiGommetteService;
 
     private GommetteEventListener listener = null;
 
@@ -105,9 +105,9 @@ public class Gommette extends NiCommand {
                     case TOP:
                         doTopMode(arguments, args, opts);
                         break;
-                    case CSV:
-                        doCsvMode(arguments, args, opts);
-                        break;
+                    //case CSV:
+                        //doCsvMode(arguments, args, opts);
+                        //break;
                 }
             } else {
                 nicobot.sendMessage(opts.message,messages.getMessage("gmWrongArgs"));
@@ -118,11 +118,11 @@ public class Gommette extends NiCommand {
         }
     }
 
-    private void doCsvMode(GommetteArguments arguments, String[] args, Option opts) {
-        String gomCSV = repositoryManager.getGommettesFormatted();
-        nicobot.sendFile(opts.message, gomCSV.getBytes(),"gommettes.csv");
+    //private void doCsvMode(GommetteArguments arguments, String[] args, Option opts) {
+        //String gomCSV = repositoryManager.getGommettesFormatted();
+        //nicobot.sendFile(opts.message, gomCSV.getBytes(),"gommettes.csv");
         //nicobot.sendMessage(opts.message, "```"+repositoryManager.getGommettesFormatted()+"```");
-    }
+    //}
 
     private void doPollingMode(GommetteArguments arguments, String[] args, Option opts) {
         if(isPollAlreadyRunning()) {
@@ -201,66 +201,39 @@ public class Gommette extends NiCommand {
     }
 
     private void addGommette(GommetteArguments arguments, Option opts, boolean valid) {
-        GommetteRecord record = new GommetteRecord();
-        record.setUserId(arguments.user.getId());
-        record.setGiverId(opts.message.getSender().getId());
-        record.setReason(arguments.reason);
-        record.setType(arguments.gommette.ordinal());
-        record.setYesCount(listener.getVoteYesCount());
-        record.setNoCount(listener.getVoteNoCount());
-        record.setDate(new Timestamp(DateTime.now().getMillis()));
-        record.setCoefficient(arguments.gommette == RED ? -1 : 2);
-        record.setValid(valid);
-        repositoryManager.addGommette(record);
+        com.st.nicobot.api.domain.model.Gommette gommette = new com.st.nicobot.api.domain.model.Gommette(
+                arguments.user.getId(),
+                opts.message.getSender().getId(),
+                arguments.reason,
+                arguments.gommette,
+                listener.getVoteYesCount(),
+                listener.getVoteNoCount(),
+                DateTime.now(),
+                valid
+        );
+        apiGommetteService.addGommette(gommette);
     }
 
-    private void doBestUserMode(GommetteArguments arguments, String[] args, Option opts) {
-        Map<GommetteColor, Integer> gomm = repositoryManager.getBestGommettes();
-
-        if(gomm != null)  {
-            sendGreetings(gomm, opts, opts.message.getSender());
-        } else {
-            nicobot.sendMessage(opts.message, messages.getMessage("gmNoBest"));
-        }
-    }
+//    private void doBestUserMode(GommetteArguments arguments, String[] args, Option opts) {
+//        Map<GommetteColor, Integer> gomm = repositoryManager.getBestGommettes();
+//
+//        if(gomm != null)  {
+//            sendGreetings(gomm, opts, opts.message.getSender());
+//        } else {
+//            nicobot.sendMessage(opts.message, messages.getMessage("gmNoBest"));
+//        }
+//    }
 
     private void doScoreMode(GommetteArguments arguments, String[] args, Option opts) {
         SlackUser target = arguments.user != null ? arguments.user : opts.message.getSender();
-        Map<GommetteColor, Integer> gomm = repositoryManager.getGommettes(target.getId());
+        String scoreMessage = gommetteService.getUserScore(target);
 
-        if (gomm == null) {
-            nicobot.sendMessage(opts.message, messages.getMessage("gmScoreEmpty", usernameService.getNoHLName(target)));
-        } else {
-            sendGreetings(gomm,opts,target);
-        }
+
+        nicobot.sendMessage(opts.message, scoreMessage);
     }
 
     private void doTopMode(GommetteArguments arguments, String[] args, Option opts) {
-        nicobot.sendMessage(opts.message, buildTopUsers(repositoryManager.getGommettesTop()));
-    }
-
-    private String buildTopUsers(List<GommetteUserScore> users) {
-        StringBuilder message = new StringBuilder(messages.getMessage("gmTopUsers"));
-        if(users != null && !users.isEmpty()) {
-            for(GommetteUserScore score : users) {
-                SlackUser username = nicobot.getSession().findUserById(score.getUserId());
-                message.append(usernameService.getNoHLName(username)).append(" (*").append(score.getTotalScore()).append("* [").append(score.getGreenCount()).append("|").append(score.getRedCount()).append("]), ");
-            }
-            message.delete(message.lastIndexOf(","), message.length());
-        } else {
-            message.append(messages.getMessage("noOne"));
-        }
-        return message.toString();
-    }
-
-    private void sendGreetings(Map<GommetteColor, Integer> gomm, Option opts, SlackUser target) {
-        int green = gomm.get(GREEN) != null ? gomm.get(GREEN) : 0;
-        int red = gomm.get(RED) != null ? gomm.get(RED) : 0;
-
-        String greenPlural = green > 1 ? "s" : "";
-        String redPlural = red > 1 ? "s" : "";
-
-        nicobot.sendMessage(opts.message, messages.getMessage("gmScore", usernameService.getNoHLName(target), green, greenPlural, greenPlural, red, redPlural, redPlural));
+        nicobot.sendMessage(opts.message, gommetteService.getCurrentYearScore());
     }
 
     private class GommetteArguments {

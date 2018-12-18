@@ -11,7 +11,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableAsync
 @PropertySource("classpath:nicobot.properties")
-@Import(PersistenceContext.class)
 public class BotMain {
 
 	/**
