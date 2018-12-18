@@ -40,12 +40,12 @@ public class Gommette extends NiCommand {
     private static final String FORMAT = "!gommette <rouge|verte|score"/*+"|best"*/+"|top> <nickname> [\"raison\"]";
     private static final String DESC = "Attribue une gommette rouge ou verte à l'utilisateur <nickname>.";
 
-    private static final int VOTE_TIMER_MINUTES = 1;
-    private static final int TICK_DURATION_SECONDS = 1;
+    private static final int VOTE_TIMER_MINUTES = 5;
+    private static final int TICK_DURATION_SECONDS = 10;
     private static final int TICKS = VOTE_TIMER_MINUTES * 60 / TICK_DURATION_SECONDS;
     private static final int GRACE_TICKS = 2 * 60 / TICK_DURATION_SECONDS;
 
-    private static final int MIN_VOTES_TRIGGER = 2;
+    private static final int MIN_VOTES_TRIGGER = 3;
 
     @Autowired
     private NicoBot nicobot;
