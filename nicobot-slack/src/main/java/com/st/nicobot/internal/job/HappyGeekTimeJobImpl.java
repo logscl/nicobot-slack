@@ -1,6 +1,7 @@
 package com.st.nicobot.internal.job;
 
-import com.st.nicobot.api.services.APIHgtService;
+import com.st.nicobot.services.PersistenceService;
+import com.st.nicobot.services.PropertiesService;
 import com.st.nicobot.bot.NicoBot;
 import com.st.nicobot.job.HappyGeekTimeJob;
 import com.st.nicobot.services.*;
@@ -39,7 +40,7 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
     private LeetGreetingService greetingService;
 
     @Autowired
-    private APIHgtService apiHgtService;
+    private PersistenceService persistenceService;
 
     @Autowired
     private HappyGeekTimeService hgtService;
@@ -84,7 +85,11 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
             nicobot.sendMessage(chan, null, message);
 
             if (users != null && !users.isEmpty()) {
-                apiHgtService.addScores(chan.getId(), users.stream().map(SlackUser::getId).collect(Collectors.toList()));
+                try {
+                    persistenceService.addHgtScores(chan.getId(), users.stream().map(SlackUser::getId).collect(Collectors.toList()));
+                } catch (Exception e) {
+                    logger.error("Unable to add HGT score", e);
+                }
             }
 
             nicobot.sendMessage(chan, null, hgtService.getWeekTopUsers(chan.getId()));

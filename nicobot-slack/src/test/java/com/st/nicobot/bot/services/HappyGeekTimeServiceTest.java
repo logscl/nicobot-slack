@@ -1,10 +1,10 @@
 package com.st.nicobot.bot.services;
 
-import com.st.nicobot.api.domain.model.Hgt;
-import com.st.nicobot.api.services.APIHgtService;
+import be.zqsd.hgt.HgtScore;
 import com.st.nicobot.bot.NicoBot;
 import com.st.nicobot.internal.services.HappyGeekTimeServiceImpl;
 import com.st.nicobot.services.Messages;
+import com.st.nicobot.services.PersistenceService;
 import com.st.nicobot.services.UsernameService;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
@@ -16,10 +16,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.*;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableList;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -39,7 +45,7 @@ public class HappyGeekTimeServiceTest {
     private UsernameService usernameService;
 
     @Mock
-    private APIHgtService greeters;
+    private PersistenceService persistenceService;
 
     @Mock
     private Messages messages;
@@ -62,13 +68,13 @@ public class HappyGeekTimeServiceTest {
     }
 
     @Test
-    public void test_getAllTimeTopUsers() {
-        List<Hgt> testData = new LinkedList<>();
-        testData.add(new Hgt("0", 3));
-        testData.add(new Hgt("1", 2));
-        testData.add(new Hgt("2", 1));
+    public void test_getAllTimeTopUsers() throws IOException {
+        List<HgtScore> testData = new LinkedList<>();
+        testData.add(new HgtScore("0", 3));
+        testData.add(new HgtScore("1", 2));
+        testData.add(new HgtScore("2", 1));
 
-        when(greeters.getYearlyScores(anyString(), anyInt())).thenReturn(testData);
+        when(persistenceService.getYearlyHgtScores(anyString())).thenReturn(unmodifiableList(testData));
 
         String output = hgtService.getAllTimeTopUsers("general");
         String expected = String.format("%s%s (%d), %s (%d), %s (%d)",
@@ -82,13 +88,13 @@ public class HappyGeekTimeServiceTest {
     }
 
     @Test
-    public void test_getWeekTopUsers() {
-        List<Hgt> testData = new LinkedList<>();
-        testData.add(new Hgt("0", 3));
-        testData.add(new Hgt("1", 2));
-        testData.add(new Hgt("2", 1));
+    public void test_getWeekTopUsers() throws IOException {
+        List<HgtScore> testData = new LinkedList<>();
+        testData.add(new HgtScore("0", 3));
+        testData.add(new HgtScore("1", 2));
+        testData.add(new HgtScore("2", 1));
 
-        when(greeters.getWeeklyScores(anyString())).thenReturn(testData);
+        when(persistenceService.getWeeklyHgtScores(anyString())).thenReturn(unmodifiableList(testData));
 
         String output = hgtService.getWeekTopUsers("general");
         String expected = String.format("%s%s (%d), %s (%d), %s (%d)",
@@ -101,8 +107,8 @@ public class HappyGeekTimeServiceTest {
     }
 
     @Test
-    public void test_getWeekTopUsers_Nobody() {
-        when(greeters.getWeeklyScores(anyString())).thenReturn(Collections.emptyList());
+    public void test_getWeekTopUsers_Nobody() throws IOException {
+        when(persistenceService.getWeeklyHgtScores(anyString())).thenReturn(emptyList());
 
         String output = hgtService.getWeekTopUsers("general");
 

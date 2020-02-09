@@ -113,9 +113,7 @@
     </dependencies>
 
     <modules>
-        <module>nicobot-api</module>
         <module>nicobot-slack</module>
-        <module>nicobot-services</module>
     </modules>
 
 

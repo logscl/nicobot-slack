@@ -1,18 +1,20 @@
 package com.st.nicobot.internal.services;
 
-import com.st.nicobot.api.domain.model.Hgt;
-import com.st.nicobot.api.services.APIHgtService;
+import be.zqsd.hgt.HgtScore;
 import com.st.nicobot.bot.NicoBot;
 import com.st.nicobot.services.HappyGeekTimeService;
 import com.st.nicobot.services.Messages;
+import com.st.nicobot.services.PersistenceService;
 import com.st.nicobot.services.UsernameService;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 /**
@@ -21,6 +23,8 @@ import java.util.stream.Collectors;
 @Service
 public class HappyGeekTimeServiceImpl implements HappyGeekTimeService {
 
+    private static Logger logger = LoggerFactory.getLogger(HappyGeekTimeServiceImpl.class);
+
     @Autowired
     private NicoBot nicobot;
 
@@ -28,7 +32,7 @@ public class HappyGeekTimeServiceImpl implements HappyGeekTimeService {
     private UsernameService usernameService;
 
     @Autowired
-    private APIHgtService greeters;
+    private PersistenceService persistenceService;
 
     @Autowired
     private Messages messages;
@@ -38,19 +42,31 @@ public class HappyGeekTimeServiceImpl implements HappyGeekTimeService {
     public String getAllTimeTopUsers(String channel) {
         String startSentence = messages.getMessage("allTopHGT", DateTime.now().getYear(), DateTime.now().getDayOfYear());
         String noOne = messages.getMessage("noOne");
-        List<Hgt> users = greeters.getYearlyScores(channel, DateTime.now().getYear());
-        return buildUserList(startSentence,noOne,users);
+        try {
+            Collection<HgtScore> scores = persistenceService.getYearlyHgtScores(channel);
+
+            return buildUserList(startSentence, noOne, scores);
+        } catch (Exception e) {
+            logger.error("Unable to get user scores", e);
+            return "Oops error :(";
+        }
     }
 
     @Override
     public String getWeekTopUsers(String channel) {
         String startSentence = messages.getMessage("weekTopHGT");
         String noOne = messages.getMessage("noOne");
-        List<Hgt> users = greeters.getWeeklyScores(channel);
-        return buildUserList(startSentence,noOne,users);
+        try {
+            Collection<HgtScore> scores = persistenceService.getWeeklyHgtScores(channel);
+
+            return buildUserList(startSentence, noOne, scores);
+        } catch (Exception e) {
+            logger.error("Unable to get user scores", e);
+            return "Oops error :(";
+        }
     }
 
-    private String buildUserList(String startSentence, String noOneSentence, List<Hgt> users) {
+    private String buildUserList(String startSentence, String noOneSentence, Collection<HgtScore> users) {
         StringBuilder message = new StringBuilder(startSentence);
 
         if (CollectionUtils.isEmpty(users)) {

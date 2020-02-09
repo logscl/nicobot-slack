@@ -102,11 +102,6 @@
 
         <dependency>
             <groupId>com.st</groupId>
-            <artifactId>nicobot-api</artifactId>
-            <version>${nicobot.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.st</groupId>
             <artifactId>nicobot-services</artifactId>
             <version>${nicobot.version}</version>
         </dependency>
@@ -132,6 +127,24 @@
                     <groupId>org.apache.httpcomponents</groupId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>1.17.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-json</artifactId>
+            <version>1.17.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>be.zqsd</groupId>
+            <artifactId>nicobot-persistence-api</artifactId>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 

@@ -20,7 +20,7 @@ public abstract class NiCommand {
 	protected NiCommand nextCommand;
 	
 	/**
-	 * Retourne la chaine de caractere à  partir de laquelle nico doit etre commandé
+	 * Retourne la chaine de caractere à partir de laquelle nico doit etre commandé
 	 */
 	public abstract String getCommandName();
 

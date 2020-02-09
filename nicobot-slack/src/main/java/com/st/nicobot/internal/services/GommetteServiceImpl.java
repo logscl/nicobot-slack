@@ -1,22 +1,26 @@
 package com.st.nicobot.internal.services;
 
+import be.zqsd.gommette.Gommette;
+import be.zqsd.gommette.GommetteScore;
 import com.google.common.base.Objects;
-import com.st.nicobot.api.domain.model.GommetteScore;
-import com.st.nicobot.api.services.APIGommetteService;
 import com.st.nicobot.bot.NicoBot;
 import com.st.nicobot.services.GommetteService;
 import com.st.nicobot.services.Messages;
+import com.st.nicobot.services.PersistenceService;
 import com.st.nicobot.services.UsernameService;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
-import java.util.List;
+import java.util.Collection;
 
 @Service
 public class GommetteServiceImpl implements GommetteService {
+
+    private static Logger logger = LoggerFactory.getLogger(GommetteServiceImpl.class);
 
     @Autowired
     private NicoBot nicobot;
@@ -25,7 +29,7 @@ public class GommetteServiceImpl implements GommetteService {
     private UsernameService usernameService;
 
     @Autowired
-    private APIGommetteService gommetteService;
+    private PersistenceService persistenceService;
 
     @Autowired
     private Messages messages;
@@ -33,16 +37,28 @@ public class GommetteServiceImpl implements GommetteService {
 
     @Override
     public String getCurrentYearScore() {
-        return buildTopUsers(gommetteService.getCurrentYearScores());
+        try {
+            Collection<GommetteScore> scores = persistenceService
+                    .getCurrentGommettesScore();
+            return buildTopUsers(scores);
+        } catch (Exception e) {
+            logger.error("unable to get current year scores", e);
+            return "Oops, error :(";
+        }
     }
 
     @Override
     public String getUserScore(SlackUser user) {
-        List<GommetteScore> scores = gommetteService.getUserScore(DateTime.now().getYear(), user.getId());
-        if (!CollectionUtils.isEmpty(scores)) {
-            return buildUserScore(scores.get(0));
-        } else {
-            return messages.getMessage("gmScoreEmpty", usernameService.getNoHLName(user));
+        try {
+            Collection<GommetteScore> gommettes = persistenceService
+                    .getUserGommettesScore(DateTime.now().getYear(), user.getId());
+
+            return gommettes
+                    .stream().findFirst().map(this::buildUserScore)
+                    .orElse(messages.getMessage("gmScoreEmpty", usernameService.getNoHLName(user)));
+        } catch (Exception e) {
+            logger.error("unable to get user '" + user.getId() + "' score", e);
+            return "Oops, error :(";
         }
     }
 
@@ -50,9 +66,9 @@ public class GommetteServiceImpl implements GommetteService {
         return nicobot.getSession().findUserById(userId);
     }
 
-    private String buildTopUsers(List<GommetteScore> scores) {
+    private String buildTopUsers(Collection<GommetteScore> scores) {
         StringBuilder message = new StringBuilder(messages.getMessage("gmTopUsers"));
-        if (!CollectionUtils.isEmpty(scores)) {
+        if (!scores.isEmpty()) {
             for (GommetteScore score : scores) {
                 SlackUser username = getById(score.getUserId());
                 message.append(usernameService.getNoHLName(username)).append(" (*").append(score.getScore()).append("* [").append(score.getGreenCount()).append("|").append(score.getRedCount()).append("]), ");
