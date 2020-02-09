@@ -80,12 +80,12 @@ pip-log.txt
 ## Intellij
 #############
 
-/.idea/
+.idea/
 *.iml
 
-nicobot-slack/src/main/filter/nicobot_secret_*.properties
+src/main/filter/nicobot_secret_*.properties
 *.ser
-/nicobot.*.db
+nicobot.*.db
 
 nicobot*.log*
 upload.sh

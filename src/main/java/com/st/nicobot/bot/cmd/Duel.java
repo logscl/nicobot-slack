@@ -231,7 +231,7 @@ public class Duel extends NiCommand {
             if (event.getChannel().isDirect() && remainingContestants.contains(event.getSender())) {
                 String message = event.getMessageContent().trim();
                 if (pollType == PollType.NUMERIC) {
-                    if (NumberUtils.isNumber(message) && Integer.parseInt(message) >= NUMERIC_POLL_MIN_VALUE && Integer.parseInt(message) <= NUMERIC_POLL_MAX_VALUE) {
+                    if (NumberUtils.isCreatable(message) && Integer.parseInt(message) >= NUMERIC_POLL_MIN_VALUE && Integer.parseInt(message) <= NUMERIC_POLL_MAX_VALUE) {
                         addVoteAndDecrement(new Vote(event.getSender(), Integer.parseInt(message)));
                     } else {
                         nicobot.sendMessage(event, messages.getMessage("duelRNError", NUMERIC_POLL_MIN_VALUE, NUMERIC_POLL_MAX_VALUE));

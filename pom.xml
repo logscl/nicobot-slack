@@ -7,39 +7,109 @@
     <groupId>com.st</groupId>
     <artifactId>nicobot</artifactId>
     <packaging>pom</packaging>
-    <version>1.1</version>
+    <version>1.2.0</version>
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
+        <maven.dependency.plugin.version>3.1.1</maven.dependency.plugin.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.targetEncoding>UTF-8</project.build.targetEncoding>
+
+        <commons.lang3.version>3.9</commons.lang3.version>
+        <slf4j.version>1.7.30</slf4j.version>
+        <log4j2.version>[2.8,)</log4j2.version>
+        <joda.version>2.10.5</joda.version>
+        <junit.version>4.13</junit.version>
+        <mockito.version>3.2.4</mockito.version>
+        <simpleslackapi.version>1.2.0</simpleslackapi.version>
+        <spring.version>5.2.3.RELEASE</spring.version>
+        <commons.io.version>2.6</commons.io.version>
+        <nicobot.persistence.version>1.0.0</nicobot.persistence.version>
+        <jersey.version>1.19.4</jersey.version>
+        <google.api.youtube.version>v3-rev20190827-1.30.1</google.api.youtube.version>
+        <google.api.search.version>v1-rev20181001-1.30.1</google.api.search.version>
+        <algorithmia.client.version>[,1.1.0)</algorithmia.client.version>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <profile.name>dev</profile.name>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+
+        <profile>
+            <id>master</id>
+            <properties>
+                <profile.name>master</profile.name>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>${maven.compiler.plugin.version}</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.st.nicobot.BotMain</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>${maven.dependency.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
+
+        <filters>
+            <filter>src/main/filter/nicobot_${profile.name}.properties</filter>
+            <filter>src/main/filter/nicobot_secret_${profile.name}.properties</filter>
+        </filters>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.build.targetEncoding>UTF-8</project.build.targetEncoding>
-        <slf4j.version>1.7.25</slf4j.version>
-        <log4j2.version>[2.8,)</log4j2.version>
-        <simpleslackapi.version>1.2.0</simpleslackapi.version>
-        <spring.version>4.1.5.RELEASE</spring.version>
-        <nicobot.version>1.1</nicobot.version>
-    </properties>
-
-    
 
     <dependencies>
 
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.3.2</version>
+            <version>${commons.lang3.version}</version>
         </dependency>
 
         <dependency>
@@ -81,20 +151,20 @@
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-            <version>2.2</version>
+            <version>${joda.version}</version>
         </dependency>
 
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.9.5</version>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -108,13 +178,71 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.5</version>
+            <version>${commons.io.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ullink.slack</groupId>
+            <artifactId>simpleslackapi</artifactId>
+            <version>${simpleslackapi.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.apis</groupId>
+            <artifactId>google-api-services-youtube</artifactId>
+            <version>${google.api.youtube.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>httpclient</artifactId>
+                    <groupId>org.apache.httpcomponents</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.apis</groupId>
+            <artifactId>google-api-services-customsearch</artifactId>
+            <version>${google.api.search.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>httpclient</artifactId>
+                    <groupId>org.apache.httpcomponents</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-json</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.algorithmia</groupId>
+            <artifactId>algorithmia-client</artifactId>
+            <version>${algorithmia.client.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>be.zqsd</groupId>
+            <artifactId>nicobot-persistence-api</artifactId>
+            <version>${nicobot.persistence.version}</version>
         </dependency>
     </dependencies>
-
-    <modules>
-        <module>nicobot-slack</module>
-    </modules>
-
-
 </project>

@@ -65,12 +65,8 @@ public class WeekEndTest {
 
     private void handle() {
         SlackMessagePosted message = mock(SlackMessagePosted.class);
-        when(message.getMessageContent()).thenReturn("!weekend");
-        when(message.getChannel()).thenReturn(mock(SlackChannel.class));
         ArrayList<SlackChannel> list = new ArrayList<>();
         list.add(message.getChannel());
-        when(nicobot.getSession()).thenReturn(mock(SlackSession.class));
-        when(nicobot.getSession().getChannels()).thenReturn(list);
 
         weekEnd.doCommand("!weekend", null, new Option(message));
     }

@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 
+import static java.util.Optional.ofNullable;
+
 @Service
 public class GommetteServiceImpl implements GommetteService {
 
@@ -81,8 +83,8 @@ public class GommetteServiceImpl implements GommetteService {
     }
 
     private String buildUserScore(GommetteScore score) {
-        int greenCount = Objects.firstNonNull(score.getGreenCount(), 0);
-        int redCount = Objects.firstNonNull(score.getRedCount(), 0);
+        int greenCount = ofNullable(score.getGreenCount()).orElse(0);
+        int redCount = ofNullable(score.getRedCount()).orElse(0);
 
         String greenPlural = greenCount > 1 ? "s" : "";
         String redPlural = redCount > 1 ? "s" : "";

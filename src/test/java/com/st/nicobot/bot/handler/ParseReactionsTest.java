@@ -48,10 +48,8 @@ public class ParseReactionsTest {
 
     @Before
     public void setup() {
-        when(nicobot.isSelfMessage(any(SlackMessagePosted.class))).thenReturn(false);
         when(greetingService.isLeetHourActive()).thenReturn(false);
         when(nicobot.sendMessage(any(SlackMessagePosted.class), anyString())).thenReturn(null);
-        when(commands.isProbableCommand(anyString())).thenReturn(false);
         when(properties.get(NicobotProperty.FEATURED_CHANNEL)).thenReturn("general");
     }
 
@@ -66,8 +64,6 @@ public class ParseReactionsTest {
         when(message.getChannel().getName()).thenReturn("general");
         ArrayList<SlackChannel> list = new ArrayList<>();
         list.add(message.getChannel());
-        when(nicobot.getSession()).thenReturn(mock(SlackSession.class));
-        when(nicobot.getSession().getChannels()).thenReturn(list);
 
         HashSet<Reaction> set = new HashSet<>();
         set.add(new Reaction(".*(julie|hercot) .*",			true, 30, "On en reparle quand elle aura arrêté avec son équipe de meeeerde celle là.  Iiiimmmmbécile."));

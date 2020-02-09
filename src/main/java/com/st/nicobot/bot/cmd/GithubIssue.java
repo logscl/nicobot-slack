@@ -74,10 +74,10 @@ public class GithubIssue extends NiCommand {
                     .header("Authorization", "token "+properties.get(NicobotProperty.GITHUB_API_KEY))
                     .post(ClientResponse.class, issue);
 
-            if(response.getClientResponseStatus() == ClientResponse.Status.CREATED) {
+            if(response.getStatusInfo() == ClientResponse.Status.CREATED) {
                 nicobot.sendMessage(opts.message, messages.getMessage("githubAdded", getUrlWebFormat(response.getLocation().toString())));
             } else {
-                logger.warn("Unable to add new request to GitHub ! Error: "+response.getClientResponseStatus());
+                logger.warn("Unable to add new request to GitHub ! Error: "+response.getStatusInfo());
                 nicobot.sendMessage(opts.message, messages.getMessage("githubFailure"));
             }
 
