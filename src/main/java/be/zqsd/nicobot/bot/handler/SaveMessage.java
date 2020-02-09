@@ -44,15 +44,13 @@ public class SaveMessage extends AbstractMessageEvent {
 
     @Override
     public void onMessage(final SlackMessagePosted message) {
-        Thread t = new Thread() {
-            public void run() {
-                try {
-                    persistenceService.saveMessage(message.getSender().getUserName(), replaceTokens(message.getMessageContent()));
-                } catch (Exception e) {
-                    logger.error("Unable to save message", e);
-                }
+        Thread t = new Thread(() -> {
+            try {
+                persistenceService.saveMessage(message.getSender().getUserName(), replaceTokens(message.getMessageContent()));
+            } catch (Exception e) {
+                logger.error("Unable to save message", e);
             }
-        };
+        });
 
         t.start();
     }

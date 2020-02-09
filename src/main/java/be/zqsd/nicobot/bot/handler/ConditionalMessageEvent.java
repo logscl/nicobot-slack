@@ -29,10 +29,8 @@ public abstract class ConditionalMessageEvent extends AbstractMessageEvent imple
 	final boolean testCondition(Option opt) {
 		if (testImpl(opt)) {
 			int chance = Random.MAX_CHANCE - Random.nextInt();
-			
-			if (chance < getChance()) {
-				return true;
-			}
+
+			return chance < getChance();
 		}
 		
 		return false;

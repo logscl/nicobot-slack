@@ -59,9 +59,7 @@ public class Reaction implements Serializable {
 	public boolean canSaySentence(SlackChannel chan) {
 		if(cooldownTimer > 0) {
 			if(getSpokenTime(chan) != null) {
-				if(getSpokenTime(chan).plusSeconds(cooldownTimer).isAfterNow()) {
-					return false;
-				}
+				return !getSpokenTime(chan).plusSeconds(cooldownTimer).isAfterNow();
 			}
 		}
 		return true;
