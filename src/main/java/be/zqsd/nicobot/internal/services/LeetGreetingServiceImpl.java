@@ -1,0 +1,72 @@
+package be.zqsd.nicobot.internal.services;
+
+import be.zqsd.nicobot.services.LeetGreetingService;
+import com.ullink.slack.simpleslackapi.SlackChannel;
+import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
+
+@Service
+public class LeetGreetingServiceImpl implements LeetGreetingService {
+
+	private static Logger logger = LoggerFactory.getLogger(LeetGreetingServiceImpl.class);
+
+    private boolean leetHourActive = false;
+
+    // clé=chan,list=users
+    private Map<SlackChannel,Set<SlackUser>> leetGreeters = new HashMap<>();
+
+    private static Pattern[] triggers = new Pattern[]{
+            Pattern.compile(".*h+ ?g+ ?t+.*", Pattern.CASE_INSENSITIVE),
+            Pattern.compile(".*Happy.*Geek.*Time.*", Pattern.CASE_INSENSITIVE)
+    };
+
+    @Override
+    public void init() {
+        leetHourActive = true;
+        leetGreeters =  new HashMap<>();
+    }
+
+    public void finish() {
+        leetHourActive = false;
+    }
+
+    @Override
+    public void addGreeter(SlackMessagePosted message) {
+        if(!hasAlreadyGreeted(message) && !message.getSender().isBot()) {
+            for(Pattern pattern : triggers) {
+                if(pattern.matcher(message.getMessageContent()).find()) {
+                	logger.debug("Cha-ching ! trigger found");
+                    leetGreeters.get(message.getChannel()).add(message.getSender());
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean isLeetHourActive() {
+        return leetHourActive;
+    }
+
+    private boolean hasAlreadyGreeted(SlackMessagePosted message) {
+        if(leetGreeters.get(message.getChannel()) == null) {
+            leetGreeters.put(message.getChannel(), new LinkedHashSet<>());
+            return false;
+        } else {
+            return (leetGreeters.get(message.getChannel()).contains(message.getSender()));
+        }
+    }
+    
+    @Override
+    public Map<SlackChannel,Set<SlackUser>> getGreeters() {
+    	return leetGreeters;
+    }
+}
