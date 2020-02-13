@@ -1,13 +1,13 @@
 package be.zqsd.nicobot.internal.services;
 
-import be.zqsd.client.NicobotPersistence;
-import be.zqsd.gommette.Gommette;
-import be.zqsd.gommette.GommetteRequest;
-import be.zqsd.gommette.GommetteScore;
-import be.zqsd.hgt.HgtRequest;
-import be.zqsd.hgt.HgtScore;
-import be.zqsd.message.Message;
-import be.zqsd.message.MessageRequest;
+import be.zqsd.nicobot.client.NicobotPersistence;
+import be.zqsd.nicobot.gommette.Gommette;
+import be.zqsd.nicobot.gommette.GommetteRequest;
+import be.zqsd.nicobot.gommette.GommetteScore;
+import be.zqsd.nicobot.hgt.HgtRequest;
+import be.zqsd.nicobot.hgt.HgtScore;
+import be.zqsd.nicobot.message.Message;
+import be.zqsd.nicobot.message.MessageRequest;
 import be.zqsd.nicobot.utils.NicobotProperty;
 import be.zqsd.nicobot.services.PersistenceService;
 import be.zqsd.nicobot.services.PropertiesService;

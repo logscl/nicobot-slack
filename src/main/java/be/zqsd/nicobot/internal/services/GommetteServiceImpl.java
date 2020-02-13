@@ -1,6 +1,6 @@
 package be.zqsd.nicobot.internal.services;
 
-import be.zqsd.gommette.GommetteScore;
+import be.zqsd.nicobot.gommette.GommetteScore;
 import be.zqsd.nicobot.bot.NicoBot;
 import be.zqsd.nicobot.services.Messages;
 import be.zqsd.nicobot.services.UsernameService;

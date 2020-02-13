@@ -1,6 +1,6 @@
 package be.zqsd.nicobot.internal.services;
 
-import be.zqsd.hgt.HgtScore;
+import be.zqsd.nicobot.hgt.HgtScore;
 import be.zqsd.nicobot.bot.NicoBot;
 import be.zqsd.nicobot.services.HappyGeekTimeService;
 import be.zqsd.nicobot.services.Messages;

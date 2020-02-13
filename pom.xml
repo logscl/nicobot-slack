@@ -25,7 +25,7 @@
         <simpleslackapi.version>1.2.0</simpleslackapi.version>
         <spring.version>5.2.3.RELEASE</spring.version>
         <commons.io.version>2.6</commons.io.version>
-        <nicobot.persistence.version>1.0.0</nicobot.persistence.version>
+        <nicobot.persistence.version>1.0.2</nicobot.persistence.version>
         <jersey.version>1.19.4</jersey.version>
         <google.api.youtube.version>v3-rev20190827-1.30.1</google.api.youtube.version>
         <google.api.search.version>v1-rev20181001-1.30.1</google.api.search.version>
@@ -239,7 +239,7 @@
         </dependency>
 
         <dependency>
-            <groupId>be.zqsd</groupId>
+            <groupId>be.zqsd.nicobot</groupId>
             <artifactId>nicobot-persistence-api</artifactId>
             <version>${nicobot.persistence.version}</version>
         </dependency>

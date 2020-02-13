@@ -1,8 +1,8 @@
 package be.zqsd.nicobot.internal.services;
 
-import be.zqsd.gommette.Gommette;
-import be.zqsd.gommette.GommetteScore;
-import be.zqsd.hgt.HgtScore;
+import be.zqsd.nicobot.gommette.Gommette;
+import be.zqsd.nicobot.gommette.GommetteScore;
+import be.zqsd.nicobot.hgt.HgtScore;
 import be.zqsd.nicobot.services.PersistenceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

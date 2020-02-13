@@ -1,6 +1,6 @@
 package be.zqsd.nicobot.bot.cmd;
 
-import be.zqsd.gommette.GommetteType;
+import be.zqsd.nicobot.gommette.GommetteType;
 import be.zqsd.nicobot.bot.NicoBot;
 import be.zqsd.nicobot.bot.utils.Emoji;
 import be.zqsd.nicobot.bot.utils.Option;
@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static be.zqsd.gommette.GommetteType.GREEN;
+import static be.zqsd.nicobot.gommette.GommetteType.GREEN;
 
 /**
  * Created by Logs on 17-08-15.
@@ -205,7 +205,7 @@ public class Gommette extends NiCommand {
     }
 
     private void addGommette(GommetteArguments arguments, Option opts, boolean valid) {
-        be.zqsd.gommette.Gommette gommette = new be.zqsd.gommette.Gommette(
+        be.zqsd.nicobot.gommette.Gommette gommette = new be.zqsd.nicobot.gommette.Gommette(
                 arguments.user.getId(),
                 opts.message.getSender().getId(),
                 arguments.reason,
