@@ -9,19 +9,21 @@ import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.Minutes;
+import org.apache.commons.text.similarity.JaroWinklerDistance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static java.time.LocalDateTime.now;
+import static java.time.temporal.ChronoUnit.MINUTES;
 
 /**
  * Created by Logs on 18-06-17.
@@ -37,6 +39,8 @@ public class Hangman extends NiCommand {
 
     private static final int MAX_GAME_TIME_MIN = 5;
 
+    private static JaroWinklerDistance JARO_WINKLER_DISTANCE = new JaroWinklerDistance();
+
     @Autowired
     private NicoBot nicobot;
 
@@ -46,7 +50,7 @@ public class Hangman extends NiCommand {
     private HangmanEventListener listener = null;
     private CountDownLatch latch = null;
 
-    private DateTime lastHangman = null;
+    private LocalDateTime lastHangman = null;
 
     @Override
     public String getCommandName() {
@@ -76,7 +80,7 @@ public class Hangman extends NiCommand {
             String hangmanQuery;
             SlackChannel channel;
 
-            if(lastHangman != null && Minutes.minutesBetween(lastHangman, DateTime.now(DateTimeZone.UTC)).getMinutes() < 15) {
+            if(lastHangman != null && MINUTES.between(lastHangman, now()) < 15) {
                 nicobot.sendMessage(opts.message, "Essaye plus tard...");
                 return;
             }
@@ -116,7 +120,7 @@ public class Hangman extends NiCommand {
                     } finally {
                         nicobot.getSession().removeMessagePostedListener(listener);
                         listener = null;
-                        lastHangman = DateTime.now(DateTimeZone.UTC);
+                        lastHangman = now();
                     }
                 }
             }.start();
@@ -194,8 +198,9 @@ public class Hangman extends NiCommand {
                 String messagePosted = slackMessagePosted.getMessageContent();
                 messagePosted = StringUtils.stripAccents(messagePosted);
                 messagePosted = StringUtils.upperCase(messagePosted);
-                logger.info("Query: {} - Input : {} - Jaro Winkler Distance: {}", query, messagePosted, StringUtils.getJaroWinklerDistance(messagePosted, query));
-                if(StringUtils.getJaroWinklerDistance(messagePosted, query) >= .99) {
+                Double similarity = JARO_WINKLER_DISTANCE.apply(messagePosted, query);
+                logger.info("Query: {} - Input : {} - Jaro Winkler Distance: {}", query, messagePosted, similarity);
+                if(similarity != null && similarity >= .99) {
                     winner = slackMessagePosted.getSender();
                     latch.countDown();
                 }

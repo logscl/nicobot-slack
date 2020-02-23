@@ -6,7 +6,6 @@ import be.zqsd.nicobot.internal.services.MessagesImpl;
 import be.zqsd.nicobot.services.PropertiesService;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
-import org.joda.time.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,8 +16,14 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 
+import static java.time.Duration.between;
+import static java.time.LocalDateTime.of;
+import static java.time.temporal.ChronoUnit.*;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -30,16 +35,16 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class WeekEndTest {
 
-    private static DateTime MONDAY_15_00 = new DateTime(2015,8,24,15,0,1);
-    private static DateTime THURSDAY_15_00 = new DateTime(2015,8,27,15,0,2);
-    private static DateTime FRIDAY_16_30 = new DateTime(2015,8,28,16,30,3);
-    private static DateTime FRIDAY_20_00 = new DateTime(2015,8,28,20,0,4);
-    private static DateTime SATURDAY_12_00 = new DateTime(2015,8,29,12,0,5);
-    private static DateTime SUNDAY_23_00 = new DateTime(2015,8,30,23,0,6);
-    private static DateTime MONDAY_03_00 = new DateTime(2015,8,31,3,0,7);
+    private static LocalDateTime MONDAY_15_00 = of(2015,8,24,15,0,1);
+    private static LocalDateTime THURSDAY_15_00 = of(2015,8,27,15,0,2);
+    private static LocalDateTime FRIDAY_16_30 = of(2015,8,28,16,30,3);
+    private static LocalDateTime FRIDAY_20_00 = of(2015,8,28,20,0,4);
+    private static LocalDateTime SATURDAY_12_00 = of(2015,8,29,12,0,5);
+    private static LocalDateTime SUNDAY_23_00 = of(2015,8,30,23,0,6);
+    private static LocalDateTime MONDAY_03_00 = of(2015,8,31,3,0,7);
 
-    private static DateTime EXPECTED_WEEKEND_START = new DateTime(2015,8,28,17,0);
-    private static DateTime EXPECTED_WEEKEND_END = new DateTime(2015,8,31,9,0);
+    private static LocalDateTime EXPECTED_WEEKEND_START = of(2015,8,28,17,0);
+    private static LocalDateTime EXPECTED_WEEKEND_END = of(2015,8,31,9,0);
 
     @InjectMocks
     private WeekEnd weekEnd = new WeekEnd();
@@ -53,11 +58,15 @@ public class WeekEndTest {
     @Mock
     private NicoBot nicobot;
 
+    @Mock
+    private Clock clock;
+
     @Captor
     private ArgumentCaptor<String> messageCaptor;
 
     @Before
     public void setUp() {
+        when(clock.getZone()).thenReturn(ZoneOffset.UTC);
         ReflectionTestUtils.setField(weekEnd, "messages", messages);
         messages.start();
     }
@@ -70,8 +79,8 @@ public class WeekEndTest {
         weekEnd.doCommand("!weekend", null, new Option(message));
     }
 
-    private String getRemainingTimeStr(DateTime d1, DateTime d2) {
-        return ReflectionTestUtils.invokeMethod(weekEnd, "getRemainingTimeStr", new Duration(d1,d2));
+    private String getRemainingTimeStr(LocalDateTime d1, LocalDateTime d2) {
+        return ReflectionTestUtils.invokeMethod(weekEnd, "getRemainingTimeStr", between(d1,d2));
     }
 
     private void checkMethod(String messageToCheck) {
@@ -89,18 +98,18 @@ public class WeekEndTest {
 
     @Test
     public void WeekEnd_Test_MONDAY_15_00() {
-        DateTimeUtils.setCurrentMillisFixed(MONDAY_15_00.getMillis());
+        when(clock.instant()).thenReturn(MONDAY_15_00.toInstant(ZoneOffset.UTC));
 
-        String expectedMsg = messages.getMessage("weNoDays", Days.daysBetween(MONDAY_15_00, EXPECTED_WEEKEND_START).getDays(), getRemainingTimeStr(MONDAY_15_00, EXPECTED_WEEKEND_START));
+        String expectedMsg = messages.getMessage("weNoDays", DAYS.between(MONDAY_15_00, EXPECTED_WEEKEND_START), getRemainingTimeStr(MONDAY_15_00, EXPECTED_WEEKEND_START));
 
         checkMethod(expectedMsg);
     }
 
     @Test
     public void WeekEnd_Test_THURSDAY_15_00() {
-        DateTimeUtils.setCurrentMillisFixed(THURSDAY_15_00.getMillis());
+        when(clock.instant()).thenReturn(THURSDAY_15_00.toInstant(ZoneOffset.UTC));
 
-        int hours = Hours.hoursBetween(THURSDAY_15_00, EXPECTED_WEEKEND_START).getHours();
+        long hours = HOURS.between(THURSDAY_15_00, EXPECTED_WEEKEND_START);
 
         String expectedMsg = messages.getMessage("weNoHours", hours, hours > 1 ? "s" : "", getRemainingTimeStr(THURSDAY_15_00, EXPECTED_WEEKEND_START));
 
@@ -109,9 +118,10 @@ public class WeekEndTest {
 
     @Test
     public void WeekEnd_Test_FRIDAY_16_30() {
-        DateTimeUtils.setCurrentMillisFixed(FRIDAY_16_30.getMillis());
+        when(clock.instant()).thenReturn(FRIDAY_16_30.toInstant(ZoneOffset.UTC));
 
-        int minutes = Minutes.minutesBetween(FRIDAY_16_30, EXPECTED_WEEKEND_START).getMinutes();
+
+        long minutes = MINUTES.between(FRIDAY_16_30, EXPECTED_WEEKEND_START);
 
         String expectedMsg = messages.getMessage("weNoMinutes", minutes, minutes > 1 ? "s" : "", getRemainingTimeStr(FRIDAY_16_30, EXPECTED_WEEKEND_START));
 
@@ -120,7 +130,7 @@ public class WeekEndTest {
 
     @Test
     public void WeekEnd_Test_FRIDAY_20_00() {
-        DateTimeUtils.setCurrentMillisFixed(FRIDAY_20_00.getMillis());
+        when(clock.instant()).thenReturn(FRIDAY_20_00.toInstant(ZoneOffset.UTC));
 
         String expectedMsg = messages.getMessage("weYesDays");
 
@@ -129,25 +139,25 @@ public class WeekEndTest {
 
     @Test
     public void WeekEnd_Test_SATURDAY_12_00() {
-        DateTimeUtils.setCurrentMillisFixed(SATURDAY_12_00.getMillis());
+        when(clock.instant()).thenReturn(SATURDAY_12_00.toInstant(ZoneOffset.UTC));
 
-        String expectedMsg = messages.getMessage("weYesHours", Hours.hoursBetween(SATURDAY_12_00, EXPECTED_WEEKEND_END).getHours());
+        String expectedMsg = messages.getMessage("weYesHours", HOURS.between(SATURDAY_12_00, EXPECTED_WEEKEND_END));
 
         checkMethod(expectedMsg);
     }
 
     @Test
     public void WeekEnd_Test_SUNDAY_23_00() {
-        DateTimeUtils.setCurrentMillisFixed(SUNDAY_23_00.getMillis());
+        when(clock.instant()).thenReturn(SUNDAY_23_00.toInstant(ZoneOffset.UTC));
 
-        String expectedMsg = messages.getMessage("weYesHours", Hours.hoursBetween(SUNDAY_23_00, EXPECTED_WEEKEND_END).getHours());
+        String expectedMsg = messages.getMessage("weYesHours", HOURS.between(SUNDAY_23_00, EXPECTED_WEEKEND_END));
 
         checkMethod(expectedMsg);
     }
 
     @Test
     public void WeekEnd_Test_MONDAY_03_00() {
-        DateTimeUtils.setCurrentMillisFixed(MONDAY_03_00.getMillis());
+        when(clock.instant()).thenReturn(MONDAY_03_00.toInstant(ZoneOffset.UTC));
 
         String expectedMsg = messages.getMessage("weYesMinutes");
 

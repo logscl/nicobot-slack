@@ -1,14 +1,13 @@
 package be.zqsd.nicobot.bot.services;
 
-import be.zqsd.nicobot.hgt.HgtScore;
 import be.zqsd.nicobot.bot.NicoBot;
+import be.zqsd.nicobot.hgt.HgtScore;
 import be.zqsd.nicobot.internal.services.HappyGeekTimeServiceImpl;
 import be.zqsd.nicobot.services.Messages;
-import be.zqsd.nicobot.services.UsernameService;
 import be.zqsd.nicobot.services.PersistenceService;
+import be.zqsd.nicobot.services.UsernameService;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +20,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import static java.time.LocalDate.now;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 import static org.junit.Assert.assertEquals;
@@ -58,7 +58,7 @@ public class HappyGeekTimeServiceTest {
 
     @Before
     public void setUp() {
-        when(messages.getMessage("allTopHGT", DateTime.now().getYear(), DateTime.now().getDayOfYear())).thenReturn(ALL_TOP);
+        when(messages.getMessage("allTopHGT", now().getYear(), now().getDayOfYear())).thenReturn(ALL_TOP);
         when(messages.getMessage("weekTopHGT")).thenReturn(WEEK_TOP);
         when(messages.getMessage("noOne")).thenReturn(NO_ONE);
 

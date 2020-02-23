@@ -5,21 +5,16 @@ public enum NicobotProperty {
 	SLACK_API_KEY("slack.api.key"),
 
 	API_URI("api.uri", "http://api.nicobot.cloudbees.net"),
-	API_PERSISTENCE_STRATEGY("api.persistence.stragegy", "NoPersistenceStrategy"),
 	API_KEY("nicobot.persitence.api.key"),
 
-	SEARCH_URI("search.uri"),
 	SEARCH_CX_KEY("search.cx.key"),
 	SEARCH_API_KEY("search.api.key"),
 
-	YOUTUBE_QUERY_URI("youtube.query.uri"),
 	YOUTUBE_VIDEO_URI("youtube.video.uri"),
 
-	GITHUB_ISSUE_ADD_URL("github.issue.add.url"),
 	GITHUB_API_KEY("github.api.key"),
-
-	GOOGLE_MAPS_URI("google.maps.uri"),
-	GOOGLE_MAPS_PLACE_URI("google.maps.place.uri"),
+	GITHUB_REPOSITORY_USERNAME("github.repository.username"),
+	GITHUB_REPOSITORY_NAME("github.repository.name"),
 
 	FEATURED_CHANNEL("nicobot.featured.channel"),
 

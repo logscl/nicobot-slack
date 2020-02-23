@@ -5,19 +5,21 @@ import be.zqsd.nicobot.bot.utils.Option;
 import be.zqsd.nicobot.services.Messages;
 import be.zqsd.nicobot.services.PropertiesService;
 import be.zqsd.nicobot.utils.NicobotProperty;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
+import org.eclipse.egit.github.core.Issue;
+import org.eclipse.egit.github.core.client.GitHubClient;
+import org.eclipse.egit.github.core.service.IssueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+
+import static be.zqsd.nicobot.utils.NicobotProperty.GITHUB_REPOSITORY_NAME;
+import static be.zqsd.nicobot.utils.NicobotProperty.GITHUB_REPOSITORY_USERNAME;
 
 /**
  * Created by Logs on 18-10-15.
@@ -63,48 +65,31 @@ public class GithubIssue extends NiCommand {
 
     @Override
     protected void doCommand(String command, String[] args, Option opts) {
+
         try {
             GithubArguments arguments = new GithubArguments(args);
 
-            String issue = buildIssueStr(arguments, opts);
+            GitHubClient client = new GitHubClient();
+            client.setOAuth2Token(properties.get(NicobotProperty.GITHUB_API_KEY));
 
-            WebResource resource = Client.create().resource(properties.get(NicobotProperty.GITHUB_ISSUE_ADD_URL));
+            IssueService issueService = new IssueService(client);
 
-            ClientResponse response = resource
-                    .header("Authorization", "token "+properties.get(NicobotProperty.GITHUB_API_KEY))
-                    .post(ClientResponse.class, issue);
+            Issue issue = new Issue()
+                    .setTitle(arguments.issueTitle)
+                    .setBody(buildIssueText(arguments, opts));
 
-            if(response.getStatusInfo() == ClientResponse.Status.CREATED) {
-                nicobot.sendMessage(opts.message, messages.getMessage("githubAdded", getUrlWebFormat(response.getLocation().toString())));
-            } else {
-                logger.warn("Unable to add new request to GitHub ! Error: "+response.getStatusInfo());
-                nicobot.sendMessage(opts.message, messages.getMessage("githubFailure"));
-            }
-
-
-
+            issueService.createIssue(properties.get(GITHUB_REPOSITORY_USERNAME), properties.get(GITHUB_REPOSITORY_NAME), issue);
+        } catch (IOException e) {
+            nicobot.sendMessage(opts.message, messages.getMessage("githubFailure"));
         } catch (IllegalArgumentException ex) {
             nicobot.sendPrivateMessage(opts.message, ex.getMessage());
-        } catch (JSONException ex) {
-            logger.error("Unable to add issue to github !",ex);
         }
     }
 
-    private String getUrlWebFormat(String apiUrl) {
-        return apiUrl.replace("api.", "").replace("repos/", "");
-    }
-
-    private String buildIssueStr(GithubArguments arguments, Option opts) throws JSONException {
-        JSONObject issue = new JSONObject();
-
-        issue.put("title", arguments.issueTitle);
-
-        String issueBody = arguments.issueBody != null ? arguments.issueBody : "";
-        issueBody += "\r\n- Requested by " + opts.message.getSender().getUserName();
-
-        issue.put("body", issueBody);
-
-        return issue.toString();
+    private String buildIssueText(GithubArguments arguments, Option opts) {
+        String issueText = arguments.issueBody != null ? arguments.issueBody : "";
+        issueText += "\r\n- Requested by " + opts.message.getSender().getUserName();
+        return issueText;
     }
 
     private class GithubArguments {

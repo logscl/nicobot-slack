@@ -1,13 +1,12 @@
 package be.zqsd.nicobot.internal.services;
 
-import be.zqsd.nicobot.hgt.HgtScore;
 import be.zqsd.nicobot.bot.NicoBot;
+import be.zqsd.nicobot.hgt.HgtScore;
 import be.zqsd.nicobot.services.HappyGeekTimeService;
 import be.zqsd.nicobot.services.Messages;
-import be.zqsd.nicobot.services.UsernameService;
 import be.zqsd.nicobot.services.PersistenceService;
+import be.zqsd.nicobot.services.UsernameService;
 import com.ullink.slack.simpleslackapi.SlackUser;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,8 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
+
+import static java.time.LocalDate.now;
 
 /**
  * Created by Logs on 24-01-16.
@@ -40,7 +41,7 @@ public class HappyGeekTimeServiceImpl implements HappyGeekTimeService {
 
     @Override
     public String getAllTimeTopUsers(String channel) {
-        String startSentence = messages.getMessage("allTopHGT", DateTime.now().getYear(), DateTime.now().getDayOfYear());
+        String startSentence = messages.getMessage("allTopHGT", now().getYear(), now().getDayOfYear());
         String noOne = messages.getMessage("noOne");
         try {
             Collection<HgtScore> scores = persistenceService.getYearlyHgtScores(channel);

@@ -2,14 +2,16 @@ package be.zqsd.nicobot.bot.utils;
 
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import org.apache.commons.lang3.RandomUtils;
-import org.joda.time.DateTime;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import static java.time.LocalDateTime.now;
 
 public class Reaction implements Serializable {
 
@@ -19,7 +21,7 @@ public class Reaction implements Serializable {
 	private Pattern pattern;
 	private List<String> response;
 	private int cooldownTimer;
-	private Map<SlackChannel, DateTime> lastSpokenTimeByChan = new HashMap<>();
+	private Map<SlackChannel, LocalDateTime> lastSpokenTimeByChan = new HashMap<>();
 	
 	/**
 	 * Crée une réaction a un message sur le chan
@@ -59,22 +61,22 @@ public class Reaction implements Serializable {
 	public boolean canSaySentence(SlackChannel chan) {
 		if(cooldownTimer > 0) {
 			if(getSpokenTime(chan) != null) {
-				return !getSpokenTime(chan).plusSeconds(cooldownTimer).isAfterNow();
+				return !getSpokenTime(chan).plusSeconds(cooldownTimer).isAfter(now());
 			}
 		}
 		return true;
 	}
 	
-	public DateTime getSpokenTime(SlackChannel chan) {
+	public LocalDateTime getSpokenTime(SlackChannel chan) {
 		return lastSpokenTimeByChan.get(chan);
 	}
 	
-	public void addSpokenTime(SlackChannel chan, DateTime date) {
+	public void addSpokenTime(SlackChannel chan, LocalDateTime date) {
 		lastSpokenTimeByChan.put(chan, date);
 	}
 
 	public void addSpokenTime(SlackChannel chan) {
-		addSpokenTime(chan, DateTime.now());
+		addSpokenTime(chan, now());
 	}
 
 	public Pattern getPattern() {

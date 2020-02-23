@@ -6,8 +6,6 @@ import be.zqsd.nicobot.services.*;
 import be.zqsd.nicobot.utils.NicobotProperty;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackUser;
-import org.joda.time.DateTime;
-import org.joda.time.Seconds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +13,14 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.temporal.TemporalAdjuster;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import static java.time.LocalDateTime.now;
+import static java.time.temporal.ChronoField.*;
+import static java.time.temporal.ChronoUnit.SECONDS;
 
 /**
  * Created by Logs on 22-03-15.
@@ -55,24 +58,25 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
     //@Scheduled(fixedDelay = 11000, initialDelay = 5000)
     public void runJob() {
         greetingService.init();
-        logger.info("Leet starting at "+ DateTime.now().toString());
+        logger.info("Leet starting at "+ now().toString());
 
         Predicate<SlackChannel> isGroupChannel = slackChannel -> slackChannel.getType() != SlackChannel.SlackChannelType.INSTANT_MESSAGING;
         Predicate<SlackChannel> isFeatured = slackChannel -> slackChannel.getName().equals(properties.get(NicobotProperty.FEATURED_CHANNEL));
 
         try {
-            logger.info("Bot will now wait for 1 min to read mesages at "+ DateTime.now().toString());
+            logger.info("Bot will now wait for 1 min to read mesages at "+ now().toString());
             synchronized (this) {
-                int secondsBeforeTimeOut = Seconds.secondsBetween(DateTime.now(), DateTime.now().withTime(13, 38, 0, 0)).getSeconds();
+
+                long secondsBeforeTimeOut = SECONDS.between(now(), now().with(leetHour()));
                 logger.info("exact wait time (seconds): {}",secondsBeforeTimeOut);
                 this.wait(secondsBeforeTimeOut*1000);
             }
-            logger.info("Happy Geek Thread finished at "+ DateTime.now().toString());
+            logger.info("Happy Geek Thread finished at "+ now().toString());
         } catch (InterruptedException e) {
             logger.error("Error in waiting task", e);
         } finally {
             greetingService.finish();
-            logger.info("Leet ended at " + DateTime.now().toString());
+            logger.info("Leet ended at " + now().toString());
         }
 
         nicobot.getSession().getChannels().stream().filter(isGroupChannel.and(isFeatured)).forEach(chan -> {
@@ -92,6 +96,14 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
 
             nicobot.sendMessage(chan, null, hgtService.getWeekTopUsers(chan.getId()));
         });
+    }
+
+    private TemporalAdjuster leetHour() {
+        return (temporal) -> temporal
+                .with(HOUR_OF_DAY, 13)
+                .with(MINUTE_OF_HOUR, 37)
+                .with(OFFSET_SECONDS, 0)
+                .with(MILLI_OF_SECOND, 0);
     }
 
     /**

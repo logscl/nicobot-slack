@@ -6,6 +6,8 @@ import org.springframework.context.annotation.*;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import java.time.Clock;
+
 @Configuration
 @ComponentScan
 @EnableScheduling
@@ -23,5 +25,10 @@ public class BotMain {
 		NicoBot session = context.getBean(NicoBot.class);
 
 		session.connect();
+	}
+
+	@Bean
+	public Clock clock() {
+		return Clock.systemDefaultZone();
 	}
 }

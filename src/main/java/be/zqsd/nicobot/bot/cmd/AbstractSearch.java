@@ -1,19 +1,17 @@
 package be.zqsd.nicobot.bot.cmd;
 
 import be.zqsd.nicobot.bot.NicoBot;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.services.customsearch.Customsearch;
-import com.google.api.services.customsearch.model.Result;
-import com.google.api.services.customsearch.model.Search;
 import be.zqsd.nicobot.bot.utils.Option;
 import be.zqsd.nicobot.services.Messages;
 import be.zqsd.nicobot.services.NudityDectionService;
 import be.zqsd.nicobot.services.PropertiesService;
 import be.zqsd.nicobot.utils.NicobotProperty;
-import com.ullink.slack.simpleslackapi.SlackAttachment;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.customsearch.Customsearch;
+import com.google.api.services.customsearch.model.Result;
+import com.google.api.services.customsearch.model.Search;
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,19 +100,7 @@ public abstract class AbstractSearch extends NiCommand {
         }
 
         if(needNSFWCheck()) {
-            try {
-                JSONObject result = nudityDectionService.checkUrl(foundLink);
-                SlackAttachment attachment = new SlackAttachment();
-                logger.info("Result from Nudity Detection Service: "+result.toString());
-                if (result.getBoolean("nude")) {
-                    attachment.setColor("danger");
-                    attachment.setText(messages.getMessage("nsfwDetected"));
-                } else {
-                }
-                nicobot.sendMessage(opts.message, foundLink, attachment);
-            } catch (Exception e) {
-                logger.error("Unable to parse nudity Service result",e);
-            }
+            logger.info("No service for nudity detection yet :(");
         } else {
             nicobot.sendMessage(opts.message, foundLink);
         }

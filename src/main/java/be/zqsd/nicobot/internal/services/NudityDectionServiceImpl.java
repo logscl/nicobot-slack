@@ -1,13 +1,13 @@
 package be.zqsd.nicobot.internal.services;
 
 import be.zqsd.nicobot.services.NudityDectionService;
+import be.zqsd.nicobot.services.PropertiesService;
 import be.zqsd.nicobot.utils.NicobotProperty;
 import com.algorithmia.Algorithmia;
 import com.algorithmia.AlgorithmiaClient;
 import com.algorithmia.algo.AlgoResponse;
 import com.algorithmia.algo.Algorithm;
-import be.zqsd.nicobot.services.PropertiesService;
-import org.codehaus.jettison.json.JSONObject;
+import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +35,8 @@ public class NudityDectionServiceImpl implements NudityDectionService {
     }
 
     @Override
-    public JSONObject checkUrl(String url) throws Exception {
+    public boolean checkUrl(String url) throws Exception {
         AlgoResponse result = algo.pipeJson(String.format("\"%s\"", url));
-        return new JSONObject(result.asJsonString());
+        return BooleanUtils.toBoolean(result.asJsonString());
     }
 }

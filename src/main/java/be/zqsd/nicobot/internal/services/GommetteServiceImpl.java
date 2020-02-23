@@ -1,13 +1,12 @@
 package be.zqsd.nicobot.internal.services;
 
-import be.zqsd.nicobot.gommette.GommetteScore;
 import be.zqsd.nicobot.bot.NicoBot;
-import be.zqsd.nicobot.services.Messages;
-import be.zqsd.nicobot.services.UsernameService;
+import be.zqsd.nicobot.gommette.GommetteScore;
 import be.zqsd.nicobot.services.GommetteService;
+import be.zqsd.nicobot.services.Messages;
 import be.zqsd.nicobot.services.PersistenceService;
+import be.zqsd.nicobot.services.UsernameService;
 import com.ullink.slack.simpleslackapi.SlackUser;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 
+import static java.time.LocalDate.now;
 import static java.util.Optional.ofNullable;
 
 @Service
@@ -51,7 +51,7 @@ public class GommetteServiceImpl implements GommetteService {
     public String getUserScore(SlackUser user) {
         try {
             Collection<GommetteScore> gommettes = persistenceService
-                    .getUserGommettesScore(DateTime.now().getYear(), user.getId());
+                    .getUserGommettesScore(now().getYear(), user.getId());
 
             return gommettes
                     .stream().findFirst().map(this::buildUserScore)

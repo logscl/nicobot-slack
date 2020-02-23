@@ -1,22 +1,22 @@
 package be.zqsd.nicobot.bot.cmd;
 
 import be.zqsd.nicobot.bot.NicoBot;
+import be.zqsd.nicobot.bot.utils.Option;
+import be.zqsd.nicobot.services.Messages;
+import be.zqsd.nicobot.services.PropertiesService;
+import be.zqsd.nicobot.utils.NicobotProperty;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
-import be.zqsd.nicobot.bot.utils.Option;
-import be.zqsd.nicobot.services.Messages;
-import be.zqsd.nicobot.services.PropertiesService;
-import be.zqsd.nicobot.utils.NicobotProperty;
-import com.sun.jersey.api.client.UniformInterfaceException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -93,10 +93,7 @@ public class YoutubeSearch extends NiCommand {
                 logger.info("Query [{}] has no results",searchArguments);
                 nicobot.sendMessage(opts.message, messages.getMessage("nothingFound"));
             }
-        } catch (UniformInterfaceException e) {
-            logger.error(e.getMessage(),e);
-            logger.info("Additional Exception Info: "+e.getResponse().getEntity(String.class));
-        } catch (Exception e) {
+        } catch (IOException e) {
             logger.error(e.getMessage(),e);
         }
     }

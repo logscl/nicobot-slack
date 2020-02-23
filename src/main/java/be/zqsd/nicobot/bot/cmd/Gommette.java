@@ -1,9 +1,9 @@
 package be.zqsd.nicobot.bot.cmd;
 
-import be.zqsd.nicobot.gommette.GommetteType;
 import be.zqsd.nicobot.bot.NicoBot;
 import be.zqsd.nicobot.bot.utils.Emoji;
 import be.zqsd.nicobot.bot.utils.Option;
+import be.zqsd.nicobot.gommette.GommetteType;
 import be.zqsd.nicobot.services.GommetteService;
 import be.zqsd.nicobot.services.Messages;
 import be.zqsd.nicobot.services.PersistenceService;
@@ -14,13 +14,13 @@ import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import static be.zqsd.nicobot.gommette.GommetteType.GREEN;
+import static java.time.LocalDateTime.now;
 
 /**
  * Created by Logs on 17-08-15.
@@ -158,7 +159,7 @@ public class Gommette extends NiCommand {
                         while (i < TICKS) {
                             if (i > GRACE_TICKS) {
                                 // pas de vote depuis 1 min
-                                if (listener.getLastVoteDate().isBefore(DateTime.now().minusMinutes(1))) {
+                                if (listener.getLastVoteDate().isBefore(now().minusMinutes(1))) {
                                     warns++;
                                 } else {
                                     warns = 0;
@@ -283,13 +284,13 @@ public class Gommette extends NiCommand {
         private Messages messages;
         private SlackUser target;
         private Map<SlackUser, GommetteVoteType> votes = new HashMap<>();
-        private DateTime lastVoteDate;
+        private LocalDateTime lastVoteDate;
 
         public GommetteEventListener(NicoBot nicobot, Messages messages, SlackUser target) {
             this.nicobot = nicobot;
             this.messages = messages;
             this.target = target;
-            this.lastVoteDate = DateTime.now();
+            this.lastVoteDate = now();
         }
 
         @Override
@@ -318,7 +319,7 @@ public class Gommette extends NiCommand {
                 } else if (getVoteNoStr().contains(message)) {
                     votes.put(event.getSender(), GommetteVoteType.NO);
                 }
-                lastVoteDate = DateTime.now();
+                lastVoteDate = now();
             } else {
                 nicobot.sendMessage(event, messages.getMessage("gmVoteOnce", event.getSender().getUserName()));
             }
@@ -340,7 +341,7 @@ public class Gommette extends NiCommand {
             return message.equals(getVoteYesStr()) || message.equals(getVoteNoStr());
         }
 
-        public DateTime getLastVoteDate() {
+        public LocalDateTime getLastVoteDate() {
             return lastVoteDate;
         }
 
