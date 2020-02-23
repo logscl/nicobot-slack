@@ -3,5 +3,5 @@ The (second) best bot in the world !
 
 # TODO
 * publish nicobot-persistence-api
-* change slack api lib
+* change slack api lib (https://github.com/slackapi/java-slack-sdk)
 * docker
