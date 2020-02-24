@@ -102,7 +102,7 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
         return (temporal) -> temporal
                 .with(HOUR_OF_DAY, 13)
                 .with(MINUTE_OF_HOUR, 37)
-                .with(OFFSET_SECONDS, 0)
+                .with(SECOND_OF_MINUTE, 0)
                 .with(MILLI_OF_SECOND, 0);
     }
 
