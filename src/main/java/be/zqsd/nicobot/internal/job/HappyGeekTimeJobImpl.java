@@ -55,7 +55,6 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
     @Override
     @Async
     @Scheduled(cron="0 37 13 * * *")
-    //@Scheduled(fixedDelay = 11000, initialDelay = 5000)
     public void runJob() {
         greetingService.init();
         logger.info("Leet starting at "+ now().toString());
@@ -64,7 +63,7 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
         Predicate<SlackChannel> isFeatured = slackChannel -> slackChannel.getName().equals(properties.get(NicobotProperty.FEATURED_CHANNEL));
 
         try {
-            logger.info("Bot will now wait for 1 min to read mesages at "+ now().toString());
+            logger.info("Bot will now wait for 1 min to read messages at {} - until {}", now(), now().with(leetHour()));
             synchronized (this) {
 
                 long secondsBeforeTimeOut = SECONDS.between(now(), now().with(leetHour()));
@@ -101,7 +100,7 @@ public class HappyGeekTimeJobImpl implements HappyGeekTimeJob {
     private TemporalAdjuster leetHour() {
         return (temporal) -> temporal
                 .with(HOUR_OF_DAY, 13)
-                .with(MINUTE_OF_HOUR, 37)
+                .with(MINUTE_OF_HOUR, 38)
                 .with(SECOND_OF_MINUTE, 0)
                 .with(MILLI_OF_SECOND, 0);
     }
