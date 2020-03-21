@@ -100,6 +100,7 @@ public class MessagesImpl implements Messages {
 		reactions.add(new Reaction(".*\\blac\\b.*",					"laque!"));
 		reactions.add(new Reaction(".*gomette.*",					"Ca s'écrit gomMette. Avec 2 m."));
 		reactions.add(new Reaction(".* lance.*",					true, 60, "Oui, mais pas trop loin..."));
+		reactions.add(new Reaction(".*en vrai.*",                   true, 60, "En vrai !?", "M'enfin...", "INTERVENTION"));
 
 		// Random reacts
 		reactions.add(new Reaction(".*qui .*\\?$",					"C'est #u !", "J'veux pas dénoncer... mais c'est #u.", "Si c'est pas #u, c'est ta mère !"));

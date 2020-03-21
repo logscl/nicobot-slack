@@ -78,7 +78,8 @@ public class GithubIssue extends NiCommand {
                     .setTitle(arguments.issueTitle)
                     .setBody(buildIssueText(arguments, opts));
 
-            issueService.createIssue(properties.get(GITHUB_REPOSITORY_USERNAME), properties.get(GITHUB_REPOSITORY_NAME), issue);
+            Issue savedIssue = issueService.createIssue(properties.get(GITHUB_REPOSITORY_USERNAME), properties.get(GITHUB_REPOSITORY_NAME), issue);
+            nicobot.sendMessage(opts.message, messages.getMessage("githubAdded", savedIssue.getHtmlUrl()));
         } catch (IOException e) {
             nicobot.sendMessage(opts.message, messages.getMessage("githubFailure"));
         } catch (IllegalArgumentException ex) {
