@@ -34,7 +34,7 @@
         <mockito.version>3.3.0</mockito.version>
         <simpleslackapi.version>1.2.0</simpleslackapi.version>
         <spring.version>5.2.3.RELEASE</spring.version>
-        <nicobot.persistence.version>1.0.2</nicobot.persistence.version>
+        <nicobot.persistence.version>1.0.3</nicobot.persistence.version>
         <google.api.youtube.version>v3-rev20200109-1.30.8</google.api.youtube.version>
         <google.api.search.version>v1-rev20181001-1.30.8</google.api.search.version>
         <google.api.map.version>0.11.0</google.api.map.version>
@@ -237,7 +237,7 @@
         </dependency>
 
         <dependency>
-            <groupId>be.zqsd.nicobot</groupId>
+            <groupId>wtf.logs.nicobot</groupId>
             <artifactId>nicobot-persistence-api</artifactId>
             <version>${nicobot.persistence.version}</version>
         </dependency>
