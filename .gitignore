@@ -84,6 +84,7 @@ pip-log.txt
 *.iml
 
 src/main/filter/nicobot_secret_*.properties
+!src/main/filter/nicobot_secret_test.properties
 *.ser
 nicobot.*.db
 

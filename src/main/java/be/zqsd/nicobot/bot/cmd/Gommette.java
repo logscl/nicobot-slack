@@ -3,7 +3,6 @@ package be.zqsd.nicobot.bot.cmd;
 import be.zqsd.nicobot.bot.NicoBot;
 import be.zqsd.nicobot.bot.utils.Emoji;
 import be.zqsd.nicobot.bot.utils.Option;
-import be.zqsd.nicobot.gommette.GommetteType;
 import be.zqsd.nicobot.services.GommetteService;
 import be.zqsd.nicobot.services.Messages;
 import be.zqsd.nicobot.services.PersistenceService;
@@ -19,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import wtf.logs.nicobot.gommette.GommetteType;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -27,8 +27,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static be.zqsd.nicobot.gommette.GommetteType.GREEN;
 import static java.time.LocalDateTime.now;
+import static wtf.logs.nicobot.gommette.GommetteType.GREEN;
 
 /**
  * Created by Logs on 17-08-15.
@@ -206,7 +206,7 @@ public class Gommette extends NiCommand {
     }
 
     private void addGommette(GommetteArguments arguments, Option opts, boolean valid) {
-        be.zqsd.nicobot.gommette.Gommette gommette = new be.zqsd.nicobot.gommette.Gommette(
+        wtf.logs.nicobot.gommette.Gommette gommette = new wtf.logs.nicobot.gommette.Gommette(
                 arguments.user.getId(),
                 opts.message.getSender().getId(),
                 arguments.reason,

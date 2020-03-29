@@ -1,13 +1,13 @@
 package be.zqsd.nicobot.internal.services;
 
-import be.zqsd.nicobot.gommette.Gommette;
-import be.zqsd.nicobot.gommette.GommetteScore;
-import be.zqsd.nicobot.hgt.HgtScore;
 import be.zqsd.nicobot.services.PersistenceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import wtf.logs.nicobot.gommette.Gommette;
+import wtf.logs.nicobot.gommette.GommetteScore;
+import wtf.logs.nicobot.hgt.HgtScore;
 
 import java.io.IOException;
 import java.util.Collection;

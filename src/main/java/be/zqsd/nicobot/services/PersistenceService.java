@@ -1,8 +1,8 @@
 package be.zqsd.nicobot.services;
 
-import be.zqsd.nicobot.gommette.Gommette;
-import be.zqsd.nicobot.gommette.GommetteScore;
-import be.zqsd.nicobot.hgt.HgtScore;
+import wtf.logs.nicobot.gommette.Gommette;
+import wtf.logs.nicobot.gommette.GommetteScore;
+import wtf.logs.nicobot.hgt.HgtScore;
 
 import java.io.IOException;
 import java.util.Collection;

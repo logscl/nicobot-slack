@@ -1,7 +1,6 @@
 package be.zqsd.nicobot.bot.services;
 
 import be.zqsd.nicobot.bot.NicoBot;
-import be.zqsd.nicobot.hgt.HgtScore;
 import be.zqsd.nicobot.internal.services.HappyGeekTimeServiceImpl;
 import be.zqsd.nicobot.services.Messages;
 import be.zqsd.nicobot.services.PersistenceService;
@@ -14,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import wtf.logs.nicobot.hgt.HgtScore;
 
 import java.io.IOException;
 import java.util.Arrays;
