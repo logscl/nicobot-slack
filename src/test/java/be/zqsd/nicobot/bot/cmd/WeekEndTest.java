@@ -68,7 +68,7 @@ public class WeekEndTest {
     public void setUp() {
         when(clock.getZone()).thenReturn(ZoneOffset.UTC);
         ReflectionTestUtils.setField(weekEnd, "messages", messages);
-        messages.start();
+        messages.afterPropertiesSet();
     }
 
     private void handle() {

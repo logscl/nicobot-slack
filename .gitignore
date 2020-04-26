@@ -90,3 +90,5 @@ nicobot.*.db
 
 nicobot*.log*
 upload.sh
+
+env/

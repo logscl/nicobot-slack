@@ -12,7 +12,6 @@ import java.time.Clock;
 @ComponentScan
 @EnableScheduling
 @EnableAsync
-@PropertySource("classpath:nicobot.properties")
 public class BotMain {
 
 	/**

@@ -5,10 +5,10 @@ import be.zqsd.nicobot.bot.utils.Reaction;
 import be.zqsd.nicobot.services.Messages;
 import be.zqsd.nicobot.services.PropertiesService;
 import com.ullink.slack.simpleslackapi.SlackPersona;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.*;
 
 
@@ -20,7 +20,7 @@ import java.util.*;
  *
  */
 @Service
-public class MessagesImpl implements Messages {
+public class MessagesImpl implements Messages, InitializingBean {
 
 	@Autowired
 	private PropertiesService props;
@@ -37,8 +37,7 @@ public class MessagesImpl implements Messages {
     /** Les réactions aléatoires de nicobot */
     private List<String> randomSpeeches;
 
-	@PostConstruct
-	public void start() {
+	public void afterPropertiesSet() {
 		/**
 		 * Init des réactions.
 		 *
@@ -51,7 +50,7 @@ public class MessagesImpl implements Messages {
 		 */
 
 		reactions = new LinkedHashSet<>();
-		
+
 		// messages complets
 		reactions.add(new Reaction("^(sisi|13)$", 					"la famille"));
 		reactions.add(new Reaction("^tf2$", 						"Bande de casus..."));
@@ -75,7 +74,7 @@ public class MessagesImpl implements Messages {
 		reactions.add(new Reaction("^!popopo$",						"https://www.youtube.com/watch?v=NJuTp7KTZCU"));
 		reactions.add(new Reaction("^!admektator$",					"https://soundcloud.com/vincevh/admektator"));
 		reactions.add(new Reaction("^!astuvu$",						"https://youtu.be/0jZf7jIjB5s?t=1m9s"));
-		
+
 		// fragments
 		reactions.add(new Reaction(".*gamin.*",						"Hein fieu"));
 		reactions.add(new Reaction(".*hey.*",						"Hey Hey !"));
@@ -124,9 +123,9 @@ public class MessagesImpl implements Messages {
 		otherMessages.put("helpHeader",		"Liste des commandes que nicobot connait :");
 		otherMessages.put("inviteNo",		"LOL ? T'as cru ? Va t'faire refaire, ALIEN !");
 		otherMessages.put("helpNotFound", 	"J'veux bien t'aider, mais je vois pas bien ce que tu me veux la -_-");
-		
+
 		otherMessages.put("hgt",			"!!§!!§§!!§ Happy Geek Time !!§!!§§!!§");
-		
+
 		otherMessages.put("kickError",		"randomkick <#channel>. BIATCH !");
 		otherMessages.put("kickInit",		"Y'a %s qui m'a demandé de kicker quelqu'un, alors...");
 		otherMessages.put("kickReason",		"Le prends pas mal hein... on reste amis ?");
@@ -199,11 +198,14 @@ public class MessagesImpl implements Messages {
 		otherMessages.put("no",				"Non !");
 		otherMessages.put("noneOfThem",		"Aucun des %d !");
 
+		otherMessages.put("contNo",         "Non, reste encore à la maison (%s)");
+		otherMessages.put("contYes",        "Tu peux sortir \\o/");
+
 		welcomeMessages = new HashMap<>();
 		welcomeMessages.put("newJoin0",		"Yo les gars! Saluez #p !");
 		welcomeMessages.put("newJoin1",		"Coucou #p ! Ca va bien ?");
 		welcomeMessages.put("newJoin2",		"BOOM ! #p est dans la place !");
-		
+
 		welcomeMessages.put("join1", 		"Hé ! Encore toi #p !");
 		welcomeMessages.put("join2", 		"OMG T'es revenu #p !");
 		welcomeMessages.put("join3",		"Euh Ca fait 3 fois aujourd'hui #p, T'en as pas marre ?");

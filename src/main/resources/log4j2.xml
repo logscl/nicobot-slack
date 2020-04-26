@@ -1,41 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration>
+<Configuration status="trace">
     <Appenders>
         <Console name="console" target="SYSTEM_OUT">
             <PatternLayout>
                 <Pattern>%-5p %d: [%10.20t] %40.40c{1.} - %m%n</Pattern>
             </PatternLayout>
         </Console>
-        <RollingFile name="file" fileName="${bot.logger.logfile-path}nicobot.log"
-                     filePattern="${bot.logger.logfile-path}nicobot-%d{yyyy-MM-dd}.log.gz">
-            <PatternLayout>
-                <Pattern>%-5p %d: [%10.20t] %40.40c{1.} - %m%n</Pattern>
-            </PatternLayout>
-            <TimeBasedTriggeringPolicy/>
-            <DefaultRolloverStrategy>
-                <Delete basePath="${bot.logger.logfile-path}">
-                    <IfFileName glob="nicobot-*.log.gz"/>
-                    <IfLastModified age="90d"/>
-                </Delete>
-            </DefaultRolloverStrategy>
-        </RollingFile>
     </Appenders>
 
     <Loggers>
 
-        <Logger name="com.st.nicobot" level="${bot.logger.level}" additivity="false">
+        <Logger name="com.st.nicobot" level="TRACE" additivity="false">
             <AppenderRef ref="console"/>
-            <AppenderRef ref="file"/>
         </Logger>
 
-        <Logger name="com.ullink.slack.simpleslackapi" level="${bot.logger.level}" additivity="false">
+        <Logger name="com.ullink.slack.simpleslackapi" level="TRACE" additivity="false">
             <AppenderRef ref="console"/>
-            <AppenderRef ref="file"/>
         </Logger>
 
         <Root level="info">
             <AppenderRef ref="console"/>
-            <AppenderRef ref="file"/>
         </Root>
     </Loggers>
 </Configuration>

@@ -5,6 +5,7 @@ import be.zqsd.nicobot.services.PropertiesService;
 import be.zqsd.nicobot.utils.NicobotProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,6 @@ import wtf.logs.nicobot.hgt.HgtScore;
 import wtf.logs.nicobot.message.Message;
 import wtf.logs.nicobot.message.MessageRequest;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Collection;
 
@@ -26,7 +26,7 @@ import static java.util.Collections.singletonList;
 
 @Service
 @Profile("master")
-public class RemotePersistenceServiceImpl implements PersistenceService {
+public class RemotePersistenceServiceImpl implements PersistenceService, InitializingBean {
 
     private static Logger logger = LoggerFactory.getLogger(RemotePersistenceServiceImpl.class);
 
@@ -35,8 +35,7 @@ public class RemotePersistenceServiceImpl implements PersistenceService {
     @Autowired
     private PropertiesService properties;
 
-    @PostConstruct
-    private void init() {
+    public void afterPropertiesSet() {
         persistenceService = NicobotPersistence.create(properties.get(NicobotProperty.API_URI), properties.get(NicobotProperty.API_KEY));
     }
 

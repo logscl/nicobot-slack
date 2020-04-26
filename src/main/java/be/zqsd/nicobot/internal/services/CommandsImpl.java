@@ -6,11 +6,11 @@ import be.zqsd.nicobot.bot.utils.Option;
 import be.zqsd.nicobot.services.Commands;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  *
  */
 @Service
-public class CommandsImpl implements Commands {
+public class CommandsImpl implements Commands, InitializingBean {
 
 	@Autowired
 	private ApplicationContext ctx;
@@ -35,8 +35,7 @@ public class CommandsImpl implements Commands {
 
 	public CommandsImpl() {	}
 
-	@PostConstruct
-	private void postConstruct() {
+	public void afterPropertiesSet() {
 		createChain();
 	}
 	

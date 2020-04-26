@@ -16,11 +16,11 @@ import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
 import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
  * Created by Logs on 09-05-15.
  */
 @Service
-public class NicoBotImpl implements NicoBot {
+public class NicoBotImpl implements NicoBot, InitializingBean {
 
     private static Logger logger = LoggerFactory.getLogger(NicoBotImpl.class);
 
@@ -54,8 +54,7 @@ public class NicoBotImpl implements NicoBot {
 
     private static Pattern userIDPattern = Pattern.compile("<@(U[0-9A-Z]+)>");
 
-    @PostConstruct
-    private void postConstruct() {
+    public void afterPropertiesSet() {
         session = SlackSessionFactory.createWebSocketSlackSession(props.get(NicobotProperty.SLACK_API_KEY));
         Map<String, MessageEvent> eventMap = ctx.getBeansOfType(MessageEvent.class);
 
