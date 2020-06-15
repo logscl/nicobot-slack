@@ -38,6 +38,7 @@ public abstract class AbstractSearch extends NiCommand {
     private NudityDectionService nudityDectionService;
 
     private List<Result> lastSearchResult = null;
+    private String lastSearchQuery = null;
     private int searchIndex = 0;
 
     protected abstract void addSpecificQueryArguments(Customsearch.Cse.List search);
@@ -53,7 +54,7 @@ public abstract class AbstractSearch extends NiCommand {
 
         if ("next".equals(searchArguments) && lastSearchResult != null) {
             searchIndex++;
-            searchAndSendLink(opts, args);
+            searchAndSendLink(opts);
             return;
         } else {
             searchIndex = 0;
@@ -80,11 +81,13 @@ public abstract class AbstractSearch extends NiCommand {
 
             if (results != null && !results.isEmpty()) {
                 lastSearchResult = results;
-                searchAndSendLink(opts, args);
+                lastSearchQuery = String.join(" ", args);
+                searchAndSendLink(opts);
             } else {
                 logger.info("Query [{}] has no results", searchArguments);
                 nicobot.sendMessage(opts.message, messages.getMessage("nothingFound"));
                 lastSearchResult = null;
+                lastSearchQuery = null;
             }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -92,7 +95,7 @@ public abstract class AbstractSearch extends NiCommand {
 
     }
 
-    private void searchAndSendLink(Option opts, String[] args) {
+    private void searchAndSendLink(Option opts) {
         Result foundResult = lastSearchResult.get(searchIndex);
         while (foundResult.getLink().contains("x-raw-image")) {
             searchIndex++;
@@ -102,13 +105,12 @@ public abstract class AbstractSearch extends NiCommand {
         if(needNSFWCheck()) {
             logger.info("No service for nudity detection yet :(");
         } else {
-            nicobot.sendMessage(opts.message, formatMessage(foundResult.getLink(), foundResult.getDisplayLink(), args));
+            nicobot.sendMessage(opts.message, formatMessage(foundResult.getLink(), foundResult.getDisplayLink()));
         }
     }
 
-    private String formatMessage(String link, String displayLink, String[] args) {
-        String query = StringUtils.join(args, " ");
-        return "<"+link+"|"+query+" ("+displayLink+")>";
+    private String formatMessage(String link, String displayLink) {
+        return String.format("<%s|%s (%s)>", link, lastSearchQuery, displayLink);
     }
 
 
