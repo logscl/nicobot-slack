@@ -198,9 +198,6 @@ public class MessagesImpl implements Messages, InitializingBean {
 		otherMessages.put("no",				"Non !");
 		otherMessages.put("noneOfThem",		"Aucun des %d !");
 
-		otherMessages.put("contNo",         "Non, reste encore à la maison (%s)");
-		otherMessages.put("contYes",        "Tu peux sortir \\o/");
-
 		welcomeMessages = new HashMap<>();
 		welcomeMessages.put("newJoin0",		"Yo les gars! Saluez #p !");
 		welcomeMessages.put("newJoin1",		"Coucou #p ! Ca va bien ?");

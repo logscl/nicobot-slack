@@ -53,7 +53,7 @@ public abstract class AbstractSearch extends NiCommand {
 
         if ("next".equals(searchArguments) && lastSearchResult != null) {
             searchIndex++;
-            searchAndSendLink(opts);
+            searchAndSendLink(opts, args);
             return;
         } else {
             searchIndex = 0;
@@ -71,7 +71,7 @@ public abstract class AbstractSearch extends NiCommand {
 
             search.setKey(properties.get(NicobotProperty.SEARCH_API_KEY));
             search.setCx(properties.get(NicobotProperty.SEARCH_CX_KEY));
-            search.setFields("items/link");
+            search.setFields("items/link,items/displayLink");
             search.setQ(searchArguments);
             addSpecificQueryArguments(search);
 
@@ -80,7 +80,7 @@ public abstract class AbstractSearch extends NiCommand {
 
             if (results != null && !results.isEmpty()) {
                 lastSearchResult = results;
-                searchAndSendLink(opts);
+                searchAndSendLink(opts, args);
             } else {
                 logger.info("Query [{}] has no results", searchArguments);
                 nicobot.sendMessage(opts.message, messages.getMessage("nothingFound"));
@@ -92,18 +92,23 @@ public abstract class AbstractSearch extends NiCommand {
 
     }
 
-    private void searchAndSendLink(Option opts) {
-        String foundLink = lastSearchResult.get(searchIndex).getLink();
-        while (foundLink.contains("x-raw-image")) {
+    private void searchAndSendLink(Option opts, String[] args) {
+        Result foundResult = lastSearchResult.get(searchIndex);
+        while (foundResult.getLink().contains("x-raw-image")) {
             searchIndex++;
-            foundLink = lastSearchResult.get(searchIndex).getLink();
+            foundResult = lastSearchResult.get(searchIndex);
         }
 
         if(needNSFWCheck()) {
             logger.info("No service for nudity detection yet :(");
         } else {
-            nicobot.sendMessage(opts.message, foundLink);
+            nicobot.sendMessage(opts.message, formatMessage(foundResult.getLink(), foundResult.getDisplayLink(), args));
         }
+    }
+
+    private String formatMessage(String link, String displayLink, String[] args) {
+        String query = StringUtils.join(args, " ");
+        return "<"+link+"|"+query+" ("+displayLink+")>";
     }
 
 
