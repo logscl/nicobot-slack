@@ -1,0 +1,115 @@
+package be.zqsd.slack.client;
+
+import com.slack.api.Slack;
+import com.slack.api.methods.MethodsClient;
+import com.slack.api.methods.request.chat.ChatPostMessageRequest;
+import com.slack.api.methods.response.auth.AuthTestResponse;
+import com.slack.api.methods.response.chat.ChatPostMessageResponse;
+import com.slack.api.methods.response.reactions.ReactionsAddResponse;
+import com.slack.api.model.Conversation;
+import com.slack.api.model.User;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.slf4j.Logger;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.util.List;
+import java.util.Optional;
+
+import static com.slack.api.model.ConversationType.*;
+import static java.util.Collections.emptyList;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
+import static org.slf4j.LoggerFactory.getLogger;
+
+@ApplicationScoped
+public class WebClient {
+    private static final Logger LOG = getLogger(WebClient.class);
+
+    private final MethodsClient methods;
+    private final AuthTestResponse identity;
+
+    @Inject
+    WebClient(@ConfigProperty(name = "slack.api.key") String slackApiKey) {
+        var slack = Slack.getInstance();
+        methods = slack.methods(slackApiKey);
+        identity = fetchIdentity();
+    }
+
+    private AuthTestResponse fetchIdentity() {
+        try {
+            LOG.debug("Fetching bot identity...");
+            var identity = methods.authTest(builder -> builder);
+            LOG.debug("Identity found: ID: {} - Name: {}", identity.getUserId(), identity.getUser());
+            return identity;
+        } catch (Exception e) {
+            LOG.error("Issue when creating the websocket client", e);
+            throw new SlackClientException(e);
+        }
+    }
+
+    public List<User> fetchUsers() {
+        try {
+            var response = methods.usersList(req -> req);
+            return response.getMembers();
+        } catch (Exception e) {
+            LOG.error("Unable to fetch users", e);
+        }
+        return emptyList();
+    }
+
+    public List<Conversation> fetchChannels() {
+        try {
+            var response = methods.conversationsList(req ->
+                    req
+                            .excludeArchived(true)
+                            .types(List.of(PUBLIC_CHANNEL, PRIVATE_CHANNEL, IM, MPIM)));
+            return response.getChannels();
+        } catch (Exception e) {
+            LOG.error("Unable to fetch conversations", e);
+        }
+        return emptyList();
+    }
+
+    public Optional<ChatPostMessageResponse> sendMessage(String channelId, String threadTimestamp, String message) {
+        try {
+            var request = ChatPostMessageRequest.builder()
+                    .channel(channelId)
+                    .threadTs(threadTimestamp)
+                    .text(message)
+                    .unfurlLinks(true)
+                    .unfurlMedia(true)
+                    .build();
+
+            var response = methods.chatPostMessage(request);
+            LOG.debug("response posted: {}", response);
+            return of(response);
+        } catch (Exception e) {
+            LOG.error("Unable to send message at this time", e);
+        }
+        return empty();
+    }
+
+    public Optional<ReactionsAddResponse> addReactionToMessage(String channelId, String messageTimeStamp, String emojiName) {
+        try {
+            var reactionResponse = methods.reactionsAdd(builder -> builder
+                    .channel(channelId)
+                    .timestamp(messageTimeStamp)
+                    .name(emojiName)
+            );
+            LOG.debug("Reaction added, {}", reactionResponse);
+            return of(reactionResponse);
+        } catch (Exception e) {
+            LOG.error("Unable to add reaction to message at this time", e);
+        }
+        return empty();
+    }
+
+    public String botId() {
+        return identity.getUserId();
+    }
+
+    public String botName() {
+        return identity.getUser();
+    }
+}
