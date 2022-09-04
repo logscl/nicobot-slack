@@ -10,7 +10,6 @@
 * Commands handling:
   * Duel
   * duel (new look ?)
-  * GitHub issue
   * gommette
   * hangman
   * admin say
@@ -19,6 +18,7 @@
 * tests
 * tests
 * tests
+* linter
 * did I mention tests ?
 * docker build (hub ?)
 
