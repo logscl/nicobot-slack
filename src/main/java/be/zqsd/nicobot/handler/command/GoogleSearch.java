@@ -6,7 +6,7 @@ import com.slack.api.model.event.MessageEvent;
 
 import java.util.Collection;
 
-public abstract class GoogleSearch extends NiCommand {
+public abstract class GoogleSearch implements NiCommand {
 
     private static String NEXT_ARGUMENT = "next";
 
@@ -18,7 +18,7 @@ public abstract class GoogleSearch extends NiCommand {
     abstract Nicobot getBot();
 
     @Override
-    protected void doCommand(String command, Collection<String> arguments, MessageEvent triggeringMessage) {
+    public void doCommand(String command, Collection<String> arguments, MessageEvent triggeringMessage) {
         var query = buildSearchQuery(command, arguments);
 
         if (NEXT_ARGUMENT.equals(query)) {
@@ -33,7 +33,8 @@ public abstract class GoogleSearch extends NiCommand {
                 .filter(search -> !search.getLink().contains("x-raw-image"))
                 .skip(searchIndex)
                 .findFirst()
-                .ifPresentOrElse(result -> buildAndSendResult(result, triggeringMessage),
+                .map(this::createMessage)
+                .ifPresentOrElse(message -> getBot().sendMessage(triggeringMessage, message),
                         () -> getBot().sendMessage(triggeringMessage, "J'ai rien trouvé :("));
     }
 
@@ -51,12 +52,10 @@ public abstract class GoogleSearch extends NiCommand {
         return getCommandNames().stream().findFirst().map(name -> !name.equals(command)).orElse(false);
     }
 
-    private void buildAndSendResult(Result result, MessageEvent triggeringMessage) {
-        var message = "<%s|%s (%s)>".formatted(
+    private String createMessage(Result result) {
+        return "<%s|%s (%s)>".formatted(
                 result.getLink(),
                 result.getDisplayLink(),
                 lastQuery.replace("+", " "));
-
-        getBot().sendMessage(triggeringMessage, message);
     }
 }

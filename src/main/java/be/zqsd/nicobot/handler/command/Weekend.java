@@ -20,7 +20,7 @@ import static java.time.temporal.ChronoField.*;
 import static java.util.Collections.singletonList;
 
 @ApplicationScoped
-public class Weekend extends NiCommand {
+public class Weekend implements NiCommand {
 
     private final Nicobot nicobot;
     private final Clock clock;
@@ -56,7 +56,7 @@ public class Weekend extends NiCommand {
     }
 
     @Override
-    protected void doCommand(String command, Collection<String> arguments, MessageEvent triggeringMessage) {
+    public void doCommand(String command, Collection<String> arguments, MessageEvent triggeringMessage) {
         LocalDateTime now = now(clock);
         LocalDateTime nextWeekendStart = now(clock).with(weekendStart());
         LocalDateTime nextWeekendEnd =  now(clock).plusWeeks(1).with(weekendEnd());

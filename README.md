@@ -2,10 +2,7 @@
 
 * Write an how-to create a slack app
 * nicobot methods:
-  * send attachment
-  * send private ?
   * send file
-  * ephemeral message (instead of private)
 * Clean this readme :)
 * Messages handling:
     * save self messages (via web client / nicobot ?)
@@ -16,7 +13,6 @@
   * GitHub issue
   * gommette
   * hangman
-  * map search
   * admin say
   * top hgt
 * hgt job

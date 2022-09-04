@@ -11,7 +11,7 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.joining;
 
 @ApplicationScoped
-public class Help extends NiCommand {
+public class Help implements NiCommand {
 
 
     private final Nicobot nicobot;
@@ -33,10 +33,7 @@ public class Help extends NiCommand {
 
     @Override
     public String getDescription() {
-        return """
-                Retourne la liste des commandes disponibles, ou
-                une aide détaillée pour la commande passée en paramètre.
-                """;
+        return "Retourne la liste des commandes disponibles, ou une aide détaillée pour la commande passée en paramètre.";
     }
 
     @Override
@@ -45,29 +42,29 @@ public class Help extends NiCommand {
     }
 
     @Override
-    protected void doCommand(String command, Collection<String> arguments, MessageEvent triggeringMessage) {
+    public void doCommand(String command, Collection<String> arguments, MessageEvent triggeringMessage) {
         if (arguments.isEmpty()) {
-            sendAllCommands(triggeringMessage.getUser());
+            sendAllCommands(triggeringMessage);
         } else {
-            sendCommandDescription(triggeringMessage.getUser(), arguments.stream().findFirst().orElse(""));
+            sendCommandDescription(triggeringMessage, arguments.stream().findFirst().orElse(""));
         }
     }
 
-    private void sendCommandDescription(String userId, String commandName) {
+    private void sendCommandDescription(MessageEvent triggeringMessage, String commandName) {
         var command = commandManager.findCommandByName(commandName);
         command.map(foundCommand -> foundCommand.getDescription() + "\n" + foundCommand.getFormat())
                 .ifPresentOrElse(message ->
-                    nicobot.sendPrivateMessage(userId, message)
-                , () -> nicobot.sendPrivateMessage(userId, "Commande '" + commandName+ "' inconnue :("));
+                    nicobot.sendEphemeral(triggeringMessage, message)
+                , () -> nicobot.sendEphemeral(triggeringMessage, "Commande '" + commandName+ "' inconnue :("));
     }
 
-    private void sendAllCommands(String userId) {
+    private void sendAllCommands(MessageEvent triggeringMessage) {
         var allCommands = commandManager.getCommands().stream()
                 .map(command -> {
                     var commandName = command.getCommandNames().stream().findFirst().orElse("");
                     return commandName + " : " + command.getDescription();
                 }).collect(joining("\n", "Voici les commandes disponibles: \n", ""));
 
-        nicobot.sendPrivateMessage(userId, allCommands);
+        nicobot.sendEphemeral(triggeringMessage, allCommands);
     }
 }

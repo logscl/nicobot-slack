@@ -14,7 +14,7 @@ import static java.util.Collections.singletonList;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @ApplicationScoped
-public class YoutubeSearch extends NiCommand {
+public class YoutubeSearch implements NiCommand {
 
     private static final Logger LOG = getLogger(YoutubeSearch.class);
     private static final String CACHE_NAME = "youtube-videos";
@@ -51,7 +51,7 @@ public class YoutubeSearch extends NiCommand {
     }
 
     @Override
-    protected void doCommand(String command, Collection<String> arguments, MessageEvent triggeringMessage) {
+    public void doCommand(String command, Collection<String> arguments, MessageEvent triggeringMessage) {
         var query = String.join("+", arguments);
 
         if (NEXT_ARGUMENT.equals(query)) {

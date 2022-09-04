@@ -2,12 +2,15 @@ package be.zqsd.slack.client;
 
 import com.slack.api.Slack;
 import com.slack.api.methods.MethodsClient;
+import com.slack.api.methods.request.chat.ChatPostEphemeralRequest;
 import com.slack.api.methods.request.chat.ChatPostMessageRequest;
 import com.slack.api.methods.response.auth.AuthTestResponse;
+import com.slack.api.methods.response.chat.ChatPostEphemeralResponse;
 import com.slack.api.methods.response.chat.ChatPostMessageResponse;
 import com.slack.api.methods.response.reactions.ReactionsAddResponse;
 import com.slack.api.model.Conversation;
 import com.slack.api.model.User;
+import com.slack.api.model.block.LayoutBlock;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 
@@ -86,6 +89,44 @@ public class WebClient {
             return of(response);
         } catch (Exception e) {
             LOG.error("Unable to send message at this time", e);
+        }
+        return empty();
+    }
+
+    public Optional<ChatPostMessageResponse> sendBlocks(String channelId, String threadTimestamp, List<LayoutBlock> blocks, String fallbackMessage) {
+        try {
+            var request = ChatPostMessageRequest.builder()
+                    .channel(channelId)
+                    .threadTs(threadTimestamp)
+                    .blocks(blocks)
+                    .text(fallbackMessage)
+                    .unfurlLinks(false)
+                    .unfurlMedia(false)
+                    .build();
+
+            var response = methods.chatPostMessage(request);
+            LOG.debug("response posted: {}", response);
+            return of(response);
+        } catch (Exception e) {
+            LOG.error("Unable to send message at this time", e);
+        }
+        return empty();
+    }
+
+    public Optional<ChatPostEphemeralResponse> sendEphemeral(String channelId, String threadTimestamp, String userId, String message) {
+        try {
+            var request = ChatPostEphemeralRequest.builder()
+                    .channel(channelId)
+                    .threadTs(threadTimestamp)
+                    .user(userId)
+                    .text(message)
+                    .build();
+
+            var response = methods.chatPostEphemeral(request);
+            LOG.debug("Ephemeral response posted: {}", response);
+            return of(response);
+        } catch (Exception e) {
+            LOG.error("Unable to send ephemeral message at this time", e);
         }
         return empty();
     }

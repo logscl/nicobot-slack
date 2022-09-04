@@ -13,7 +13,7 @@ import static java.util.Collections.singletonList;
 import static java.util.concurrent.ThreadLocalRandom.current;
 
 @ApplicationScoped
-public class Michel extends NiCommand {
+public class Michel implements NiCommand {
 
     private final Nicobot nicobot;
 
@@ -41,7 +41,7 @@ public class Michel extends NiCommand {
     }
 
     @Override
-    protected void doCommand(String command, Collection<String> arguments, MessageEvent triggeringMessage) {
+    public void doCommand(String command, Collection<String> arguments, MessageEvent triggeringMessage) {
         var endOfSentence = current().nextBoolean() ? " ok" : "";
         var sentence = current().ints(0, FRAGMENTS.size())
                 .distinct()

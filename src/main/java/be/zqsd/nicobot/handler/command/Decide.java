@@ -12,7 +12,7 @@ import java.util.List;
 import static java.util.concurrent.ThreadLocalRandom.current;
 
 @ApplicationScoped
-public class Decide extends NiCommand {
+public class Decide implements NiCommand {
 
     private final Nicobot nicobot;
 
@@ -40,7 +40,7 @@ public class Decide extends NiCommand {
     }
 
     @Override
-    protected void doCommand(String command, Collection<String> arguments, MessageEvent triggeringMessage) {
+    public void doCommand(String command, Collection<String> arguments, MessageEvent triggeringMessage) {
         if (arguments.size() < 2) {
             if(current().nextInt(2) == 1) {
                 nicobot.sendMessage(triggeringMessage, "Oui !");
