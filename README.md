@@ -12,7 +12,6 @@
     * save events ? which one ?
 * Commands handling:
   * Duel
-  * Gif/image/web search
   * duel (new look ?)
   * GitHub issue
   * gommette

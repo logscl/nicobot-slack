@@ -1,4 +1,4 @@
-package be.zqsd.search;
+package be.zqsd.thirdparty;
 
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
@@ -16,14 +16,14 @@ import static java.util.List.of;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @ApplicationScoped
-public class YoutubeVideo {
-    private static final Logger LOG = getLogger(YoutubeVideo.class);
+public class YoutubeService {
+    private static final Logger LOG = getLogger(YoutubeService.class);
     private static String YOUTUBE_BASE_URL = "https://youtu.be/";
     private final String apiKey;
     private final YouTube youtube;
 
     @Inject
-    public YoutubeVideo(@ConfigProperty(name = "search.api.key") String apiKey) {
+    public YoutubeService(@ConfigProperty(name = "search.api.key") String apiKey) {
         this.apiKey = apiKey;
         this.youtube = new YouTube.Builder(new NetHttpTransport(), new GsonFactory(), httpRequest -> {})
                 .setApplicationName("youtube-search")

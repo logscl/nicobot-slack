@@ -1,7 +1,7 @@
 package be.zqsd.nicobot.handler.command;
 
 import be.zqsd.nicobot.bot.Nicobot;
-import be.zqsd.search.YoutubeVideo;
+import be.zqsd.thirdparty.YoutubeService;
 import com.slack.api.model.event.MessageEvent;
 import io.quarkus.cache.CacheResult;
 import org.slf4j.Logger;
@@ -22,7 +22,7 @@ public class YoutubeSearch extends NiCommand {
     private static String NEXT_ARGUMENT = "next";
 
     private final Nicobot nicobot;
-    private final YoutubeVideo youtube;
+    private final YoutubeService youtube;
 
     // for a lack of a better solution
     private String lastQuery = "";
@@ -30,7 +30,7 @@ public class YoutubeSearch extends NiCommand {
 
     @Inject
     public YoutubeSearch(Nicobot nicobot,
-                         YoutubeVideo youtube) {
+                         YoutubeService youtube) {
         this.nicobot = nicobot;
         this.youtube = youtube;
     }

@@ -18,6 +18,7 @@
     <nicobot.persistence.version>1.0.3</nicobot.persistence.version>
     <google.platform.version>25.4.0</google.platform.version>
     <googleapi.youtube.version>v3-rev20220719-2.0.0</googleapi.youtube.version>
+    <googleapi.search.version>v1-rev20210918-2.0.0</googleapi.search.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -89,6 +90,11 @@
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-youtube</artifactId>
       <version>${googleapi.youtube.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.apis</groupId>
+      <artifactId>google-api-services-customsearch</artifactId>
+      <version>${googleapi.search.version}</version>
     </dependency>
   </dependencies>
   <build>
