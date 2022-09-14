@@ -18,7 +18,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 @ApplicationScoped
 public class YoutubeService {
     private static final Logger LOG = getLogger(YoutubeService.class);
-    private static String YOUTUBE_BASE_URL = "https://youtu.be/";
+    private static final String YOUTUBE_BASE_URL = "https://youtu.be/";
     private final String apiKey;
     private final YouTube youtube;
 

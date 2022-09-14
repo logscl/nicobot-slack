@@ -10,7 +10,6 @@ import javax.inject.Inject;
 import java.util.Collection;
 
 import static java.util.Collections.singletonList;
-import static java.util.List.of;
 
 @ApplicationScoped
 public class GifSearch extends GoogleSearch {

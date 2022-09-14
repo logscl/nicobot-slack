@@ -12,9 +12,9 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-    <quarkus.platform.version>2.12.0.Final</quarkus.platform.version>
+    <quarkus.platform.version>2.12.1.Final</quarkus.platform.version>
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
-    <slack.api.version>1.25.0</slack.api.version>
+    <slack.api.version>1.25.1</slack.api.version>
     <nicobot.persistence.version>1.0.3</nicobot.persistence.version>
     <google.platform.version>25.4.0</google.platform.version>
     <youtube.api.version>v3-rev20220719-2.0.0</youtube.api.version>

@@ -2,7 +2,6 @@ package be.zqsd.thirdparty;
 
 import com.google.maps.GeoApiContext;
 import com.google.maps.PlacesApi;
-import com.google.maps.errors.ApiException;
 import com.google.maps.model.PlaceDetails;
 import com.google.maps.model.PlacesSearchResult;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -10,7 +9,6 @@ import org.slf4j.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;

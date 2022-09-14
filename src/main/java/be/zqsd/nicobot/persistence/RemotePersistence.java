@@ -25,7 +25,7 @@ import static java.util.Collections.singletonList;
 @IfBuildProfile("prod")
 public class RemotePersistence implements Persistence {
 
-    private static Logger LOG = LoggerFactory.getLogger(RemotePersistence.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RemotePersistence.class);
 
     private final NicobotPersistence persistenceService;
 

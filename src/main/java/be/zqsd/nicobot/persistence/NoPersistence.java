@@ -2,7 +2,6 @@ package be.zqsd.nicobot.persistence;
 
 import io.quarkus.arc.DefaultBean;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import wtf.logs.nicobot.gommette.Gommette;
 import wtf.logs.nicobot.gommette.GommetteScore;
 import wtf.logs.nicobot.hgt.HgtScore;
@@ -12,11 +11,13 @@ import java.io.IOException;
 import java.util.Collection;
 
 import static java.util.Collections.emptyList;
+import static org.slf4j.LoggerFactory.getLogger;
+
 @ApplicationScoped
 @DefaultBean
 public class NoPersistence implements Persistence {
 
-    private static Logger LOG = LoggerFactory.getLogger(NoPersistence.class);
+    private static final Logger LOG = getLogger(NoPersistence.class);
 
     @Override
     public void saveMessage(String username, String message) {

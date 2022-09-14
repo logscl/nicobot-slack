@@ -4,12 +4,9 @@ import be.zqsd.nicobot.bot.Nicobot;
 import be.zqsd.thirdparty.MapService;
 import com.google.maps.model.PlaceDetails;
 import com.google.maps.model.PlacesSearchResult;
-import com.slack.api.model.block.ImageBlock;
 import com.slack.api.model.block.LayoutBlock;
 import com.slack.api.model.block.SectionBlock;
 import com.slack.api.model.block.composition.MarkdownTextObject;
-import com.slack.api.model.block.composition.TextObject;
-import com.slack.api.model.block.element.BlockElement;
 import com.slack.api.model.block.element.ImageElement;
 import com.slack.api.model.event.MessageEvent;
 import io.quarkus.cache.CacheResult;
@@ -27,8 +24,7 @@ import static java.util.List.of;
 public class MapSearch implements NiCommand {
 
     private static final String CACHE_NAME = "map-places";
-
-    private static String NEXT_ARGUMENT = "next";
+    private static final String NEXT_ARGUMENT = "next";
 
     private final Nicobot nicobot;
     private final MapService maps;

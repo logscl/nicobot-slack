@@ -125,8 +125,6 @@ public class ConversationTrigger extends ConditionalMessage {
         var channel = event.getChannel();
         var message = event.getText();
 
-        // TODO commands here ?
-
         if (featuredChannels.isEmpty() || featuredChannels.contains(channel)) {
             var conversations = conversationsPerChannel.computeIfAbsent(channel, c -> initConversations());
 
@@ -164,16 +162,15 @@ public class ConversationTrigger extends ConditionalMessage {
 
         private Conversation(Pattern trigger,
                              List<String> replies,
-                             int cooldownInSeconds,
-                             LocalDateTime lastAnswerTime) {
+                             int cooldownInSeconds) {
             this.trigger = trigger;
             this.replies = replies;
             this.cooldownInSeconds = cooldownInSeconds;
-            this.lastAnswerTime = lastAnswerTime;
+            this.lastAnswerTime = null;
         }
 
         public static Conversation init(Reaction reaction, WebClient client) {
-            return new Conversation(reaction.buildPattern(client.botId(), client.botName()), reaction.getReplies(), reaction.getCooldownInSeconds(), null);
+            return new Conversation(reaction.buildPattern(client.botId(), client.botName()), reaction.getReplies(), reaction.getCooldownInSeconds());
         }
 
         public Conversation markAsSpoken() {

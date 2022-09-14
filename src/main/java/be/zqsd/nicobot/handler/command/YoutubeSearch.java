@@ -18,8 +18,7 @@ public class YoutubeSearch implements NiCommand {
 
     private static final Logger LOG = getLogger(YoutubeSearch.class);
     private static final String CACHE_NAME = "youtube-videos";
-
-    private static String NEXT_ARGUMENT = "next";
+    private static final String NEXT_ARGUMENT = "next";
 
     private final Nicobot nicobot;
     private final YoutubeService youtube;

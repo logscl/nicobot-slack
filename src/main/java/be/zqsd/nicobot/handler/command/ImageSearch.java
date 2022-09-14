@@ -8,9 +8,7 @@ import io.quarkus.cache.CacheResult;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.Collection;
-import java.util.List;
 
-import static java.util.Collections.singletonList;
 import static java.util.List.of;
 
 @ApplicationScoped

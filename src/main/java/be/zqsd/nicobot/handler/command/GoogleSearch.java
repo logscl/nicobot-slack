@@ -8,7 +8,7 @@ import java.util.Collection;
 
 public abstract class GoogleSearch implements NiCommand {
 
-    private static String NEXT_ARGUMENT = "next";
+    private static final String NEXT_ARGUMENT = "next";
 
     // for a lack of a better solution
     private String lastQuery = "";

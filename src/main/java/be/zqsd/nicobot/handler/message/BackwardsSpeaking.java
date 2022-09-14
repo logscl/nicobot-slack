@@ -19,7 +19,7 @@ import static java.util.stream.Collectors.joining;
 public class BackwardsSpeaking extends ConditionalMessage {
 
     private static final int MAX_LENGTH_TO_REVERSE = 50;
-    private static final Pattern URL_REGEX = compile("(https?://)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([/\\w \\.-]*)*/?");
+    private static final Pattern URL_REGEX = compile("(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})([/\\w .-]*)*/?");
     private static final Pattern EMOJI_REGEX = compile(":[^: ]*:");
     private static final Pattern USERNAME_OR_CHANNEL_REGEX = compile(">[^<]*([@|#])<");
 
