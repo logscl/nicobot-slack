@@ -36,6 +36,14 @@ public class ChannelService {
                 .map(Conversation::getNameNormalized);
     }
 
+    public Optional<String> findChannelId(String channelName) {
+        return channelsPerId.values()
+                .stream()
+                .filter(channel -> channelName.equals(channel.getNameNormalized()))
+                .findFirst()
+                .map(Conversation::getId);
+    }
+
     public String getChannelLink(String channelId) {
         return String.format(HIGHLIGHT_CHANNEL, channelId);
     }

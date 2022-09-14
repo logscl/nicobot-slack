@@ -7,13 +7,13 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.shuffle;
 import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
 import static java.util.function.Function.identity;
 import static java.util.function.Predicate.not;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 @ApplicationScoped
@@ -51,7 +51,7 @@ public class UserService {
         var activeUsers = usersPerId.values()
                 .stream()
                 .filter(not(User::isDeleted))
-                .collect(Collectors.toList());
+                .collect(toList());
         shuffle(activeUsers);
         return activeUsers
                 .stream()
@@ -67,6 +67,12 @@ public class UserService {
 
     public Optional<String> findUserNameWithHighlight(String userId) {
         return of(String.format(HIGHLIGHT_USER, userId));
+    }
+
+    public boolean isAdmin(String userId) {
+        return ofNullable(usersPerId.get(userId))
+                .map(User::isAdmin)
+                .orElse(false);
     }
 
     private String withoutHighlight(String name) {
