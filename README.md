@@ -1,8 +1,6 @@
 # TODO
 
 * Write an how-to create a slack app
-* nicobot methods:
-  * send file
 * Clean this readme :)
 * Messages handling:
     * save self messages (via web client / nicobot ?)
@@ -12,7 +10,6 @@
   * duel (new look ?)
   * gommette
   * hangman
-  * admin say
   * top hgt
 * hgt job
 * tests
