@@ -60,12 +60,12 @@ public class UserService {
                 .map(this::withoutHighlight);
     }
 
-    public Optional<String> findUserNameWithoutHighlight(String userId) {
+    public Optional<String> userNameWithoutHighlight(String userId) {
         return findUserName(userId)
                 .map(this::withoutHighlight);
     }
 
-    public Optional<String> findUserNameWithHighlight(String userId) {
+    public Optional<String> userNameWithHighlight(String userId) {
         return of(String.format(HIGHLIGHT_USER, userId));
     }
 

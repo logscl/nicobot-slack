@@ -1,17 +1,15 @@
 # TODO
 
+* Refactor TopHgt / LeetGreetingJob into a LeetService or whatever
 * Write an how-to create a slack app
 * Clean this readme :)
 * Messages handling:
     * save self messages (via web client / nicobot ?)
     * save events ? which one ?
 * Commands handling:
-  * Duel
   * duel (new look ?)
   * gommette
   * hangman
-  * top hgt
-* hgt job
 * tests
 * tests
 * tests

@@ -1,11 +1,11 @@
 package be.zqsd.nicobot.handler.message;
 
+import be.zqsd.nicobot.bot.ChannelService;
 import be.zqsd.nicobot.bot.Nicobot;
 import be.zqsd.nicobot.message.MessageFormatter;
 import be.zqsd.nicobot.message.Reaction;
 import be.zqsd.slack.client.WebClient;
 import com.slack.api.model.event.MessageEvent;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -14,12 +14,10 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 import static be.zqsd.nicobot.message.Reaction.react;
 import static java.time.LocalDateTime.now;
-import static java.util.Collections.emptyList;
 import static java.util.List.of;
 import static java.util.Optional.ofNullable;
 import static java.util.concurrent.ThreadLocalRandom.current;
@@ -94,7 +92,7 @@ public class ConversationTrigger extends ConditionalMessage {
     private final Nicobot nicobot;
     private final WebClient client;
     private final MessageFormatter formatter;
-    private final List<String> featuredChannels;
+    private final ChannelService channelService;
 
     private final Map<String, List<Conversation>> conversationsPerChannel;
 
@@ -102,11 +100,11 @@ public class ConversationTrigger extends ConditionalMessage {
     public ConversationTrigger(Nicobot nicobot,
                                WebClient client,
                                MessageFormatter formatter,
-                               @ConfigProperty(name = "nicobot.featured.channels") Optional<List<String>> featuredChannels) {
+                               ChannelService channelService) {
         this.nicobot = nicobot;
         this.client = client;
         this.formatter = formatter;
-        this.featuredChannels = featuredChannels.orElse(emptyList());
+        this.channelService = channelService;
         this.conversationsPerChannel = new HashMap<>();
     }
 
@@ -125,7 +123,7 @@ public class ConversationTrigger extends ConditionalMessage {
         var channel = event.getChannel();
         var message = event.getText();
 
-        if (featuredChannels.isEmpty() || featuredChannels.contains(channel)) {
+        if (channelService.isFeaturedChannel(event.getChannel())) {
             var conversations = conversationsPerChannel.computeIfAbsent(channel, c -> initConversations());
 
             LOG.debug("Checking if this message '{}' triggers a response from bot...", event.getText());
@@ -140,8 +138,6 @@ public class ConversationTrigger extends ConditionalMessage {
                         var formattedMessage = formatter.formatMessage(conversation.getResponse(), event.getUser(), event.getChannel());
                         nicobot.sendMessage(event, formattedMessage);
                     });
-
-            // TODO hgt here ?
         }
 
 

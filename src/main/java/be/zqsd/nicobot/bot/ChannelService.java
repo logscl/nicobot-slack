@@ -2,6 +2,7 @@ package be.zqsd.nicobot.bot;
 
 import be.zqsd.slack.client.WebClient;
 import com.slack.api.model.Conversation;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -17,12 +18,15 @@ public class ChannelService {
 
     private static final String HIGHLIGHT_CHANNEL = "<#%s>";
     private final WebClient client;
+    private final String featuredChannelId;
     private Map<String, Conversation> channelsPerId;
 
     @Inject
-    ChannelService(WebClient client) {
+    ChannelService(WebClient client,
+                   @ConfigProperty(name = "nicobot.featured.channel") String featuredChannelName) {
         this.client = client;
         refreshChannels();
+        this.featuredChannelId = findChannelId(featuredChannelName).orElse(null);
     }
 
     public void refreshChannels() {
@@ -46,5 +50,13 @@ public class ChannelService {
 
     public String getChannelLink(String channelId) {
         return String.format(HIGHLIGHT_CHANNEL, channelId);
+    }
+
+    public boolean isFeaturedChannel(String channelId) {
+        return getFeaturedChannelId().map(chanId -> chanId.equals(channelId)).orElse(false);
+    }
+
+    public Optional<String> getFeaturedChannelId() {
+        return ofNullable(featuredChannelId);
     }
 }

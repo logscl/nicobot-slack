@@ -50,7 +50,7 @@ public class MessageFormatter {
 
     private String replaceOriginatorInMessage(String message, String originatorId) {
         return ofNullable(originatorId)
-                .map(userService::findUserNameWithoutHighlight)
+                .map(userService::userNameWithoutHighlight)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .map(name -> message.replace(ORIGINATOR_PLACEHOLDER, name))

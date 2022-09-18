@@ -5,7 +5,6 @@ import be.zqsd.nicobot.bot.UserService;
 import be.zqsd.nicobot.persistence.Persistence;
 import com.slack.api.model.event.MessageEvent;
 import io.smallrye.mutiny.Uni;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -29,22 +28,19 @@ public class SaveMessage implements MessageHandler {
     private final Persistence persistence;
     private final ChannelService channelService;
     private final UserService userService;
-    private final String featuredChannel;
 
     @Inject
     public SaveMessage(Persistence persistence,
                        ChannelService channelService,
-                       UserService userService,
-                       @ConfigProperty(name = "nicobot.featured.channel") String featuredChannel) {
+                       UserService userService) {
         this.persistence = persistence;
         this.channelService = channelService;
         this.userService = userService;
-        this.featuredChannel = featuredChannel;
     }
 
     @Override
     public void handle(MessageEvent event) {
-        if (channelService.findChannelName(event.getChannel()).orElse("").equals(featuredChannel)) {
+        if (channelService.isFeaturedChannel(event.getChannel())) {
             var user = userService.findUserName(event.getUser()).orElse("?");
             var message = replaceTokens(event.getText());
             LOG.debug("Will log message from {}: '{}'", user, message);
