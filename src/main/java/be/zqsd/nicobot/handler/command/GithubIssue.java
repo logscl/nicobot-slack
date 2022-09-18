@@ -54,7 +54,7 @@ public class GithubIssue implements NiCommand {
                     () -> nicobot.sendMessage(triggeringMessage, "Désolé, j'ai pas su créer l'issue :(")
             );
         } else {
-            nicobot.sendEphemeral(triggeringMessage, "Mauvais format: !github \"issue\" \"description\"");
+            nicobot.sendEphemeralMessage(triggeringMessage, "Mauvais format: !github \"issue\" \"description\"");
         }
     }
 

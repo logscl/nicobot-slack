@@ -42,9 +42,9 @@ public class WebClient {
     private AuthTestResponse fetchIdentity() {
         try {
             LOG.debug("Fetching bot identity...");
-            var identity = methods.authTest(builder -> builder);
-            LOG.debug("Identity found: ID: {} - Name: {}", identity.getUserId(), identity.getUser());
-            return identity;
+            var self = methods.authTest(builder -> builder);
+            LOG.debug("Identity found: ID: {} - Name: {}", self.getUserId(), self.getUser());
+            return self;
         } catch (Exception e) {
             LOG.error("Issue when creating the websocket client", e);
             throw new SlackClientException(e);
@@ -113,7 +113,7 @@ public class WebClient {
         return empty();
     }
 
-    public Optional<ChatPostEphemeralResponse> sendEphemeral(String channelId, String threadTimestamp, String userId, String message) {
+    public Optional<ChatPostEphemeralResponse> sendEphemeralMessage(String channelId, String threadTimestamp, String userId, String message) {
         try {
             var request = ChatPostEphemeralRequest.builder()
                     .channel(channelId)
@@ -124,6 +124,25 @@ public class WebClient {
 
             var response = methods.chatPostEphemeral(request);
             LOG.debug("Ephemeral response posted: {}", response);
+            return of(response);
+        } catch (Exception e) {
+            LOG.error("Unable to send ephemeral message at this time", e);
+        }
+        return empty();
+    }
+
+    public Optional<ChatPostEphemeralResponse> sendEphemeralBlocks(String channelId, String threadTimestamp, String userId, List<LayoutBlock> blocks, String fallbackMessage) {
+        try {
+            var request = ChatPostEphemeralRequest.builder()
+                    .channel(channelId)
+                    .threadTs(threadTimestamp)
+                    .user(userId)
+                    .blocks(blocks)
+                    .text(fallbackMessage)
+                    .build();
+
+            var response = methods.chatPostEphemeral(request);
+            LOG.debug("ephemeral response posted: {}", response);
             return of(response);
         } catch (Exception e) {
             LOG.error("Unable to send ephemeral message at this time", e);

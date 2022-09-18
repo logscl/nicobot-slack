@@ -48,13 +48,17 @@ public class Nicobot {
         return client.sendMessage(userId, null, message);
     }
 
-    public Optional<ChatPostEphemeralResponse> sendEphemeral(String channelId, String userId, String messageTimeStamp, String message) {
+    public Optional<ChatPostEphemeralResponse> sendEphemeralMessage(String channelId, String userId, String messageTimeStamp, String message) {
         LOG.debug("Sending ephemeral message to {}: {}", userId, message);
-        return client.sendEphemeral(channelId, userId, messageTimeStamp, message);
+        return client.sendEphemeralMessage(channelId, userId, messageTimeStamp, message);
     }
 
-    public Optional<ChatPostEphemeralResponse> sendEphemeral(MessageEvent event, String message) {
+    public Optional<ChatPostEphemeralResponse> sendEphemeralMessage(MessageEvent event, String message) {
         LOG.debug("Sending ephemeral message to {}: {}", event.getUser(), message);
-        return client.sendEphemeral(event.getChannel(), event.getThreadTs(), event.getUser(), message);
+        return client.sendEphemeralMessage(event.getChannel(), event.getThreadTs(), event.getUser(), message);
+    }
+
+    public Optional<ChatPostEphemeralResponse> sendEphemeralBlocks(MessageEvent event, List<LayoutBlock> blocks, String fallbackMessage) {
+        return client.sendEphemeralBlocks(event.getChannel(), event.getThreadTs(), event.getUser(), blocks, fallbackMessage);
     }
 }

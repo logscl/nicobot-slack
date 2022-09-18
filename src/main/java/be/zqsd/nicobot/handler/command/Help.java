@@ -54,8 +54,8 @@ public class Help implements NiCommand {
         var command = commandManager.findCommandByName(commandName);
         command.map(foundCommand -> foundCommand.getDescription() + "\n" + foundCommand.getFormat())
                 .ifPresentOrElse(message ->
-                    nicobot.sendEphemeral(triggeringMessage, message)
-                , () -> nicobot.sendEphemeral(triggeringMessage, "Commande '" + commandName+ "' inconnue :("));
+                    nicobot.sendEphemeralMessage(triggeringMessage, message)
+                , () -> nicobot.sendEphemeralMessage(triggeringMessage, "Commande '" + commandName+ "' inconnue :("));
     }
 
     private void sendAllCommands(MessageEvent triggeringMessage) {
@@ -65,6 +65,6 @@ public class Help implements NiCommand {
                     return commandName + " : " + command.getDescription();
                 }).collect(joining("\n", "Voici les commandes disponibles: \n", ""));
 
-        nicobot.sendEphemeral(triggeringMessage, allCommands);
+        nicobot.sendEphemeralMessage(triggeringMessage, allCommands);
     }
 }

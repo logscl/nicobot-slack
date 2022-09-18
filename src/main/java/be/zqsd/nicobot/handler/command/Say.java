@@ -58,10 +58,10 @@ public class Say implements NiCommand {
             if (channelId.isPresent() && !message.isBlank()) {
                 nicobot.sendMessage(channelId.get(), null, message);
             } else {
-                nicobot.sendEphemeral(triggeringMessage, "Channel non trouvé ou message vide");
+                nicobot.sendEphemeralMessage(triggeringMessage, "Channel non trouvé ou message vide");
             }
         } else {
-            nicobot.sendEphemeral(triggeringMessage, "Nope, admin only !");
+            nicobot.sendEphemeralMessage(triggeringMessage, "Nope, admin only !");
         }
     }
 }
