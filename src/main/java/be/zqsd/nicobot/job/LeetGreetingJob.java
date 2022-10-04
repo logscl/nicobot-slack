@@ -23,20 +23,14 @@ public class LeetGreetingJob {
     private final Nicobot nicobot;
     private final LeetService leetService;
     private final ChannelService channelService;
-    private final Persistence persistence;
-    private final UserService userService;
 
     @Inject
     public LeetGreetingJob(Nicobot nicobot,
                            LeetService leetService,
-                           ChannelService channelService,
-                           Persistence persistence,
-                           UserService userService) {
+                           ChannelService channelService) {
         this.nicobot = nicobot;
         this.leetService = leetService;
         this.channelService = channelService;
-        this.persistence = persistence;
-        this.userService = userService;
     }
 
     @Scheduled(cron="59 37 13 * * ? *")
@@ -52,7 +46,7 @@ public class LeetGreetingJob {
                     nicobot.sendMessage(channelId, null, buildCongratulationMessage(leetService.getGreeters()));
                     leetService.persistGreeters();
                     // top of the week
-                    sendTopWeekMessage(channelId);
+                    leetService.buildTopWeekMessage(channelId).ifPresent(message -> nicobot.sendMessage(channelId, null, message));
                 });
     }
 
@@ -66,25 +60,5 @@ public class LeetGreetingJob {
         }
     }
 
-    private void sendTopWeekMessage(String channelId) {
-        // Le top de la semaine:
-        try {
-            var users = persistence.getWeeklyHgtScores(channelId);
-            if (users.isEmpty()) {
-                nicobot.sendMessage(channelId, null, "Personne ! Bande de clinches ! :(");
-            } else {
-                var weeklyGreeters = users
-                        .stream()
-                        .map(score -> {
-                            var name = userService.userNameWithoutHighlight(score.getUserId()).orElse("??");
-                            return "%s (%s)".formatted(name, score.getScore());
-                        })
-                        .collect(Collectors.joining(", "));
-                var message = "Le top de la semaine: %s".formatted(weeklyGreeters);
-                nicobot.sendMessage(channelId, null, message);
-            }
-        } catch (IOException e) {
-            LOG.error("Unable to call the persistence service", e);
-        }
-    }
+
 }

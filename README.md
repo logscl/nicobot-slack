@@ -1,6 +1,5 @@
 # TODO
 
-* Refactor TopHgt / LeetGreetingJob into a LeetService or whatever
 * Write an how-to create a slack app
 * Clean this readme :)
 * Messages handling:
