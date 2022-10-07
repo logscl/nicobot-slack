@@ -2,17 +2,16 @@ package be.zqsd.nicobot.job;
 
 import be.zqsd.nicobot.bot.ChannelService;
 import be.zqsd.nicobot.bot.Nicobot;
-import be.zqsd.nicobot.bot.UserService;
 import be.zqsd.nicobot.leet.LeetService;
-import be.zqsd.nicobot.persistence.Persistence;
 import io.quarkus.scheduler.Scheduled;
+import io.quarkus.scheduler.ScheduledExecution;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.io.IOException;
+import java.time.ZoneId;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -33,13 +32,13 @@ public class LeetGreetingJob {
         this.channelService = channelService;
     }
 
-    @Scheduled(cron="59 37 13 * * ? *")
+    @Scheduled(cron="59 37 * * * ? *", skipExecutionIf = ExecutionNotAtLeetHour.class)
     public void sendGreetings() {
         channelService.getFeaturedChannelId()
                 .ifPresent(channelId -> nicobot.sendMessage(channelId, null, "!!§!!§§!!§ Happy Geek Time !!§!!§§!!§"));
     }
 
-    @Scheduled(cron="01 38 13 * * ? *")
+    @Scheduled(cron="01 38 * * * ? *", skipExecutionIf = ExecutionNotAtLeetHour.class)
     public void congratulateGreeters() {
         channelService.getFeaturedChannelId()
                 .ifPresent(channelId -> {
@@ -60,5 +59,23 @@ public class LeetGreetingJob {
         }
     }
 
+    @ApplicationScoped
+    static class ExecutionNotAtLeetHour implements Scheduled.SkipPredicate {
+        private static final Logger LOG = getLogger(ExecutionNotAtLeetHour.class);
+
+        private final ZoneId timezone;
+
+        @Inject
+        public ExecutionNotAtLeetHour(@ConfigProperty(name = "nicobot.timezone.name") String timezoneName) {
+            this.timezone = ZoneId.of(timezoneName);
+        }
+
+        @Override
+        public boolean test(ScheduledExecution execution) {
+            var currentHour = execution.getFireTime().atZone(timezone).getHour();
+            LOG.debug("Checking if this execution should trigger the Leet Greeting messages (hour {})...", currentHour);
+            return currentHour != 13;
+        }
+    }
 
 }

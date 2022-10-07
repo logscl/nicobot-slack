@@ -5,7 +5,7 @@ import com.slack.api.model.event.MessageEvent;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -41,22 +41,31 @@ public class Decide implements NiCommand {
 
     @Override
     public void doCommand(String command, Collection<String> arguments, MessageEvent triggeringMessage) {
-        if (arguments.size() < 2) {
+        var choices = buildChoices(arguments);
+        if (choices.size() < 2) {
             if(current().nextInt(2) == 1) {
                 nicobot.sendMessage(triggeringMessage, "Oui !");
             } else {
                 nicobot.sendMessage(triggeringMessage, "Non !");
             }
         } else {
-            int index = current().nextInt(arguments.size());
+            int index = current().nextInt(choices.size());
             boolean none = current().nextInt(100) == 50;
 
             if(none) {
-                nicobot.sendMessage(triggeringMessage, "Aucun des %s !".formatted(arguments.size()));
+                nicobot.sendMessage(triggeringMessage, "Aucun des %s !".formatted(choices.size()));
             } else {
-                nicobot.sendMessage(triggeringMessage,  "%s !".formatted(new ArrayList<>(arguments).get(index)));
+                nicobot.sendMessage(triggeringMessage,  "%s !".formatted(choices.get(index)));
             }
 
         }
+    }
+
+    private List<String> buildChoices(Collection<String> arguments) {
+        return Arrays.stream(String.join(" ", arguments)
+                .split(",| ou "))
+                .map(String::trim)
+                .map(choice -> choice.replaceAll(" ?\\?$", ""))
+                .toList();
     }
 }
