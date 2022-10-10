@@ -35,4 +35,4 @@ jobs:
           push: true
           file: src/main/docker/Dockerfile.jvm
           context: .
-          tags: nicobot-slack:latest
+          tags: logscl/nicobot-slack:latest
