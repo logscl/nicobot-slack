@@ -10,8 +10,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
-import java.time.Clock;
-
 import static io.quarkus.runtime.LaunchMode.TEST;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -39,10 +37,5 @@ public class StartBot {
         } else {
             client.connect();
         }
-    }
-
-    @ApplicationScoped
-    public Clock getClock() {
-        return Clock.systemDefaultZone();
     }
 }

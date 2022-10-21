@@ -1,11 +1,11 @@
 package be.zqsd.nicobot.handler.command;
 
+import be.zqsd.nicobot.Clock;
 import be.zqsd.nicobot.bot.Nicobot;
 import com.slack.api.model.event.MessageEvent;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.time.Clock;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -15,7 +15,6 @@ import java.util.Collection;
 import static java.time.DayOfWeek.FRIDAY;
 import static java.time.DayOfWeek.MONDAY;
 import static java.time.Duration.between;
-import static java.time.LocalDateTime.now;
 import static java.time.temporal.ChronoField.*;
 import static java.util.Collections.singletonList;
 
@@ -57,9 +56,9 @@ public class Weekend implements NiCommand {
 
     @Override
     public void doCommand(String command, Collection<String> arguments, MessageEvent triggeringMessage) {
-        LocalDateTime now = now(clock);
-        LocalDateTime nextWeekendStart = now(clock).with(weekendStart());
-        LocalDateTime nextWeekendEnd =  now(clock).plusWeeks(1).with(weekendEnd());
+        var now = clock.now();
+        var nextWeekendStart = now.with(weekendStart());
+        var nextWeekendEnd =  now.plusWeeks(1).with(weekendEnd());
 
         if(nextWeekendStart.isAfter(now)) {
             // exception
@@ -74,7 +73,7 @@ public class Weekend implements NiCommand {
     }
 
     private TemporalAdjuster weekendStart() {
-        return (temporal) ->
+        return temporal ->
                 temporal
                         .with(DAY_OF_WEEK, WEEKEND_START_DAY.getValue())
                         .with(HOUR_OF_DAY, WEEKEND_START_HOUR)
@@ -84,7 +83,7 @@ public class Weekend implements NiCommand {
     }
 
     private TemporalAdjuster weekendEnd() {
-        return (temporal) ->
+        return temporal ->
                 temporal
                         .with(DAY_OF_WEEK, WEEKEND_END_DAY.getValue())
                         .with(HOUR_OF_DAY, WEEKEND_END_HOUR)
@@ -94,7 +93,7 @@ public class Weekend implements NiCommand {
     }
 
     private String buildRemainingTimeMessage(boolean yesWeekEnd, LocalDateTime d1, LocalDateTime d2) {
-        Duration duration = between(d1, d2);
+        var duration = between(d1, d2);
         if(duration.toHours() > HOUR_LIMIT) {
             if(yesWeekEnd) {
                 return "C'est le WEEEEKEEEEEND \\o/ !";
