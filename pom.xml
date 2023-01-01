@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>be.zqsd.nicobot</groupId>
   <artifactId>nicobot-slack</artifactId>
@@ -12,14 +12,14 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-    <quarkus.platform.version>2.15.1.Final</quarkus.platform.version>
+    <quarkus.platform.version>2.13.1.Final</quarkus.platform.version>
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
-    <slack.api.version>1.27.2</slack.api.version>
+    <slack.api.version>1.25.1</slack.api.version>
     <nicobot.persistence.version>1.0.3</nicobot.persistence.version>
     <google.platform.version>25.4.0</google.platform.version>
-    <youtube.api.version>v3-rev20221108-2.0.0</youtube.api.version>
+    <youtube.api.version>v3-rev20220719-2.0.0</youtube.api.version>
     <googlesearch.api.version>v1-rev20210918-2.0.0</googlesearch.api.version>
-    <googlemap.api.version>2.1.2</googlemap.api.version>
+    <googlemap.api.version>2.1.0</googlemap.api.version>
     <github.api.version>2.1.5</github.api.version>
   </properties>
   <dependencyManagement>
