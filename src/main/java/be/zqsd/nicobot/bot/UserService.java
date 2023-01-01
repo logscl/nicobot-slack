@@ -43,7 +43,8 @@ public class UserService {
 
     public Optional<String> findUserName(String userId) {
         return ofNullable(usersPerId.get(userId))
-                .map(User::getName);
+                .map(User::getProfile)
+                .map(User.Profile::getDisplayName);
     }
 
     public Optional<String> randomUserNameWithoutHighlight() {
@@ -56,7 +57,8 @@ public class UserService {
         return activeUsers
                 .stream()
                 .findFirst()
-                .map(User::getName)
+                .map(User::getProfile)
+                .map(User.Profile::getDisplayName)
                 .map(this::withoutHighlight);
     }
 
