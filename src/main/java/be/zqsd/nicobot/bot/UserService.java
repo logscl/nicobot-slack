@@ -2,6 +2,7 @@ package be.zqsd.nicobot.bot;
 
 import be.zqsd.slack.client.WebClient;
 import com.slack.api.model.User;
+import com.slack.api.model.User.Profile;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -13,7 +14,6 @@ import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
 import static java.util.function.Function.identity;
 import static java.util.function.Predicate.not;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 @ApplicationScoped
@@ -44,19 +44,22 @@ public class UserService {
 
     public Optional<String> findUserName(String userId) {
         return ofNullable(usersPerId.get(userId))
-                .map(User::getName);
+                .map(User::getProfile)
+                .map(Profile::getDisplayName);
     }
 
     public Optional<String> randomUserNameWithoutHighlight() {
         var activeUsers = usersPerId.values()
                 .stream()
+                .filter(User::isAppUser)
                 .filter(not(User::isDeleted))
-                .collect(toList());
+                .toList();
         shuffle(activeUsers);
         return activeUsers
                 .stream()
                 .findFirst()
-                .map(User::getName)
+                .map(User::getProfile)
+                .map(Profile::getDisplayName)
                 .map(this::withoutHighlight);
     }
 

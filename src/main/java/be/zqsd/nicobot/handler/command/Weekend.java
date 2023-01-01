@@ -30,7 +30,7 @@ public class Weekend implements NiCommand {
     private static final int WEEKEND_START_HOUR = 17;
     private static final int WEEKEND_END_HOUR = 9;
 
-    private static final int HOUR_LIMIT = 48;
+    private static final int HOUR_LIMIT = 24;
     private static final int MIN_LIMIT = 60;
 
     @Inject
