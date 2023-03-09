@@ -21,6 +21,7 @@
     <googlesearch.api.version>v1-rev20210918-2.0.0</googlesearch.api.version>
     <googlemap.api.version>2.1.2</googlemap.api.version>
     <github.api.version>2.1.5</github.api.version>
+    <chatgpt.client.version>1.0.0</chatgpt.client.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -111,6 +112,11 @@
       <groupId>org.eclipse.mylyn.github</groupId>
       <artifactId>org.eclipse.egit.github.core</artifactId>
       <version>${github.api.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.lilittlecat</groupId>
+      <artifactId>chatgpt</artifactId>
+      <version>${chatgpt.client.version}</version>
     </dependency>
   </dependencies>
   <build>
