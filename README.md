@@ -45,6 +45,7 @@ QUARKUS_LOG_MIN_LEVEL=DEBUG
 SEARCH_API_KEY=google apis key
 SLACK_API_KEY=slack api key for the integration
 SLACK_WEBSOCKET_KEY=slack websocket api key for the integration
+OPENAPI_API_KEY=openapi api key
 ```
 
 The application can be packaged using:
