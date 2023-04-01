@@ -21,7 +21,7 @@
     <googlesearch.api.version>v1-rev20210918-2.0.0</googlesearch.api.version>
     <googlemap.api.version>2.1.2</googlemap.api.version>
     <github.api.version>2.1.5</github.api.version>
-    <chatgpt.client.version>1.0.0</chatgpt.client.version>
+    <openapi.gpt3.version>0.11.1</openapi.gpt3.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -114,9 +114,9 @@
       <version>${github.api.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.lilittlecat</groupId>
-      <artifactId>chatgpt</artifactId>
-      <version>${chatgpt.client.version}</version>
+      <groupId>com.theokanning.openai-gpt3-java</groupId>
+      <artifactId>service</artifactId>
+      <version>${openapi.gpt3.version}</version>
     </dependency>
   </dependencies>
   <build>

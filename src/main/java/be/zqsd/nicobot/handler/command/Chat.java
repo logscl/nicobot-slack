@@ -1,8 +1,9 @@
 package be.zqsd.nicobot.handler.command;
 
 import be.zqsd.nicobot.bot.Nicobot;
-import com.lilittlecat.chatgpt.offical.ChatGPT;
 import com.slack.api.model.event.MessageEvent;
+import com.theokanning.openai.completion.CompletionRequest;
+import com.theokanning.openai.service.OpenAiService;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -17,13 +18,13 @@ public class Chat implements NiCommand {
 
     private final Nicobot nicobot;
 
-    private final ChatGPT chatGPT;
+    private final OpenAiService openAiService;
 
     @Inject
     public Chat(Nicobot nicobot,
                 @ConfigProperty(name = "openai.api.key") String openAIApiKey) {
         this.nicobot = nicobot;
-        this.chatGPT = new ChatGPT(openAIApiKey);
+        this.openAiService = new OpenAiService(openAIApiKey);
     }
 
     @Override
@@ -44,7 +45,11 @@ public class Chat implements NiCommand {
     @Override
     public void doCommand(String command, Collection<String> arguments, MessageEvent triggeringMessage) {
         var question = join(" ", arguments);
-        var answer = chatGPT.ask(question);
+        var completionRequest = CompletionRequest.builder()
+                .prompt(question)
+                .model("gpt-3.5-turbo")
+                .build();
+        var answer = openAiService.createCompletion(completionRequest).getChoices().get(0).getText();
         nicobot.sendMessage(triggeringMessage, answer);
     }
 }
