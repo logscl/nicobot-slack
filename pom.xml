@@ -1,27 +1,28 @@
 <?xml version="1.0"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>be.zqsd.nicobot</groupId>
   <artifactId>nicobot-slack</artifactId>
   <version>3.0.0</version>
   <properties>
     <compiler-plugin.version>3.8.1</compiler-plugin.version>
+    <github.api.version>2.1.5</github.api.version>
+    <google.platform.version>26.10.0</google.platform.version>
+    <googlemap.api.version>2.1.2</googlemap.api.version>
+    <googlesearch.api.version>v1-rev20230319-2.0.0</googlesearch.api.version>
     <maven.compiler.release>17</maven.compiler.release>
+    <nicobot.persistence.version>1.0.3</nicobot.persistence.version>
+    <openapi.gpt3.version>0.12.0</openapi.gpt3.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
     <quarkus.platform.version>2.15.2.Final</quarkus.platform.version>
+    <slack.api.version>1.28.1</slack.api.version>
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
-    <slack.api.version>1.27.2</slack.api.version>
-    <nicobot.persistence.version>1.0.3</nicobot.persistence.version>
-    <google.platform.version>25.4.0</google.platform.version>
-    <youtube.api.version>v3-rev20221108-2.0.0</youtube.api.version>
-    <googlesearch.api.version>v1-rev20210918-2.0.0</googlesearch.api.version>
-    <googlemap.api.version>2.1.2</googlemap.api.version>
-    <github.api.version>2.1.5</github.api.version>
-    <openapi.gpt3.version>0.11.1</openapi.gpt3.version>
+    <youtube.api.version>v3-rev20230319-2.0.0</youtube.api.version>
+    <quarkus.loggingsentry.version>1.2.1</quarkus.loggingsentry.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -47,6 +48,11 @@
       <artifactId>quarkus-arc</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.quarkiverse.loggingsentry</groupId>
+      <artifactId>quarkus-logging-sentry</artifactId>
+      <version>${quarkus.loggingsentry.version}</version>
+    </dependency>
+    <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-junit5</artifactId>
       <scope>test</scope>
@@ -68,7 +74,6 @@
       <artifactId>slack-api-client</artifactId>
       <version>${slack.api.version}</version>
     </dependency>
-
     <dependency>
       <groupId>com.slack.api</groupId>
       <artifactId>bolt-socket-mode</artifactId>

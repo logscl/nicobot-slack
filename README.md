@@ -14,7 +14,6 @@
 * tests
 * linter
 * did I mention tests ?
-* docker build (hub ?)
 
 users per channel:
 - https://api.slack.com/methods/conversations.members (1 call per chan, necessary ?)
