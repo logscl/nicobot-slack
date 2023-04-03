@@ -2,7 +2,7 @@ package be.zqsd.nicobot.handler.command;
 
 import be.zqsd.nicobot.bot.Nicobot;
 import com.slack.api.model.event.MessageEvent;
-import com.theokanning.openai.OpenAiHttpException;
+import com.theokanning.openai.completion.CompletionChoice;
 import com.theokanning.openai.completion.CompletionRequest;
 import com.theokanning.openai.service.OpenAiService;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -12,17 +12,18 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
 
+import static com.theokanning.openai.completion.CompletionRequest.builder;
 import static java.lang.String.join;
+import static java.util.concurrent.CompletableFuture.supplyAsync;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @ApplicationScoped
 public class Chat implements NiCommand {
 
     private static final Logger LOG = getLogger(Chat.class);
+    private static final String GPT_MODEL = "text-davinci-003";
+    private static final int MAX_TOKENS = 50;
 
     private final Nicobot nicobot;
 
@@ -53,28 +54,32 @@ public class Chat implements NiCommand {
     @Override
     public void doCommand(String command, Collection<String> arguments, MessageEvent triggeringMessage) {
         var question = join(" ", arguments);
-        var completionRequest = CompletionRequest.builder()
+        var request = buildRequest(question);
+
+        supplyAsync(() -> queryOpenAI(request))
+                .thenApply(response -> {
+                    LOG.debug("Sending response to users...");
+                    return nicobot.sendMessage(triggeringMessage, response);
+                });
+
+        LOG.debug("Query for question '{}' done. Now waiting...", question);
+    }
+
+    private CompletionRequest buildRequest(String question) {
+        return builder()
                 .prompt(question)
-                .model("text-davinci-003")
-                .maxTokens(50)
+                .model(GPT_MODEL)
+                .maxTokens(MAX_TOKENS)
                 .build();
-        Runnable task = () -> {
-            String answer;
-            try {
-                answer = openAiService.createCompletion(completionRequest).getChoices().get(0).getText().trim();
-            } catch (OpenAiHttpException ex) {
-                LOG.error("Error during request to OpenAiService", ex);
-                answer = "J'suis tout cassé";
-            }
-            nicobot.sendMessage(triggeringMessage, answer);
-        };
-        try (var executor = Executors.newSingleThreadExecutor()) {
-            var future = CompletableFuture.runAsync(task, executor);
-            try {
-                future.get();
-            } catch (InterruptedException | ExecutionException ex) {
-                LOG.error("Error during task execution for OpenAiService", ex);
-            }
-        }
+    }
+
+    private String queryOpenAI(CompletionRequest request) {
+        LOG.debug("Querying OpenAPI...");
+        return openAiService.createCompletion(request)
+                .getChoices().stream()
+                .map(CompletionChoice::getText)
+                .map(String::trim)
+                .findFirst()
+                .orElse("/shrug");
     }
 }
