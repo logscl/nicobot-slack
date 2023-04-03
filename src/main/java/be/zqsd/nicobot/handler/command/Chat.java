@@ -47,7 +47,7 @@ public class Chat implements NiCommand {
         var question = join(" ", arguments);
         var completionRequest = CompletionRequest.builder()
                 .prompt(question)
-                .model("gpt-3.5-turbo")
+                .model("text-davinci-003")
                 .build();
         var answer = openAiService.createCompletion(completionRequest).getChoices().get(0).getText();
         nicobot.sendMessage(triggeringMessage, answer);
