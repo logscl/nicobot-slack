@@ -49,7 +49,7 @@ public class Chat implements NiCommand {
                 .prompt(question)
                 .model("text-davinci-003")
                 .build();
-        var answer = openAiService.createCompletion(completionRequest).getChoices().get(0).getText();
+        var answer = openAiService.createCompletion(completionRequest).getChoices().get(0).getText().trim();
         nicobot.sendMessage(triggeringMessage, answer);
     }
 }
