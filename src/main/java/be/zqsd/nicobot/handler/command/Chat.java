@@ -12,6 +12,9 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
 
 import static java.lang.String.join;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -49,20 +52,29 @@ public class Chat implements NiCommand {
 
     @Override
     public void doCommand(String command, Collection<String> arguments, MessageEvent triggeringMessage) {
-        nicobot.sendMessage(triggeringMessage, "That's all folks !");
-//        var question = join(" ", arguments);
-//        var completionRequest = CompletionRequest.builder()
-//                .prompt(question)
-//                .model("text-davinci-003")
-//                .maxTokens(1500)
-//                .build();
-//        String answer;
-//        try {
-//            answer = openAiService.createCompletion(completionRequest).getChoices().get(0).getText().trim();
-//        } catch(OpenAiHttpException ex) {
-//            LOG.error("Error during request to OpenAiService", ex);
-//            answer = "J'suis tout cassé";
-//        }
-//        nicobot.sendMessage(triggeringMessage, answer);
+        var question = join(" ", arguments);
+        var completionRequest = CompletionRequest.builder()
+                .prompt(question)
+                .model("text-davinci-003")
+                .maxTokens(50)
+                .build();
+        Runnable task = () -> {
+            String answer;
+            try {
+                answer = openAiService.createCompletion(completionRequest).getChoices().get(0).getText().trim();
+            } catch (OpenAiHttpException ex) {
+                LOG.error("Error during request to OpenAiService", ex);
+                answer = "J'suis tout cassé";
+            }
+            nicobot.sendMessage(triggeringMessage, answer);
+        };
+        try (var executor = Executors.newSingleThreadExecutor()) {
+            var future = CompletableFuture.runAsync(task, executor);
+            try {
+                future.get();
+            } catch (InterruptedException | ExecutionException ex) {
+                LOG.error("Error during task execution for OpenAiService", ex);
+            }
+        }
     }
 }
