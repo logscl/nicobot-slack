@@ -2,9 +2,11 @@ package be.zqsd.nicobot.handler.command;
 
 import be.zqsd.nicobot.bot.Nicobot;
 import com.slack.api.model.event.MessageEvent;
+import com.theokanning.openai.OpenAiHttpException;
 import com.theokanning.openai.completion.CompletionRequest;
 import com.theokanning.openai.service.OpenAiService;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.slf4j.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -12,9 +14,12 @@ import java.util.Collection;
 import java.util.Collections;
 
 import static java.lang.String.join;
+import static org.slf4j.LoggerFactory.getLogger;
 
 @ApplicationScoped
 public class Chat implements NiCommand {
+
+    private static final Logger LOG = getLogger(Chat.class);
 
     private final Nicobot nicobot;
 
@@ -48,8 +53,15 @@ public class Chat implements NiCommand {
         var completionRequest = CompletionRequest.builder()
                 .prompt(question)
                 .model("text-davinci-003")
+                .maxTokens(1500)
                 .build();
-        var answer = openAiService.createCompletion(completionRequest).getChoices().get(0).getText();
+        String answer;
+        try {
+            answer = openAiService.createCompletion(completionRequest).getChoices().get(0).getText().trim();
+        } catch(OpenAiHttpException ex) {
+            LOG.error("Error during request to OpenAiService", ex);
+            answer = "J'suis tout cassé";
+        }
         nicobot.sendMessage(triggeringMessage, answer);
     }
 }
