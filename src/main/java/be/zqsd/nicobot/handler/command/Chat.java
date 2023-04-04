@@ -23,7 +23,7 @@ public class Chat implements NiCommand {
 
     private static final Logger LOG = getLogger(Chat.class);
     private static final String GPT_MODEL = "text-davinci-003";
-    private static final int MAX_TOKENS = 50;
+    private static final int MAX_TOKENS = 100;
 
     private final Nicobot nicobot;
 
