@@ -4,6 +4,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.customsearch.v1.CustomSearchAPI;
 import com.google.api.services.customsearch.v1.model.Result;
+import com.google.api.services.customsearch.v1.model.Search;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 
@@ -11,6 +12,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -35,7 +37,7 @@ public class GoogleService {
     public Collection<Result> webSearch(String query) {
         try {
             var search = prepareQuery(query);
-            return search.execute().getItems();
+            return findResults(search);
         } catch (Exception e) {
             LOG.error("Unable to make a Google web search", e);
             return emptyList();
@@ -46,7 +48,7 @@ public class GoogleService {
         try {
             var search = prepareQuery(query);
             search.setSearchType("image");
-            return search.execute().getItems();
+            return findResults(search);
         } catch (Exception e) {
             LOG.error("Unable to make a Google image search", e);
             return emptyList();
@@ -59,7 +61,7 @@ public class GoogleService {
             search.setSearchType("image");
             search.setFileType("gif");
             search.setHq("animated");
-            return search.execute().getItems();
+            return findResults(search);
         } catch (Exception e) {
             LOG.error("Unable to make a Google gif search", e);
             return emptyList();
@@ -75,5 +77,11 @@ public class GoogleService {
         search.setQ(query);
 
         return search;
+    }
+
+    private Collection<Result> findResults(CustomSearchAPI.Cse.List search) throws IOException {
+        return Optional.of(search.execute())
+                .map(Search::getItems)
+                .orElse(emptyList());
     }
 }
