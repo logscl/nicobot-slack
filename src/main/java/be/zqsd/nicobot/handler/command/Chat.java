@@ -2,8 +2,9 @@ package be.zqsd.nicobot.handler.command;
 
 import be.zqsd.nicobot.bot.Nicobot;
 import com.slack.api.model.event.MessageEvent;
-import com.theokanning.openai.completion.CompletionChoice;
-import com.theokanning.openai.completion.CompletionRequest;
+import com.theokanning.openai.completion.chat.ChatCompletionChoice;
+import com.theokanning.openai.completion.chat.ChatCompletionRequest;
+import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.service.OpenAiService;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
@@ -13,8 +14,9 @@ import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Collections;
 
-import static com.theokanning.openai.completion.CompletionRequest.builder;
+import static com.theokanning.openai.completion.chat.ChatCompletionRequest.builder;
 import static java.lang.String.join;
+import static java.util.Collections.singletonList;
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -22,8 +24,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class Chat implements NiCommand {
 
     private static final Logger LOG = getLogger(Chat.class);
-    private static final String GPT_MODEL = "text-davinci-003";
-    private static final int MAX_TOKENS = 100;
+    private static final String GPT_MODEL = "gpt-3.5-turbo";
+    private static final int MAX_TOKENS = 150;
 
     private final Nicobot nicobot;
 
@@ -65,19 +67,20 @@ public class Chat implements NiCommand {
         LOG.debug("Query for question '{}' done. Now waiting...", question);
     }
 
-    private CompletionRequest buildRequest(String question) {
+    private ChatCompletionRequest buildRequest(String question) {
         return builder()
-                .prompt(question)
                 .model(GPT_MODEL)
+                .messages(singletonList(new ChatMessage("user", question)))
                 .maxTokens(MAX_TOKENS)
                 .build();
     }
 
-    private String queryOpenAI(CompletionRequest request) {
+    private String queryOpenAI(ChatCompletionRequest request) {
         LOG.debug("Querying OpenAPI...");
-        return openAiService.createCompletion(request)
+        return openAiService.createChatCompletion(request)
                 .getChoices().stream()
-                .map(CompletionChoice::getText)
+                .map(ChatCompletionChoice::getMessage)
+                .map(ChatMessage::getContent)
                 .map(String::trim)
                 .findFirst()
                 .orElse("/shrug");
