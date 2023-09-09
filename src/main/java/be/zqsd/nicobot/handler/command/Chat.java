@@ -61,7 +61,7 @@ public class Chat implements NiCommand {
         supplyAsync(() -> queryOpenAI(request))
                 .thenApply(response -> {
                     LOG.debug("Sending response to users...");
-                    return nicobot.sendMessage(triggeringMessage, response);
+                    return nicobot.sendMessage(triggeringMessage.getChannel(), triggeringMessage.getTs(), response);
                 });
 
         LOG.debug("Query for question '{}' done. Now waiting...", question);
