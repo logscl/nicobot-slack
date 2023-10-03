@@ -24,17 +24,22 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class Chat implements NiCommand {
 
     private static final Logger LOG = getLogger(Chat.class);
-    private static final String GPT_MODEL = "gpt-3.5-turbo";
-    private static final int MAX_TOKENS = 150;
 
     private final Nicobot nicobot;
+
+    private final String gptModel;
+    private final int maxTokens;
 
     private final OpenAiService openAiService;
 
     @Inject
     public Chat(Nicobot nicobot,
-                @ConfigProperty(name = "openai.api.key") String openAIApiKey) {
+                @ConfigProperty(name = "openai.api.key") String openAIApiKey,
+                @ConfigProperty(name = "openai.api.model") String gptModel,
+                @ConfigProperty(name = "openai.api.maxTokens") int maxTokens) {
         this.nicobot = nicobot;
+        this.gptModel = gptModel;
+        this.maxTokens = maxTokens;
         this.openAiService = new OpenAiService(openAIApiKey);
     }
 
@@ -69,9 +74,9 @@ public class Chat implements NiCommand {
 
     private ChatCompletionRequest buildRequest(String question) {
         return builder()
-                .model(GPT_MODEL)
+                .model(gptModel)
                 .messages(singletonList(new ChatMessage("user", question)))
-                .maxTokens(MAX_TOKENS)
+                .maxTokens(maxTokens)
                 .build();
     }
 
