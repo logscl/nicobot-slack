@@ -2,6 +2,7 @@ package be.zqsd.nicobot.handler.command;
 
 import be.zqsd.nicobot.bot.Nicobot;
 import com.slack.api.model.event.MessageEvent;
+import com.theokanning.openai.OpenAiHttpException;
 import com.theokanning.openai.completion.chat.ChatCompletionChoice;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatMessage;
@@ -82,12 +83,18 @@ public class Chat implements NiCommand {
 
     private String queryOpenAI(ChatCompletionRequest request) {
         LOG.debug("Querying OpenAPI...");
-        return openAiService.createChatCompletion(request)
-                .getChoices().stream()
-                .map(ChatCompletionChoice::getMessage)
-                .map(ChatMessage::getContent)
-                .map(String::trim)
-                .findFirst()
-                .orElse("/shrug");
+        try {
+            var completion = openAiService.createChatCompletion(request);
+            LOG.debug("Query Done, OpenAI returned a completion: {}", completion);
+            return completion.getChoices().stream()
+                    .map(ChatCompletionChoice::getMessage)
+                    .map(ChatMessage::getContent)
+                    .map(String::trim)
+                    .findFirst()
+                    .orElse("/shrug");
+        } catch (OpenAiHttpException e) {
+            LOG.error("Open AI Failed to return a response", e);
+            return "Open AI failed: " + e.getMessage();
+        }
     }
 }
