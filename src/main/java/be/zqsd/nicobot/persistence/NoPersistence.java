@@ -6,7 +6,7 @@ import wtf.logs.nicobot.gommette.Gommette;
 import wtf.logs.nicobot.gommette.GommetteScore;
 import wtf.logs.nicobot.hgt.HgtScore;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import java.io.IOException;
 import java.util.Collection;
 

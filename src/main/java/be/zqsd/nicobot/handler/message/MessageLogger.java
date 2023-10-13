@@ -5,8 +5,8 @@ import be.zqsd.nicobot.bot.UserService;
 import com.slack.api.model.event.MessageEvent;
 import org.slf4j.Logger;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import static org.slf4j.LoggerFactory.getLogger;
 

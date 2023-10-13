@@ -5,7 +5,7 @@ import be.zqsd.nicobot.bot.UserService;
 import be.zqsd.nicobot.persistence.Persistence;
 import org.slf4j.Logger;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.List;

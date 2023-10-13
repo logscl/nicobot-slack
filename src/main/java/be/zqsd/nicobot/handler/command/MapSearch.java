@@ -11,8 +11,8 @@ import com.slack.api.model.block.element.ImageElement;
 import com.slack.api.model.event.MessageEvent;
 import io.quarkus.cache.CacheResult;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;

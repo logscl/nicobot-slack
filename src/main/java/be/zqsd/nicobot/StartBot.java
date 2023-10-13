@@ -4,11 +4,11 @@ import be.zqsd.nicobot.bot.Nicobot;
 import be.zqsd.slack.client.WebsocketClient;
 import io.quarkus.runtime.LaunchMode;
 import io.quarkus.runtime.StartupEvent;
+import jakarta.enterprise.event.Observes;
 import org.slf4j.Logger;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import static io.quarkus.runtime.LaunchMode.TEST;
 import static org.slf4j.LoggerFactory.getLogger;

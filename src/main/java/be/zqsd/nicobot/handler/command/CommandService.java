@@ -3,8 +3,8 @@ package be.zqsd.nicobot.handler.command;
 import com.slack.api.model.event.MessageEvent;
 import io.quarkus.arc.All;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import java.util.*;
 import java.util.regex.Pattern;
 

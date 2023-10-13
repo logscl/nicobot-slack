@@ -13,8 +13,8 @@ import wtf.logs.nicobot.hgt.HgtScore;
 import wtf.logs.nicobot.message.Message;
 import wtf.logs.nicobot.message.MessageRequest;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.Collection;
 

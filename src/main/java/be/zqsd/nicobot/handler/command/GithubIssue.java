@@ -5,8 +5,8 @@ import be.zqsd.nicobot.bot.UserService;
 import be.zqsd.thirdparty.GithubService;
 import com.slack.api.model.event.MessageEvent;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;

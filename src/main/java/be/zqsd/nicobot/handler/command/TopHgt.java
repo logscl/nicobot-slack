@@ -5,8 +5,8 @@ import be.zqsd.nicobot.leet.LeetService;
 import com.slack.api.model.event.MessageEvent;
 import org.slf4j.Logger;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import java.util.Collection;
 
 import static java.util.Collections.singletonList;

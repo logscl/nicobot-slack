@@ -3,8 +3,8 @@ package be.zqsd.nicobot.message;
 import be.zqsd.nicobot.bot.ChannelService;
 import be.zqsd.nicobot.bot.UserService;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import java.util.Optional;
 
 import static java.util.Optional.ofNullable;

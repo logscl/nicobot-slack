@@ -4,8 +4,8 @@ import be.zqsd.slack.client.WebClient;
 import com.slack.api.model.Conversation;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import java.util.Map;
 import java.util.Optional;
 

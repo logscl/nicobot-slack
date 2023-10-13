@@ -7,8 +7,8 @@ import com.slack.api.model.event.MessageEvent;
 import io.smallrye.mutiny.Uni;
 import org.slf4j.Logger;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.regex.Pattern;
 

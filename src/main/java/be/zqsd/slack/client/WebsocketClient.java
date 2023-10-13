@@ -10,9 +10,10 @@ import com.slack.api.model.event.*;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 import static com.slack.api.socket_mode.SocketModeClient.Backend.Tyrus;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -61,6 +62,11 @@ public class WebsocketClient {
         slackApp.event(ChannelCreatedEvent.class, channelEventDispatcher.onChannelCreated());
         slackApp.event(ChannelDeletedEvent.class, channelEventDispatcher.onChannelDeleted());
         slackApp.event(GroupDeletedEvent.class, channelEventDispatcher.onGroupDeleted());
+
+        // TODO - callback of blockactions
+//        slackApp.blockAction(Pattern.compile("rps-.*"), (blockActionRequest, actionContext) -> {
+//            return actionContext.ack();
+//        });
     }
 
     public void connect() throws Exception {

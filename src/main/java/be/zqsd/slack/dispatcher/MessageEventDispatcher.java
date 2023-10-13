@@ -11,8 +11,8 @@ import com.slack.api.model.event.MessageEvent;
 import io.quarkus.arc.All;
 import org.slf4j.Logger;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
@@ -37,6 +37,7 @@ public class MessageEventDispatcher implements BoltEventHandler<MessageEvent> {
     @Override
     public Response apply(EventsApiPayload<MessageEvent> event, EventContext context) throws IOException, SlackApiException {
         var messageEvent = event.getEvent();
+        // TODO the commands should execute in a sub-thread
         commandService.findCommandFor(messageEvent.getText())
                 .ifPresentOrElse(command -> commandService.handle(command, messageEvent), () -> {
                     LOG.debug("checking if Nicobot must react to {} message events", messageHandlers.size());

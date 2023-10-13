@@ -4,8 +4,8 @@ import be.zqsd.nicobot.Clock;
 import be.zqsd.nicobot.bot.Nicobot;
 import com.slack.api.model.event.MessageEvent;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDateTime;

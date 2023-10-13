@@ -5,8 +5,8 @@ import be.zqsd.thirdparty.GoogleService;
 import com.google.api.services.customsearch.v1.model.Result;
 import io.quarkus.cache.CacheResult;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import java.util.Collection;
 
 import static java.util.Collections.singletonList;

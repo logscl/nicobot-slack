@@ -4,8 +4,8 @@ import be.zqsd.nicobot.bot.ChannelService;
 import com.slack.api.bolt.handler.BoltEventHandler;
 import com.slack.api.model.event.*;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class ChannelEventDispatcher {
