@@ -44,7 +44,7 @@ public class GifSearch extends GoogleSearch {
 
     @CacheResult(cacheName = CACHE_NAME)
     protected Collection<Result> searchResult(String query) {
-        return google.imageSearch(query);
+        return google.gifSearch(query);
     }
 
     @Override

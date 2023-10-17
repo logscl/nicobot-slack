@@ -59,8 +59,8 @@ public class GoogleService {
         try {
             var search = prepareQuery(query);
             search.setSearchType("image");
+            search.setImgType("animated");
             search.setFileType("gif");
-            search.setHq("animated");
             return findResults(search);
         } catch (Exception e) {
             LOG.error("Unable to make a Google gif search", e);
