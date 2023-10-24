@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+
+import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -41,7 +43,7 @@ public class Chat implements NiCommand {
         this.nicobot = nicobot;
         this.gptModel = gptModel;
         this.maxTokens = maxTokens;
-        this.openAiService = new OpenAiService(openAIApiKey);
+        this.openAiService = new OpenAiService(openAIApiKey, Duration.ofMinutes(1));
     }
 
     @Override
