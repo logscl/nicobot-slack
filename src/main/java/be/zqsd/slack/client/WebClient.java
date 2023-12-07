@@ -7,6 +7,7 @@ import com.slack.api.methods.request.chat.ChatPostMessageRequest;
 import com.slack.api.methods.response.auth.AuthTestResponse;
 import com.slack.api.methods.response.chat.ChatPostEphemeralResponse;
 import com.slack.api.methods.response.chat.ChatPostMessageResponse;
+import com.slack.api.methods.response.files.FilesUploadV2Response;
 import com.slack.api.methods.response.reactions.ReactionsAddResponse;
 import com.slack.api.model.Conversation;
 import com.slack.api.model.User;
@@ -16,6 +17,8 @@ import org.slf4j.Logger;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
@@ -161,6 +164,21 @@ public class WebClient {
             return of(reactionResponse);
         } catch (Exception e) {
             LOG.error("Unable to add reaction to message at this time", e);
+        }
+        return empty();
+    }
+
+    public Optional<FilesUploadV2Response> uploadFile(String channelId, String threadTimestamp, File file) {
+        try {
+            var uploadResponse = methods.filesUploadV2(builder -> builder
+                    .channel(channelId)
+                    .threadTs(threadTimestamp)
+                    .file(file)
+            );
+            LOG.debug("File uploaded, {}", uploadResponse);
+            return of(uploadResponse);
+        } catch (Exception e) {
+            LOG.error("Unable to upload a file", e);
         }
         return empty();
     }

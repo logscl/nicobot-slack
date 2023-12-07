@@ -13,13 +13,13 @@
     <googlesearch.api.version>v1-rev20230702-2.0.0</googlesearch.api.version>
     <maven.compiler.release>17</maven.compiler.release>
     <nicobot.persistence.version>1.0.3</nicobot.persistence.version>
-    <openapi.gpt3.version>0.18.1</openapi.gpt3.version>
+    <openapi.gpt3.version>0.18.2</openapi.gpt3.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-    <quarkus.platform.version>3.5.2</quarkus.platform.version>
-    <slack.api.version>1.36.0</slack.api.version>
+    <quarkus.platform.version>3.6.1</quarkus.platform.version>
+    <slack.api.version>1.36.1</slack.api.version>
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
     <youtube.api.version>v3-rev20231011-2.0.0</youtube.api.version>
     <quarkus.loggingsentry.version>2.0.4</quarkus.loggingsentry.version>
@@ -122,6 +122,12 @@
       <groupId>com.theokanning.openai-gpt3-java</groupId>
       <artifactId>service</artifactId>
       <version>${openapi.gpt3.version}</version>
+    </dependency>
+    <!-- declared here while quarkus enforces okhttp 3 -->
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
+      <version>4.10.0</version>
     </dependency>
   </dependencies>
   <build>
