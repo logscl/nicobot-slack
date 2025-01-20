@@ -5,7 +5,7 @@ import be.zqsd.slack.dispatcher.ChannelEventDispatcher;
 import be.zqsd.slack.dispatcher.UserEventDispatcher;
 import com.slack.api.bolt.App;
 import com.slack.api.bolt.AppConfig;
-import com.slack.api.bolt.socket_mode.SocketModeApp;
+import com.slack.api.bolt.jakarta_socket_mode.SocketModeApp;
 import com.slack.api.model.event.*;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
@@ -15,7 +15,6 @@ import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-import static com.slack.api.socket_mode.SocketModeClient.Backend.Tyrus;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @ApplicationScoped
@@ -44,7 +43,6 @@ public class WebsocketClient {
             this.slackApp = new App(config);
             this.slackWebsocket = new SocketModeApp(
                     slackWebsocketKey,
-                    Tyrus,
                     slackApp
             );
             addHandlers();

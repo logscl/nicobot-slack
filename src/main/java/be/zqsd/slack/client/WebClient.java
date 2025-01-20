@@ -10,6 +10,7 @@ import com.slack.api.methods.response.chat.ChatPostMessageResponse;
 import com.slack.api.methods.response.files.FilesUploadV2Response;
 import com.slack.api.methods.response.reactions.ReactionsAddResponse;
 import com.slack.api.model.Conversation;
+import com.slack.api.model.Message;
 import com.slack.api.model.User;
 import com.slack.api.model.block.LayoutBlock;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -19,6 +20,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -181,6 +183,19 @@ public class WebClient {
             LOG.error("Unable to upload a file", e);
         }
         return empty();
+    }
+
+    public Collection<Message> getThreadMessages(String channelId, String parentMessageTimestamp) {
+        try {
+            var replies = methods.conversationsReplies( builder -> builder
+                    .channel(channelId)
+                    .ts(parentMessageTimestamp));
+            LOG.debug("{} replies found for thread {}", replies.getMessages().size(), parentMessageTimestamp);
+            return replies.getMessages();
+        } catch (Exception e) {
+            LOG.error("Unable to get thread messages", e);
+        }
+        return emptyList();
     }
 
     public String botId() {

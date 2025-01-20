@@ -5,6 +5,7 @@ import com.slack.api.methods.response.chat.ChatPostEphemeralResponse;
 import com.slack.api.methods.response.chat.ChatPostMessageResponse;
 import com.slack.api.methods.response.files.FilesUploadV2Response;
 import com.slack.api.methods.response.reactions.ReactionsAddResponse;
+import com.slack.api.model.Message;
 import com.slack.api.model.block.LayoutBlock;
 import com.slack.api.model.event.MessageEvent;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,5 +73,9 @@ public class Nicobot {
 
     public Optional<FilesUploadV2Response> uploadFile(MessageEvent event, String threadTimestamp, File file) {
         return client.uploadFile(event.getChannel(), threadTimestamp, file);
+    }
+
+    public Collection<Message> getThreadMessages(MessageEvent event) {
+        return client.getThreadMessages(event.getChannel(), event.getThreadTs());
     }
 }

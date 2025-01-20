@@ -1,6 +1,7 @@
 package be.zqsd.nicobot.handler.command;
 
 import be.zqsd.nicobot.bot.Nicobot;
+import com.google.api.client.http.HttpStatusCodes;
 import com.slack.api.methods.response.files.FilesUploadV2Response;
 import com.slack.api.model.event.MessageEvent;
 import com.theokanning.openai.OpenAiHttpException;
@@ -78,13 +79,10 @@ public class Prompt implements NiCommand {
         var question = join(" ", arguments);
         var request = buildRequest(question);
 
-        supplyAsync(() -> queryOpenAI(request))
+        supplyAsync(() -> queryOpenAI(request, triggeringMessage))
                 .thenApplyAsync(imageUrl -> imageUrl.map(this::downloadFile).orElseThrow())
                 .thenApply(file -> file.map(f -> this.uploadFileToSlack(triggeringMessage, f).orElseThrow()))
-                .exceptionally(exception -> {
-                    LOG.error("A problem occurred when querying openAI / downloading file / uploading to slack", exception);
-                    return empty();
-                });
+                .exceptionally(exception -> empty());
 
         LOG.debug("Query for question '{}' done. Now waiting...", question);
     }
@@ -99,7 +97,7 @@ public class Prompt implements NiCommand {
                 .build();
     }
 
-    private Optional<String> queryOpenAI(CreateImageRequest request) {
+    private Optional<String> queryOpenAI(CreateImageRequest request, MessageEvent triggeringMessage) {
         LOG.debug("Querying OpenAPI...");
         try {
             var result = openAiService.createImage(request);
@@ -108,7 +106,12 @@ public class Prompt implements NiCommand {
                     .map(Image::getUrl)
                     .findFirst();
         } catch (OpenAiHttpException e) {
-            LOG.error("Open AI Failed to return a response", e);
+            if (e.statusCode == HttpStatusCodes.STATUS_CODE_BAD_REQUEST) {
+                nicobot.sendMessage(triggeringMessage.getChannel(), triggeringMessage.getTs(), e.getMessage());
+                LOG.warn("OpenAI Failed to return a response. The request was probably not safe.");
+            } else {
+                LOG.error("OpenAI returned an error", e);
+            }
             return empty();
         }
     }
