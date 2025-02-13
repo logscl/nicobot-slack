@@ -61,6 +61,14 @@ public class WebsocketClient {
         slackApp.event(ChannelDeletedEvent.class, channelEventDispatcher.onChannelDeleted());
         slackApp.event(GroupDeletedEvent.class, channelEventDispatcher.onGroupDeleted());
 
+        // ignored events (for now) -> is there a way to ignore all events not handled ?
+        slackApp.event(MessageChangedEvent.class, (payload, context) -> context.ack());
+        slackApp.event(MessageThreadBroadcastEvent.class, (payload, context) -> context.ack());
+        slackApp.event(MessageDeletedEvent.class, (payload, context) -> context.ack());
+        slackApp.event(FileSharedEvent.class, (payload, context) -> context.ack());
+        slackApp.event(MessageChannelLeaveEvent.class, (payload, context) -> context.ack());
+        slackApp.event(MessageChannelJoinEvent.class, (payload, context) -> context.ack());
+
         // TODO - callback of blockactions
 //        slackApp.blockAction(Pattern.compile("rps-.*"), (blockActionRequest, actionContext) -> {
 //            return actionContext.ack();
