@@ -1,19 +1,18 @@
 package be.zqsd.slack.client;
 
-import be.zqsd.slack.dispatcher.MessageEventDispatcher;
 import be.zqsd.slack.dispatcher.ChannelEventDispatcher;
+import be.zqsd.slack.dispatcher.MessageEventDispatcher;
 import be.zqsd.slack.dispatcher.UserEventDispatcher;
 import com.slack.api.bolt.App;
 import com.slack.api.bolt.AppConfig;
 import com.slack.api.bolt.jakarta_socket_mode.SocketModeApp;
 import com.slack.api.model.event.*;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import java.io.IOException;
-import java.util.regex.Pattern;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -65,7 +64,7 @@ public class WebsocketClient {
         slackApp.event(MessageChangedEvent.class, (payload, context) -> context.ack());
         slackApp.event(MessageThreadBroadcastEvent.class, (payload, context) -> context.ack());
         slackApp.event(MessageDeletedEvent.class, (payload, context) -> context.ack());
-        slackApp.event(FileSharedEvent.class, (payload, context) -> context.ack());
+        slackApp.event(MessageFileShareEvent.class, (payload, context) -> context.ack());
         slackApp.event(MessageChannelLeaveEvent.class, (payload, context) -> context.ack());
         slackApp.event(MessageChannelJoinEvent.class, (payload, context) -> context.ack());
 
