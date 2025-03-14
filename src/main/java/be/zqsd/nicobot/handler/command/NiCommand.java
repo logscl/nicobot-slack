@@ -31,6 +31,6 @@ public interface NiCommand {
 	 * Handle the command from the triggering message
 	 */
 	default void handle(List<String> commandAndArguments, MessageEvent triggeringEvent) {
-		this.doCommand(commandAndArguments.get(0), commandAndArguments.subList(1, commandAndArguments.size()), triggeringEvent);
+		this.doCommand(commandAndArguments.getFirst(), commandAndArguments.subList(1, commandAndArguments.size()), triggeringEvent);
 	}
 }

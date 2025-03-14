@@ -2,38 +2,36 @@ package be.zqsd.nicobot.handler.command;
 
 import be.zqsd.nicobot.bot.Nicobot;
 import be.zqsd.slack.client.WebClient;
+import com.openai.client.OpenAIClientAsync;
+import com.openai.client.okhttp.OpenAIOkHttpClientAsync;
+import com.openai.models.chat.completions.ChatCompletionCreateParams;
+import com.openai.models.chat.completions.ChatCompletionCreateParams.WebSearchOptions;
+import com.openai.models.chat.completions.ChatCompletionCreateParams.WebSearchOptions.UserLocation;
+import com.openai.models.chat.completions.ChatCompletionCreateParams.WebSearchOptions.UserLocation.Approximate;
+import com.openai.models.chat.completions.ChatCompletionMessageParam;
+import com.openai.models.chat.completions.ChatCompletionSystemMessageParam;
+import com.openai.models.chat.completions.ChatCompletionUserMessageParam;
 import com.slack.api.model.Message;
 import com.slack.api.model.event.MessageEvent;
-import com.theokanning.openai.OpenAiHttpException;
-import com.theokanning.openai.completion.chat.ChatCompletionChoice;
-import com.theokanning.openai.completion.chat.ChatCompletionRequest;
-import com.theokanning.openai.completion.chat.ChatMessage;
-import com.theokanning.openai.service.OpenAiService;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.slf4j.Logger;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.slf4j.Logger;
 
 import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 
-import static com.theokanning.openai.completion.chat.ChatCompletionRequest.builder;
 import static java.lang.String.join;
-import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
-import static java.util.concurrent.CompletableFuture.supplyAsync;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @ApplicationScoped
 public class Chat implements NiCommand {
 
     private static final Logger LOG = getLogger(Chat.class);
-    public static final String USER_ROLE = "user";
-    public static final String ASSISTANT_ROLE = "assistant";
     public static final String CHAT_COMMAND_TRIGGER = "!chat";
 
     private final Nicobot nicobot;
@@ -42,7 +40,7 @@ public class Chat implements NiCommand {
     private final String gptModel;
     private final int maxTokens;
 
-    private final OpenAiService openAiService;
+    private final OpenAIClientAsync openAIClient;
 
     @Inject
     public Chat(Nicobot nicobot,
@@ -54,7 +52,10 @@ public class Chat implements NiCommand {
         this.client = client;
         this.gptModel = gptModel;
         this.maxTokens = maxTokens;
-        this.openAiService = new OpenAiService(openAIApiKey, Duration.ofMinutes(1));
+        this.openAIClient = OpenAIOkHttpClientAsync.builder()
+                .apiKey(openAIApiKey)
+                .timeout(Duration.ofMinutes(1))
+                .build();
     }
 
     @Override
@@ -74,72 +75,60 @@ public class Chat implements NiCommand {
 
     @Override
     public void doCommand(String command, Collection<String> arguments, MessageEvent triggeringMessage) {
-        var request = buildChatCompletionRequest(arguments, triggeringMessage);
+        var params = buildChatCompletionCreate(arguments, triggeringMessage);
 
-        supplyAsync(() -> queryOpenAI(request))
-                .thenApply(response -> {
+        openAIClient.chat()
+                .completions()
+                .create(params)
+                .thenAccept(completion -> completion.choices().getFirst().message().content().ifPresent(response -> {
                     LOG.debug("Sending response to users...");
-                    return nicobot.sendMessage(triggeringMessage.getChannel(), triggeringMessage.getTs(), response);
-                });
+                    nicobot.sendMessage(triggeringMessage.getChannel(), triggeringMessage.getTs(), response);
+                }));
     }
 
-    private ChatCompletionRequest buildChatCompletionRequest(Collection<String> arguments, MessageEvent triggeringMessage) {
+    private ChatCompletionCreateParams buildChatCompletionCreate(Collection<String> arguments, MessageEvent triggeringMessage) {
+        var builder = ChatCompletionCreateParams.builder()
+                .model(gptModel)
+                .maxCompletionTokens(maxTokens)
+                .webSearchOptions(createWebSearchOptions());
         if (triggeringMessage.getThreadTs() != null) {
             var messagesOfThread = nicobot.getThreadMessages(triggeringMessage);
             LOG.debug("Building conversation from previous messages...");
-            return buildRequestFromThread(messagesOfThread);
+            messagesOfThread.stream()
+                    .map(this::buildMessageParam)
+                    .flatMap(Optional::stream)
+                    .forEach(builder::addMessage);
         } else {
             var question = join(" ", arguments);
             LOG.debug("Will Query for question '{}'", question);
-            return buildRequestFromSingleMessage(question);
+            builder.addUserMessage(question);
         }
+        return builder.build();
     }
 
-    private ChatCompletionRequest buildRequestFromSingleMessage(String question) {
-        return builder()
-                .model(gptModel)
-                .messages(singletonList(new ChatMessage(USER_ROLE, question)))
-                .maxTokens(maxTokens)
+    private WebSearchOptions createWebSearchOptions() {
+        return WebSearchOptions.builder()
+                .userLocation(UserLocation.builder()
+                        .approximate(Approximate.builder()
+                                .country("BE")
+                                .build())
+                        .build())
                 .build();
     }
 
-    private ChatCompletionRequest buildRequestFromThread(Collection<Message> messages) {
-        var requests = messages.stream()
-                .map(this::convertMessageToChatGPTChatMessage)
-                .flatMap(Optional::stream)
-                .toList();
-
-        return builder()
-                .model(gptModel)
-                .messages(requests)
-                .maxTokens(maxTokens)
-                .build();
-    }
-
-    private Optional<ChatMessage> convertMessageToChatGPTChatMessage(Message message) {
+    private Optional<ChatCompletionMessageParam> buildMessageParam(Message message) {
         if (message.getText().startsWith(CHAT_COMMAND_TRIGGER)) {
-            return of(new ChatMessage(USER_ROLE, message.getText().substring(6)));
+            var userMessage = ChatCompletionUserMessageParam.builder()
+                    .content(message.getText().substring(6))
+                    .build();
+            return of(ChatCompletionMessageParam.ofUser(userMessage));
         } else if (message.getUser().equals(client.botId())) {
-            return of(new ChatMessage(ASSISTANT_ROLE, message.getText()));
+            var systemMessage = ChatCompletionSystemMessageParam.builder()
+                            .content(message.getText())
+                                    .build();
+            return of(ChatCompletionMessageParam.ofSystem(systemMessage));
         } else {
             return empty();
-        }
-    }
-
-    private String queryOpenAI(ChatCompletionRequest request) {
-        LOG.debug("Querying OpenAPI...");
-        try {
-            var completion = openAiService.createChatCompletion(request);
-            LOG.debug("Query Done, OpenAI returned a completion: {}", completion);
-            return completion.getChoices().stream()
-                    .map(ChatCompletionChoice::getMessage)
-                    .map(ChatMessage::getContent)
-                    .map(String::trim)
-                    .findFirst()
-                    .orElse("/shrug");
-        } catch (OpenAiHttpException e) {
-            LOG.error("Open AI Failed to return a response", e);
-            return "Open AI failed: " + e.getMessage();
         }
     }
 }

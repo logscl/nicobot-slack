@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
+import static java.lang.System.currentTimeMillis;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @ApplicationScoped
@@ -36,6 +37,7 @@ public class MessageEventDispatcher implements BoltEventHandler<MessageEvent> {
 
     @Override
     public Response apply(EventsApiPayload<MessageEvent> event, EventContext context) throws IOException, SlackApiException {
+        var start = currentTimeMillis();
         var messageEvent = event.getEvent();
         // TODO the commands should execute in a sub-thread
         commandService.findCommandFor(messageEvent.getText())
@@ -43,6 +45,7 @@ public class MessageEventDispatcher implements BoltEventHandler<MessageEvent> {
                     LOG.debug("checking if Nicobot must react to {} message events", messageHandlers.size());
                     messageHandlers.forEach(action -> action.handle(messageEvent));
                 });
+        LOG.debug("Ack done in {} ms", currentTimeMillis()-start);
         return context.ack();
     }
 }

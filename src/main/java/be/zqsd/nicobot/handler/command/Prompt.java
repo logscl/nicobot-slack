@@ -1,16 +1,23 @@
 package be.zqsd.nicobot.handler.command;
 
 import be.zqsd.nicobot.bot.Nicobot;
-import com.google.api.client.http.HttpStatusCodes;
+import com.openai.client.OpenAIClientAsync;
+import com.openai.client.okhttp.OpenAIOkHttpClientAsync;
+import com.openai.core.JsonObject;
+import com.openai.core.JsonValue;
+import com.openai.errors.BadRequestException;
+import com.openai.errors.OpenAIError;
+import com.openai.errors.OpenAIServiceException;
+import com.openai.models.images.ImageGenerateParams;
+import com.openai.models.images.ImageGenerateParams.Quality;
+import com.openai.models.images.ImageGenerateParams.Size;
+import com.openai.models.images.ImageGenerateParams.Style;
 import com.slack.api.methods.response.files.FilesUploadV2Response;
 import com.slack.api.model.event.MessageEvent;
-import com.theokanning.openai.OpenAiHttpException;
-import com.theokanning.openai.image.CreateImageRequest;
-import com.theokanning.openai.image.Image;
-import com.theokanning.openai.service.OpenAiService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import java.io.BufferedInputStream;
@@ -18,16 +25,10 @@ import java.io.File;
 import java.net.URL;
 import java.nio.file.Files;
 import java.time.Duration;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
-import static com.theokanning.openai.image.CreateImageRequest.builder;
 import static java.lang.String.join;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
-import static java.util.concurrent.CompletableFuture.supplyAsync;
+import static java.util.Optional.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @ApplicationScoped
@@ -42,7 +43,7 @@ public class Prompt implements NiCommand {
     private final String imageStyle;
     private final String imageSize;
 
-    private final OpenAiService openAiService;
+    private final OpenAIClientAsync openAIClient;
 
     @Inject
     public Prompt(Nicobot nicobot,
@@ -56,7 +57,10 @@ public class Prompt implements NiCommand {
         this.imageQuality = imageQuality;
         this.imageStyle = imageStyle;
         this.imageSize = imageSize;
-        this.openAiService = new OpenAiService(openAIApiKey, Duration.ofMinutes(1));
+        this.openAIClient = OpenAIOkHttpClientAsync.builder()
+                .apiKey(openAIApiKey)
+                .timeout(Duration.ofMinutes(1))
+                .build();
     }
 
     @Override
@@ -79,41 +83,42 @@ public class Prompt implements NiCommand {
         var question = join(" ", arguments);
         var request = buildRequest(question);
 
-        supplyAsync(() -> queryOpenAI(request, triggeringMessage))
-                .thenApplyAsync(imageUrl -> imageUrl.map(this::downloadFile).orElseThrow())
+        openAIClient.images()
+                .generate(request)
+                .thenApplyAsync(imageResponse -> downloadFile(imageResponse.data().getFirst().url().orElseThrow()))
                 .thenApply(file -> file.map(f -> this.uploadFileToSlack(triggeringMessage, f).orElseThrow()))
-                .exceptionally(exception -> empty());
+                .exceptionally(exception -> handleError(triggeringMessage, exception));
 
         LOG.debug("Query for question '{}' done. Now waiting...", question);
     }
 
-    private CreateImageRequest buildRequest(String prompt) {
-        return builder()
-                .model(imageModel)
-                .quality(imageQuality)
-                .style(imageStyle)
-                .size(imageSize)
-                .prompt(prompt)
-                .build();
+    private Optional<FilesUploadV2Response> handleError(MessageEvent triggeringMessage, Throwable exception) {
+        if (exception.getCause() instanceof BadRequestException cause) {
+            var errorMessage = of(cause)
+                    .map(OpenAIServiceException::error)
+                    .map(OpenAIError::additionalProperties)
+                    .map(properties -> properties.get("error"))
+                    .map(JsonObject.class::cast)
+                    .map(JsonObject::values)
+                    .map(values -> values.get("message"))
+                    .map(Objects::toString)
+                    .orElse(":man-shrugging:");
+            nicobot.sendMessage(triggeringMessage, errorMessage);
+
+        } else {
+            LOG.debug("There was an unknown issue processing this prompt", exception);
+        }
+        return empty();
     }
 
-    private Optional<String> queryOpenAI(CreateImageRequest request, MessageEvent triggeringMessage) {
-        LOG.debug("Querying OpenAPI...");
-        try {
-            var result = openAiService.createImage(request);
-            LOG.debug("Query Done, OpenAI returned a result: {}", result);
-            return result.getData().stream()
-                    .map(Image::getUrl)
-                    .findFirst();
-        } catch (OpenAiHttpException e) {
-            if (e.statusCode == HttpStatusCodes.STATUS_CODE_BAD_REQUEST) {
-                nicobot.sendMessage(triggeringMessage.getChannel(), triggeringMessage.getTs(), e.getMessage());
-                LOG.warn("OpenAI Failed to return a response. The request was probably not safe.");
-            } else {
-                LOG.error("OpenAI returned an error", e);
-            }
-            return empty();
-        }
+    private ImageGenerateParams buildRequest(String prompt) {
+        return ImageGenerateParams.builder()
+                .model(imageModel)
+                .quality(Quality.of(imageQuality))
+                .style(Style.of(imageStyle))
+                .size(Size.of(imageSize))
+                .prompt(prompt)
+                .build();
     }
 
     private Optional<File> downloadFile(String fileUrl) {

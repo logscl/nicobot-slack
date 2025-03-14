@@ -15,10 +15,10 @@
     <!-- QUARKUS -->
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-    <quarkus.platform.version>3.17.0</quarkus.platform.version>
-    <quarkus.loggingsentry.version>2.0.7</quarkus.loggingsentry.version>
+    <quarkus.platform.version>3.19.3</quarkus.platform.version>
+    <quarkus.loggingsentry.version>2.1.2</quarkus.loggingsentry.version>
     <!-- SLACK CLIENT -->
-    <slack.api.version>1.45.1</slack.api.version>
+    <slack.api.version>1.45.3</slack.api.version>
     <tyrus.client.version>2.2.0</tyrus.client.version>
     <jakarta.websocket.version>2.2.0</jakarta.websocket.version>
     <!-- NICOBOT -->
@@ -28,8 +28,8 @@
     <google.platform.version>26.10.0</google.platform.version>
     <googlemap.api.version>2.2.0</googlemap.api.version>
     <googlesearch.api.version>v1-rev20240821-2.0.0</googlesearch.api.version>
-    <openapi.gpt3.version>0.18.2</openapi.gpt3.version>
-    <youtube.api.version>v3-rev20250101-2.0.0</youtube.api.version>
+    <openapi.java.version>0.34.1</openapi.java.version>
+    <youtube.api.version> v3-rev20250224-2.0.0</youtube.api.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -126,9 +126,9 @@
       <version>${github.api.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.theokanning.openai-gpt3-java</groupId>
-      <artifactId>service</artifactId>
-      <version>${openapi.gpt3.version}</version>
+      <groupId>com.openai</groupId>
+      <artifactId>openai-java</artifactId>
+      <version>${openapi.java.version}</version>
     </dependency>
   </dependencies>
   <build>
