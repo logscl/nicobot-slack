@@ -4,7 +4,6 @@ import be.zqsd.nicobot.bot.Nicobot;
 import com.openai.client.OpenAIClientAsync;
 import com.openai.client.okhttp.OpenAIOkHttpClientAsync;
 import com.openai.core.JsonObject;
-import com.openai.core.JsonValue;
 import com.openai.errors.BadRequestException;
 import com.openai.errors.OpenAIError;
 import com.openai.errors.OpenAIServiceException;
@@ -17,7 +16,6 @@ import com.slack.api.model.event.MessageEvent;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import java.io.BufferedInputStream;
@@ -28,7 +26,8 @@ import java.time.Duration;
 import java.util.*;
 
 import static java.lang.String.join;
-import static java.util.Optional.*;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @ApplicationScoped
