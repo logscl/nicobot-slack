@@ -82,7 +82,7 @@ public class Chat implements NiCommand {
                 .create(params)
                 .thenAccept(completion -> completion.choices().getFirst().message().content().ifPresent(response -> {
                     LOG.debug("Sending response to users...");
-                    nicobot.sendMessage(triggeringMessage.getChannel(), triggeringMessage.getTs(), response);
+                    nicobot.sendMessageInThread(triggeringMessage, response);
                 }));
     }
 

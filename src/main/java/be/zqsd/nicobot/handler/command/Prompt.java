@@ -91,7 +91,7 @@ public class Prompt implements NiCommand {
 
     private Optional<FilesUploadV2Response> handleError(MessageEvent triggeringMessage, Throwable exception) {
         if (exception.getCause() instanceof BadRequestException cause) {
-            nicobot.sendMessage(triggeringMessage.getChannel(), triggeringMessage.getTs(), cause.getMessage());
+            nicobot.sendMessageInThread(triggeringMessage, cause.getMessage());
         } else {
             LOG.debug("There was an unknown issue processing this prompt", exception);
         }

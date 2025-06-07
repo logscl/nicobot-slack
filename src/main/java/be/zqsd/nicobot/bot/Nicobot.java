@@ -40,6 +40,10 @@ public class Nicobot {
         return sendMessage(event.getChannel(), event.getThreadTs(), message);
     }
 
+    public Optional<ChatPostMessageResponse> sendMessageInThread(MessageEvent event, String message) {
+        return sendMessage(event.getChannel(), event.getTs(), message);
+    }
+
     public Optional<ChatPostMessageResponse> sendBlocks(MessageEvent event, List<LayoutBlock> blocks, String fallbackMessage) {
         return client.sendBlocks(event.getChannel(), event.getThreadTs(), blocks, fallbackMessage);
     }

@@ -50,8 +50,8 @@ public class GithubIssue implements NiCommand {
         if (title.isPresent()) {
             var issue = github.createIssue(title.get(), descriptionBody(arguments, triggeringMessage.getUser()));
             issue.ifPresentOrElse(
-                    createdIssue -> nicobot.sendMessage(triggeringMessage, "Ok. J'y penserai : <%s|#%s>".formatted(createdIssue.getHtmlUrl(), createdIssue.getNumber())),
-                    () -> nicobot.sendMessage(triggeringMessage, "Désolé, j'ai pas su créer l'issue :(")
+                    createdIssue -> nicobot.sendMessageInThread(triggeringMessage, "Ok. J'y penserai : <%s|#%s>".formatted(createdIssue.getHtmlUrl(), createdIssue.getNumber())),
+                    () -> nicobot.sendMessageInThread(triggeringMessage, "Désolé, j'ai pas su créer l'issue :(")
             );
         } else {
             nicobot.sendEphemeralMessage(triggeringMessage, "Mauvais format: !github \"issue\" \"description\"");
