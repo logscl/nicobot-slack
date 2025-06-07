@@ -3,14 +3,10 @@ package be.zqsd.nicobot.handler.command;
 import be.zqsd.nicobot.bot.Nicobot;
 import com.openai.client.OpenAIClientAsync;
 import com.openai.client.okhttp.OpenAIOkHttpClientAsync;
-import com.openai.core.JsonObject;
 import com.openai.errors.BadRequestException;
-import com.openai.errors.OpenAIError;
-import com.openai.errors.OpenAIServiceException;
 import com.openai.models.images.ImageGenerateParams;
 import com.openai.models.images.ImageGenerateParams.Quality;
 import com.openai.models.images.ImageGenerateParams.Size;
-import com.openai.models.images.ImageGenerateParams.Style;
 import com.slack.api.methods.response.files.FilesUploadV2Response;
 import com.slack.api.model.event.MessageEvent;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -20,10 +16,13 @@ import org.slf4j.Logger;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.net.URL;
+import java.net.URI;
 import java.nio.file.Files;
 import java.time.Duration;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.UUID;
 
 import static java.lang.String.join;
 import static java.util.Optional.empty;
@@ -38,9 +37,8 @@ public class Prompt implements NiCommand {
     private final Nicobot nicobot;
 
     private final String imageModel;
-    private final String imageQuality;
-    private final String imageStyle;
-    private final String imageSize;
+    private final Quality imageQuality;
+    private final Size imageSize;
 
     private final OpenAIClientAsync openAIClient;
 
@@ -48,14 +46,12 @@ public class Prompt implements NiCommand {
     public Prompt(Nicobot nicobot,
                   @ConfigProperty(name = "openai.api.key") String openAIApiKey,
                   @ConfigProperty(name = "openai.api.imageModel") String imageModel,
-                  @ConfigProperty(name = "openai.api.imageQuality", defaultValue = "standard") String imageQuality,
-                  @ConfigProperty(name = "openai.api.imageStyle", defaultValue = "vivid") String imageStyle,
+                  @ConfigProperty(name = "openai.api.imageQuality", defaultValue = "hd") String imageQuality,
                   @ConfigProperty(name = "openai.api.imageSize", defaultValue = "1024x1024") String imageSize) {
         this.nicobot = nicobot;
         this.imageModel = imageModel;
-        this.imageQuality = imageQuality;
-        this.imageStyle = imageStyle;
-        this.imageSize = imageSize;
+        this.imageQuality = Quality.of(imageQuality);
+        this.imageSize = Size.of(imageSize);
         this.openAIClient = OpenAIOkHttpClientAsync.builder()
                 .apiKey(openAIApiKey)
                 .timeout(Duration.ofMinutes(1))
@@ -84,7 +80,9 @@ public class Prompt implements NiCommand {
 
         openAIClient.images()
                 .generate(request)
-                .thenApplyAsync(imageResponse -> downloadFile(imageResponse.data().getFirst().url().orElseThrow()))
+                .thenApplyAsync(imagesResponse -> imagesResponse.data().orElseThrow())
+                .thenApplyAsync(imageList -> imageList.stream().findFirst().orElseThrow())
+                .thenApplyAsync(image -> downloadFile(image.url().orElseThrow()))
                 .thenApply(file -> file.map(f -> this.uploadFileToSlack(triggeringMessage, f).orElseThrow()))
                 .exceptionally(exception -> handleError(triggeringMessage, exception));
 
@@ -93,17 +91,7 @@ public class Prompt implements NiCommand {
 
     private Optional<FilesUploadV2Response> handleError(MessageEvent triggeringMessage, Throwable exception) {
         if (exception.getCause() instanceof BadRequestException cause) {
-            var errorMessage = of(cause)
-                    .map(OpenAIServiceException::error)
-                    .map(OpenAIError::additionalProperties)
-                    .map(properties -> properties.get("error"))
-                    .map(JsonObject.class::cast)
-                    .map(JsonObject::values)
-                    .map(values -> values.get("message"))
-                    .map(Objects::toString)
-                    .orElse(":man-shrugging:");
-            nicobot.sendMessage(triggeringMessage, errorMessage);
-
+            nicobot.sendMessage(triggeringMessage.getChannel(), triggeringMessage.getTs(), cause.getMessage());
         } else {
             LOG.debug("There was an unknown issue processing this prompt", exception);
         }
@@ -113,15 +101,14 @@ public class Prompt implements NiCommand {
     private ImageGenerateParams buildRequest(String prompt) {
         return ImageGenerateParams.builder()
                 .model(imageModel)
-                .quality(Quality.of(imageQuality))
-                .style(Style.of(imageStyle))
-                .size(Size.of(imageSize))
+                .quality(imageQuality)
+                .size(imageSize)
                 .prompt(prompt)
                 .build();
     }
 
     private Optional<File> downloadFile(String fileUrl) {
-        try (var inputStream = new BufferedInputStream(new URL(fileUrl).openStream())) {
+        try (var inputStream = new BufferedInputStream(new URI(fileUrl).toURL().openStream())) {
             var outputFile = new File("/tmp/" + UUID.randomUUID() + ".png");
             Files.copy(inputStream, outputFile.toPath());
             return of(outputFile);
