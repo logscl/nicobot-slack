@@ -14,16 +14,15 @@ import jakarta.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 
-import java.io.BufferedInputStream;
+import javax.imageio.ImageIO;
+import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.net.URI;
-import java.nio.file.Files;
 import java.time.Duration;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
+import static com.openai.models.images.ImageGenerateParams.Background.AUTO;
+import static com.openai.models.images.ImageGenerateParams.Moderation.LOW;
+import static com.openai.models.images.ImageGenerateParams.OutputFormat.PNG;
 import static java.lang.String.join;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -46,8 +45,8 @@ public class Prompt implements NiCommand {
     public Prompt(Nicobot nicobot,
                   @ConfigProperty(name = "openai.api.key") String openAIApiKey,
                   @ConfigProperty(name = "openai.api.imageModel") String imageModel,
-                  @ConfigProperty(name = "openai.api.imageQuality", defaultValue = "hd") String imageQuality,
-                  @ConfigProperty(name = "openai.api.imageSize", defaultValue = "1024x1024") String imageSize) {
+                  @ConfigProperty(name = "openai.api.imageQuality", defaultValue = "auto") String imageQuality,
+                  @ConfigProperty(name = "openai.api.imageSize", defaultValue = "auto") String imageSize) {
         this.nicobot = nicobot;
         this.imageModel = imageModel;
         this.imageQuality = Quality.of(imageQuality);
@@ -82,7 +81,7 @@ public class Prompt implements NiCommand {
                 .generate(request)
                 .thenApplyAsync(imagesResponse -> imagesResponse.data().orElseThrow())
                 .thenApplyAsync(imageList -> imageList.stream().findFirst().orElseThrow())
-                .thenApplyAsync(image -> downloadFile(image.url().orElseThrow()))
+                .thenApplyAsync(image -> convertToFile(image.b64Json().orElseThrow()))
                 .thenApply(file -> file.map(f -> this.uploadFileToSlack(triggeringMessage, f).orElseThrow()))
                 .exceptionally(exception -> handleError(triggeringMessage, exception));
 
@@ -103,14 +102,20 @@ public class Prompt implements NiCommand {
                 .model(imageModel)
                 .quality(imageQuality)
                 .size(imageSize)
+                .outputFormat(PNG)
+                .background(AUTO)
+                .moderation(LOW)
                 .prompt(prompt)
                 .build();
     }
 
-    private Optional<File> downloadFile(String fileUrl) {
-        try (var inputStream = new BufferedInputStream(new URI(fileUrl).toURL().openStream())) {
+    private Optional<File> convertToFile(String payload) {
+        byte[] imageBytes = Base64.getDecoder().decode(payload);
+
+        try (var inputStream = new ByteArrayInputStream(imageBytes)) {
             var outputFile = new File("/tmp/" + UUID.randomUUID() + ".png");
-            Files.copy(inputStream, outputFile.toPath());
+            var image = ImageIO.read(inputStream);
+            ImageIO.write(image, "png", outputFile);
             return of(outputFile);
         } catch (Exception e) {
             LOG.error("Unable to download Image and create a file from it", e);

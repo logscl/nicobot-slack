@@ -15,11 +15,11 @@
     <!-- QUARKUS -->
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-    <quarkus.platform.version>3.23.2</quarkus.platform.version>
-    <quarkus.loggingsentry.version>2.1.4</quarkus.loggingsentry.version>
+    <quarkus.platform.version>3.30.4</quarkus.platform.version>
+    <quarkus.loggingsentry.version>2.3.0</quarkus.loggingsentry.version>
     <!-- SLACK CLIENT -->
-    <slack.api.version>1.45.3</slack.api.version>
-    <tyrus.client.version>2.2.0</tyrus.client.version>
+    <slack.api.version>1.46.0</slack.api.version>
+    <tyrus.client.version>2.2.1</tyrus.client.version>
     <jakarta.websocket.version>2.2.0</jakarta.websocket.version>
     <!-- NICOBOT -->
     <nicobot.persistence.version>1.0.3</nicobot.persistence.version>
@@ -28,8 +28,8 @@
     <google.platform.version>26.10.0</google.platform.version>
     <googlemap.api.version>2.2.0</googlemap.api.version>
     <googlesearch.api.version>v1-rev20240821-2.0.0</googlesearch.api.version>
-    <openapi.java.version>2.5.0</openapi.java.version>
-    <youtube.api.version>v3-rev20250422-2.0.0</youtube.api.version>
+    <openapi.java.version>4.12.0</openapi.java.version>
+    <youtube.api.version>v3-rev20251125-2.0.0</youtube.api.version>
   </properties>
   <dependencyManagement>
     <dependencies>

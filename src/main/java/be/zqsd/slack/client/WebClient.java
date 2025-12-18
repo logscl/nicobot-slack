@@ -59,7 +59,11 @@ public class WebClient {
     public List<User> fetchUsers() {
         try {
             var response = methods.usersList(req -> req);
-            return response.getMembers();
+            var members = response.getMembers();
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Members founds in slack: {}", String.join(", ", members.stream().map(member -> "%s: %s".formatted(member.getId(), member.getName())).toList()));
+            }
+            return members;
         } catch (Exception e) {
             LOG.error("Unable to fetch users", e);
         }
@@ -72,7 +76,11 @@ public class WebClient {
                     req
                             .excludeArchived(true)
                             .types(List.of(PUBLIC_CHANNEL, PRIVATE_CHANNEL, IM, MPIM)));
-            return response.getChannels();
+            var channels = response.getChannels();
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Channels founds in slack: {}", String.join(", ", channels.stream().map(channel -> "%s: %s".formatted(channel.getId(), channel.getNameNormalized())).toList()));
+            }
+            return channels;
         } catch (Exception e) {
             LOG.error("Unable to fetch conversations", e);
         }

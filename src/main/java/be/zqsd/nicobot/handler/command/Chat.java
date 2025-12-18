@@ -83,7 +83,12 @@ public class Chat implements NiCommand {
                 .thenAccept(completion -> completion.choices().getFirst().message().content().ifPresent(response -> {
                     LOG.debug("Sending response to users...");
                     nicobot.sendMessageInThread(triggeringMessage, response);
-                }));
+                }))
+                .exceptionally(ex -> {
+                    LOG.error("Unable to complete OpenAI request", ex);
+                    nicobot.sendMessageInThread(triggeringMessage, "C'est cassé :(");
+                    return null;
+                });
     }
 
     private ChatCompletionCreateParams buildChatCompletionCreate(Collection<String> arguments, MessageEvent triggeringMessage) {
