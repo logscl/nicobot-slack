@@ -33,6 +33,7 @@ public class Chat implements NiCommand {
 
     private static final Logger LOG = getLogger(Chat.class);
     public static final String CHAT_COMMAND_TRIGGER = "!chat";
+    public static final String INSTRUCTIONS_NOT_SET = "not_set";
 
     private final Nicobot nicobot;
     private final WebClient client;
@@ -49,7 +50,7 @@ public class Chat implements NiCommand {
                 @ConfigProperty(name = "openai.api.key") String openAIApiKey,
                 @ConfigProperty(name = "openai.api.model") String gptModel,
                 @ConfigProperty(name = "openai.api.maxTokens") int maxTokens,
-                @ConfigProperty(name = "openai.api.instructions") String instructions) {
+                @ConfigProperty(name = "openai.api.instructions", defaultValue = INSTRUCTIONS_NOT_SET) String instructions) {
         this.nicobot = nicobot;
         this.client = client;
         this.gptModel = gptModel;
@@ -98,8 +99,12 @@ public class Chat implements NiCommand {
         var builder = ChatCompletionCreateParams.builder()
                 .model(gptModel)
                 .maxCompletionTokens(maxTokens)
-                .addDeveloperMessage(instructions)
                 .webSearchOptions(createWebSearchOptions());
+
+        if (!INSTRUCTIONS_NOT_SET.equals(instructions)) {
+            builder.addDeveloperMessage(instructions);
+        }
+
         if (triggeringMessage.getThreadTs() != null) {
             var messagesOfThread = nicobot.getThreadMessages(triggeringMessage);
             LOG.debug("Building conversation from previous messages...");
