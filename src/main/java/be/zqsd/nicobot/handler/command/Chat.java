@@ -39,6 +39,7 @@ public class Chat implements NiCommand {
 
     private final String gptModel;
     private final int maxTokens;
+    private final String instructions;
 
     private final OpenAIClientAsync openAIClient;
 
@@ -47,7 +48,8 @@ public class Chat implements NiCommand {
                 WebClient client,
                 @ConfigProperty(name = "openai.api.key") String openAIApiKey,
                 @ConfigProperty(name = "openai.api.model") String gptModel,
-                @ConfigProperty(name = "openai.api.maxTokens") int maxTokens) {
+                @ConfigProperty(name = "openai.api.maxTokens") int maxTokens,
+                @ConfigProperty(name = "openai.api.instructions") String instructions) {
         this.nicobot = nicobot;
         this.client = client;
         this.gptModel = gptModel;
@@ -56,6 +58,7 @@ public class Chat implements NiCommand {
                 .apiKey(openAIApiKey)
                 .timeout(Duration.ofMinutes(1))
                 .build();
+        this.instructions = instructions;
     }
 
     @Override
@@ -95,6 +98,7 @@ public class Chat implements NiCommand {
         var builder = ChatCompletionCreateParams.builder()
                 .model(gptModel)
                 .maxCompletionTokens(maxTokens)
+                .addDeveloperMessage(instructions)
                 .webSearchOptions(createWebSearchOptions());
         if (triggeringMessage.getThreadTs() != null) {
             var messagesOfThread = nicobot.getThreadMessages(triggeringMessage);

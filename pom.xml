@@ -5,6 +5,7 @@
   <groupId>be.zqsd.nicobot</groupId>
   <artifactId>nicobot-slack</artifactId>
   <version>3.0.0</version>
+  <packaging>quarkus</packaging>
   <properties>
     <!-- PLUGINS + JAVA VERSION -->
     <compiler-plugin.version>3.8.1</compiler-plugin.version>
@@ -15,10 +16,10 @@
     <!-- QUARKUS -->
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-    <quarkus.platform.version>3.30.4</quarkus.platform.version>
-    <quarkus.loggingsentry.version>2.3.0</quarkus.loggingsentry.version>
+    <quarkus.platform.version>3.34.1</quarkus.platform.version>
+    <quarkus.loggingsentry.version>2.3.1</quarkus.loggingsentry.version>
     <!-- SLACK CLIENT -->
-    <slack.api.version>1.46.0</slack.api.version>
+    <slack.api.version>1.48.0</slack.api.version>
     <tyrus.client.version>2.2.1</tyrus.client.version>
     <jakarta.websocket.version>2.2.0</jakarta.websocket.version>
     <!-- NICOBOT -->
@@ -28,8 +29,8 @@
     <google.platform.version>26.10.0</google.platform.version>
     <googlemap.api.version>2.2.0</googlemap.api.version>
     <googlesearch.api.version>v1-rev20240821-2.0.0</googlesearch.api.version>
-    <openapi.java.version>4.12.0</openapi.java.version>
-    <youtube.api.version>v3-rev20251125-2.0.0</youtube.api.version>
+    <openapi.java.version>4.30.0</openapi.java.version>
+    <youtube.api.version>v3-rev20260323-2.0.0</youtube.api.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -61,7 +62,7 @@
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-junit5</artifactId>
+      <artifactId>quarkus-junit</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -138,15 +139,6 @@
         <artifactId>quarkus-maven-plugin</artifactId>
         <version>${quarkus.platform.version}</version>
         <extensions>true</extensions>
-        <executions>
-          <execution>
-            <goals>
-              <goal>build</goal>
-              <goal>generate-code</goal>
-              <goal>generate-code-tests</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -165,6 +157,7 @@
             <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
             <maven.home>${maven.home}</maven.home>
           </systemPropertyVariables>
+          <argLine>@{argLine}</argLine>
         </configuration>
       </plugin>
     </plugins>
@@ -197,6 +190,9 @@
                 </configuration>
               </execution>
             </executions>
+            <configuration>
+              <argLine>@{argLine}</argLine>
+            </configuration>
           </plugin>
         </plugins>
       </build>
